@@ -127,5 +127,7 @@ typings/
 # Ignore all local history of files
 .history
 
+# app and services configurations
+src/config.json
+
 # End of https://www.gitignore.io/api/macOS,VisualStudioCode,node
-n
