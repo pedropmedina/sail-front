@@ -16,13 +16,17 @@ const Header = props => {
     props.auth.logout();
   };
 
-  return isAuthenticated() && state.isLoggedIn ? (
-    <h4>
-      {profile.name}
-      <button onClick={logout}>Logout</button>
-    </h4>
-  ) : (
-    <button onClick={login}>Login</button>
+  return (
+    <>
+      {isAuthenticated() && state.isLoggedIn ? (
+        <h4>
+          {profile.name}
+          <button onClick={logout}>Logout</button>
+        </h4>
+      ) : (
+        <button onClick={login}>Login</button>
+      )}
+    </>
   );
 };
 

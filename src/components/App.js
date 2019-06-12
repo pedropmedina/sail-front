@@ -9,10 +9,11 @@ import Map from './Map';
 import Header from './Header';
 
 const App = () => {
-  const { dispatch } = useContext(Context);
+  const { state, dispatch } = useContext(Context);
+  const { isLoggedIn } = state;
 
   useEffect(() => {
-    if (localStorage.getItem('isLoggedIn') === 'true') {
+    if (localStorage.getItem('isLoggedIn') === 'true' && !isLoggedIn) {
       handleRenewSession();
     }
   }, []);
