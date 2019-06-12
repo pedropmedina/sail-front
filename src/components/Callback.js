@@ -9,7 +9,7 @@ const Callback = props => {
 
   useEffect(() => {
     handleAuthentication(props);
-  });
+  }, []);
 
   // handler to be trigger during Auth0 authentication
   const handleAuthentication = async ({ location }) => {

@@ -1,13 +1,31 @@
-/* eslint-disable react/prop-types */
+/* eslint-disable no-console, react/prop-types */
 import { hot } from 'react-hot-loader/root';
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 
 import auth from '../Auth';
+import Context from '../context';
 
 import Map from './Map';
 import Header from './Header';
 
 const App = () => {
+  const { dispatch } = useContext(Context);
+
+  useEffect(() => {
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+      handleRenewSession();
+    }
+  }, []);
+
+  const handleRenewSession = async () => {
+    try {
+      await auth.renewSession();
+      dispatch({ type: 'IS_LOGGED_IN', payload: { isLoggedIn: true } });
+    } catch (error) {
+      console.error('Error while renewing session ', error);
+    }
+  };
+
   return (
     <>
       <Header auth={auth} />
