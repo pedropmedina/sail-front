@@ -1,12 +1,13 @@
 /* eslint-disable no-console, react/prop-types */
 import { hot } from 'react-hot-loader/root';
 import React, { useEffect, useContext } from 'react';
+import { Layout } from 'antd';
 
 import auth from '../Auth';
 import Context from '../context';
 
-import Map from './Map';
-import Header from './Header';
+import Map from '../components/Map';
+import Header from '../components/Header';
 
 const App = () => {
   const { state, dispatch } = useContext(Context);
@@ -28,10 +29,10 @@ const App = () => {
   };
 
   return (
-    <>
+    <Layout className="layout">
       <Header auth={auth} />
       <Map auth={auth} />
-    </>
+    </Layout>
   );
 };
 

@@ -63,11 +63,12 @@ class Auth {
   renewSession = () => {
     return new Promise((resolve, reject) => {
       this.auth0.checkSession({}, (err, authResult) => {
-        if (err) {
-          this.logout();
-          return reject(err);
-        }
-        if (!authResult || !authResult.idToken || !authResult.accessToken) {
+        if (
+          err ||
+          !authResult ||
+          !authResult.idToken ||
+          !authResult.accessToken
+        ) {
           this.logout();
           return reject(err);
         }

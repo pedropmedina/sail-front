@@ -1,13 +1,16 @@
-import 'mapbox-gl/dist/mapbox-gl.css';
 import React, { useReducer, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, Switch } from 'react-router-dom';
+
+import 'antd/dist/antd.css';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import './index.css';
 
 import history from './history';
 import Context from './context';
 import reducer from './reducer';
 
-import App from './components/App';
+import App from './pages/App';
 import Callback from './components/Callback';
 
 const Root = () => {

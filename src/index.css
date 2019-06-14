@@ -1,0 +1,20 @@
+.logo {
+  width: 120px;
+  height: 31px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px 24px 16px 0;
+  float: left;
+}
+
+.header {
+  padding: 0 10px;
+}
+
+.header-profile-menu {
+  width: 200px;
+  text-align: center;
+}
+
+.header-profile-menu-item {
+  font-size: 24px;
+}
