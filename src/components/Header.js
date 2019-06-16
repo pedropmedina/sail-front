@@ -24,15 +24,15 @@ const Header = props => {
       <Menu>
         <Menu.Item>{profile.name}</Menu.Item>
         <Menu.Item onClick={logout}>
+          <Icon type="logout" style={{ marginRight: '15px' }} />
           <span>logout</span>
-          <Icon type="logout" style={{ marginLeft: '10px' }} />
         </Menu.Item>
       </Menu>
     ) : (
       <Menu>
         <Menu.Item onClick={login}>
+          <Icon type="login" style={{ marginRight: '15px' }} />
           <span>login</span>
-          <Icon type="login" style={{ marginLeft: '10px' }} />
         </Menu.Item>
       </Menu>
     );

@@ -1,5 +1,6 @@
 /* eslint-disable no-console, react/prop-types */
 import React, { useEffect, useContext } from 'react';
+import { Spin } from 'antd';
 
 import auth from '../Auth';
 import Context from '../context';
@@ -23,7 +24,11 @@ const Callback = props => {
     }
   };
 
-  return <div>Loading Profile from Callback...</div>;
+  return (
+    <div className="spin">
+      <Spin size="large" />
+    </div>
+  );
 };
 
 export default Callback;
