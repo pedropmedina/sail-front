@@ -1,4 +1,6 @@
 /* eslint-disable no-console */
+// This file is here as an example of how to use Auth0.
+// In this app, I'm using a custom authentication instead
 import auth0 from 'auth0-js';
 
 import config from './config.json';

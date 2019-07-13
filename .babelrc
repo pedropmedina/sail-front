@@ -4,7 +4,6 @@
     "react-hot-loader/babel",
     "@babel/plugin-proposal-class-properties",
     "@babel/plugin-transform-async-to-generator",
-    "@babel/plugin-transform-runtime",
-    ["import", { "libraryName": "antd", "libraryDirectory": "es" }]
+    "@babel/plugin-transform-runtime"
   ]
 }

@@ -2,7 +2,6 @@ import React, { useReducer, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, Switch } from 'react-router-dom';
 
-import 'antd/dist/antd.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './index.css';
 
@@ -11,7 +10,6 @@ import Context from './context';
 import reducer from './reducer';
 
 import App from './pages/App';
-import Callback from './components/Callback';
 
 const Root = () => {
   // create initial state with default values set in Context
@@ -24,7 +22,6 @@ const Root = () => {
       <Context.Provider value={{ state, dispatch }}>
         <Switch>
           <Route exact path="/" component={App} />
-          <Route path="/callback" component={Callback} />
         </Switch>
       </Context.Provider>
     </Router>
