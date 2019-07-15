@@ -2,8 +2,10 @@ import React, { useReducer, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, Switch } from 'react-router-dom';
 
+// styles
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './index.css';
+import GlobalStyles from './stylesBase';
 
 import history from './history';
 import Context from './context';
@@ -18,13 +20,16 @@ const Root = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <Router history={history}>
-      <Context.Provider value={{ state, dispatch }}>
-        <Switch>
-          <Route exact path="/" component={App} />
-        </Switch>
-      </Context.Provider>
-    </Router>
+    <>
+      <GlobalStyles />
+      <Router history={history}>
+        <Context.Provider value={{ state, dispatch }}>
+          <Switch>
+            <Route exact path="/" component={App} />
+          </Switch>
+        </Context.Provider>
+      </Router>
+    </>
   );
 };
 
