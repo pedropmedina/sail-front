@@ -36,7 +36,7 @@ module.exports = (env = { mode: 'production', presets: [] }) => {
               {
                 loader: MiniCssExtractPlugin.loader,
                 options: {
-                  hmr: env.mode === 'development'
+                  hmr: devMode
                 }
               },
               'css-loader'
