@@ -8,8 +8,21 @@ import history from './history';
 import Context from './context';
 import reducer from './reducer';
 
-import App from './pages/App';
 import PublicRoute from './routes/PublicRoute';
+import PrivateRoute from './routes/PrivateRoute';
+
+import App from './pages/App';
+import Plans from './pages/Plans';
+import Pins from './pages/Pins';
+import Chats from './pages/Chats';
+import Friends from './pages/Friends';
+
+const PRIVATE_ROUTES = [
+  { path: '/plans', component: Plans },
+  { path: '/pins', component: Pins },
+  { path: '/chats', component: Chats },
+  { path: '/friends', component: Friends }
+];
 
 const Root = () => {
   // create initial state with default values set in Context
@@ -23,7 +36,19 @@ const Root = () => {
       <Router history={history}>
         <Context.Provider value={{ state, dispatch }}>
           <Switch>
-            <PublicRoute exact path="/" component={App} />
+            <PublicRoute
+              exact
+              path="/"
+              isLoggedIn={state.isLoggedIn}
+              component={App}
+            />
+            {PRIVATE_ROUTES.map(route => (
+              <PrivateRoute
+                key={route.path}
+                {...route}
+                isLoggedIn={state.isLoggedIn}
+              />
+            ))}
           </Switch>
         </Context.Provider>
       </Router>

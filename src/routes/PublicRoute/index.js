@@ -2,15 +2,15 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import Sidebar from '../../components/Sidebar';
 import * as Styled from './styled';
+import Sidebar from '../../components/Sidebar';
 
 const PublicRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props => (
       <Styled.Container>
-        <Sidebar />
+        {rest.isLoggedIn && <Sidebar />}
         <Component {...props} />
       </Styled.Container>
     )}
