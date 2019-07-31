@@ -12,6 +12,7 @@ import PublicRoute from './routes/PublicRoute';
 import PrivateRoute from './routes/PrivateRoute';
 
 import App from './pages/App';
+import Auth from './pages/Auth';
 import Plans from './pages/Plans';
 import Pins from './pages/Pins';
 import Chats from './pages/Chats';
@@ -42,6 +43,7 @@ const Root = () => {
               isLoggedIn={state.isLoggedIn}
               component={App}
             />
+            <PublicRoute path="/auth" component={Auth} />
             {PRIVATE_ROUTES.map(route => (
               <PrivateRoute
                 key={route.path}
