@@ -14,6 +14,6 @@ module.exports = env => {
       hot: true,
       overlay: true
     },
-    plugins: [new BundleAnalyzerPlugin()]
+    plugins: [new BundleAnalyzerPlugin({ analyzerPort: 8888 })]
   };
 };
