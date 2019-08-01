@@ -3,11 +3,11 @@ import { createGlobalStyle } from 'styled-components/macro';
 export default createGlobalStyle`
   :root {
     --color-earth-red: #CA433B;
+    --color-almost-white: #EDECED;
     --color-almost-black: #0A0B0B;
     --color-dark-grey: #324C56;
-    --color-light-grey: #6C8C96;
-    --color-lightest-grey: #B6BBC0;
-    --color-almost-white: #EDECED;
+    --color-medium-grey: #6C8C96;
+    --color-light-grey: #B6BBC0;
   }
 
   html {
