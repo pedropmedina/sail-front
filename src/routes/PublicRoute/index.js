@@ -8,6 +8,7 @@ import Sidebar from '../../components/Sidebar';
 // Just for refenrence. To be remove once finished
 const Palette = () => (
   <Styled.Palette>
+    <Styled.EachColor color={'#4783e6'}>#4783e6 (sky blue)</Styled.EachColor>
     <Styled.EachColor color={'#CA433B'}>#CA433B (earth red)</Styled.EachColor>
     <Styled.EachColor color={'#0A0B0B'}>
       #0A0B0B (almost black)

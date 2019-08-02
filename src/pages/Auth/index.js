@@ -16,12 +16,19 @@ const Auth = () => {
           <Styled.Logo>Sail</Styled.Logo>
           <Styled.Intro>Please login to your account</Styled.Intro>
           <Styled.Form onSubmit={handleSubmit}>
-            <input type="text" placeholder="Your Email" />
-            <input type="password" placeholder="Password" />
+            <label htmlFor="email">Username</label>
+            <input
+              id="email"
+              type="text"
+              placeholder="Your Email or Username"
+            />
+            <label htmlFor="password">Password</label>
+            <input id="password" type="password" placeholder="Password" />
             <Styled.LoginBtn>Login</Styled.LoginBtn>
           </Styled.Form>
           <Styled.CreateAccount>
-            Need an account?<Styled.Btn>Create Account</Styled.Btn>
+            <span>Don&apos;t have an account?</span>
+            <Styled.Btn>Create one</Styled.Btn>
           </Styled.CreateAccount>
         </Styled.LeftPanel>
         <Styled.RightPanel>Welcome to Sail</Styled.RightPanel>

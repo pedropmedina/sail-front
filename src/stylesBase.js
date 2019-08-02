@@ -2,6 +2,7 @@ import { createGlobalStyle } from 'styled-components/macro';
 
 export default createGlobalStyle`
   :root {
+    --color-sky-blue: #4783e6;
     --color-earth-red: #CA433B;
     --color-almost-white: #EDECED;
     --color-almost-black: #0A0B0B;
