@@ -1,12 +1,14 @@
 import React, { useReducer, useContext } from 'react';
 import { Router, Switch } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
+import { ApolloProvider } from 'react-apollo';
 
 import GlobalStyles from './stylesBase';
 
 import history from './history';
 import Context from './context';
 import reducer from './reducer';
+import client from './client';
 
 import PublicRoute from './routes/PublicRoute';
 import PrivateRoute from './routes/PrivateRoute';
@@ -35,24 +37,26 @@ const Root = () => {
     <>
       <GlobalStyles />
       <Router history={history}>
-        <Context.Provider value={{ state, dispatch }}>
-          <Switch>
-            <PublicRoute
-              exact
-              path="/"
-              isLoggedIn={state.isLoggedIn}
-              component={App}
-            />
-            <PublicRoute path="/auth" component={Auth} />
-            {PRIVATE_ROUTES.map(route => (
-              <PrivateRoute
-                key={route.path}
-                {...route}
+        <ApolloProvider client={client}>
+          <Context.Provider value={{ state, dispatch }}>
+            <Switch>
+              <PublicRoute
+                exact
+                path="/"
                 isLoggedIn={state.isLoggedIn}
+                component={App}
               />
-            ))}
-          </Switch>
-        </Context.Provider>
+              <PublicRoute path="/auth" component={Auth} />
+              {PRIVATE_ROUTES.map(route => (
+                <PrivateRoute
+                  key={route.path}
+                  {...route}
+                  isLoggedIn={state.isLoggedIn}
+                />
+              ))}
+            </Switch>
+          </Context.Provider>
+        </ApolloProvider>
       </Router>
     </>
   );
