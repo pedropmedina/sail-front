@@ -1,7 +1,7 @@
 import React, { useReducer, useContext } from 'react';
 import { Router, Switch } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
-import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider } from '@apollo/react-hooks';
 
 import GlobalStyles from './stylesBase';
 
