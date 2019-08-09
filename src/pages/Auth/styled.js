@@ -78,15 +78,16 @@ export const AltMode = styled.div`
   }
 `;
 
-export const Form = styled.form`
+export const AuthForm = styled.form`
   width: 50%;
+`;
 
-  > label {
-    display: inline-block;
-    margin-left: 2.5rem;
-    padding-bottom: 0.3rem;
-    font-size: 1.2rem;
-  }
+export const AuthField = styled.label`
+  display: inline-block;
+  padding-bottom: 0.3rem;
+  font-size: 1.2rem;
+  text-indent: 2.5rem;
+  position: relative;
 
   > input {
     display: inline-block;
@@ -94,7 +95,10 @@ export const Form = styled.form`
     height: 5rem;
     margin-bottom: 2.5rem;
     border: none;
-    border: 0.1rem solid var(--color-light-grey);
+    border: ${({ error }) =>
+      error
+        ? '0.1rem solid var(--color-earth-red)'
+        : '0.1rem solid var(--color-light-grey)'};
     border-radius: 8rem;
     outline: none;
     background-color: inherit;
@@ -106,6 +110,15 @@ export const Form = styled.form`
       font-weight: normal;
       letter-spacing: 0.1rem;
     }
+  }
+
+  &::after {
+    content: ${({ error }) => (error ? `"${error}"` : '')};
+    display: block;
+    color: var(--color-earth-red);
+    position: absolute;
+    bottom: 0;
+    left: 0;
   }
 `;
 

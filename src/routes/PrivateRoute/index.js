@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 
 import * as Styled from './styled';
 import Sidebar from '../../components/Sidebar';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  return (
+  return rest.isLoggedIn ? (
     <Route
       {...rest}
       render={props => (
@@ -16,6 +16,8 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         </Styled.Container>
       )}
     />
+  ) : (
+    <Redirect to="/" />
   );
 };
 

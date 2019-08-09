@@ -16,7 +16,7 @@ const Profile = () => {
       <div>
         <span>friends</span>
         <span>pins</span>
-        <plans>plans</plans>
+        <span>plans</span>
       </div>
     </aside>
   );
@@ -29,7 +29,7 @@ const Sidebar = () => {
       <Styled.List>
         {ITEMS.map((item, i) => (
           <Styled.Item key={i}>
-            <Styled.Link>{item}</Styled.Link>
+            <Styled.Link to={`/${item}`}>{item}</Styled.Link>
           </Styled.Item>
         ))}
       </Styled.List>
