@@ -19,12 +19,16 @@ import Plans from './pages/Plans';
 import Pins from './pages/Pins';
 import Chats from './pages/Chats';
 import Friends from './pages/Friends';
+import Notifications from './pages/Notifications';
+import Settings from './pages/Settings';
 
 const PRIVATE_ROUTES = [
   { path: '/plans', component: Plans },
   { path: '/pins', component: Pins },
   { path: '/chats', component: Chats },
-  { path: '/friends', component: Friends }
+  { path: '/friends', component: Friends },
+  { path: '/notifications', component: Notifications },
+  { path: '/settings', component: Settings }
 ];
 
 const Root = () => {

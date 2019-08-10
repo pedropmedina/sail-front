@@ -1,6 +1,7 @@
 import styled from 'styled-components/macro';
 
 export const Container = styled.div`
+  display: flex;
   height: 100vh;
 `;
 
@@ -8,8 +9,8 @@ export const Palette = styled.div`
   display: grid;
   grid-template-rows: repeat(6, 5rem);
   position: absolute;
-  left: 2rem;
-  top: 2rem;
+  right: 2rem;
+  bottom: 2rem;
   box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.3);
   z-index: 10;
 `;

@@ -8,3 +8,7 @@
 .controls-geolocate {
   margin-bottom: 7px;
 }
+
+.selected-navLink {
+  color: var(--color-earth-red) !important;
+}

@@ -2,6 +2,7 @@
 import React, { useState, useContext } from 'react';
 import ReactMapGL, { GeolocateControl, NavigationControl } from 'react-map-gl';
 
+import * as Styled from './styled';
 import Context from '../../context';
 
 const MAPBOX_TOKEN =
@@ -26,13 +27,13 @@ const Map = () => {
   };
 
   return (
-    <>
+    <Styled.Map>
       <ReactMapGL
         {...viewport}
         width="100%"
         height="100vh"
         mapboxApiAccessToken={MAPBOX_TOKEN}
-        mapStyle="mapbox://styles/mapbox/streets-v10"
+        mapStyle="mapbox://styles/mapbox/light-v9"
         onViewportChange={viewport => setViewport(viewport)}
         onClick={handleMapClick}
       >
@@ -45,7 +46,7 @@ const Map = () => {
           <NavigationControl />
         </div>
       </ReactMapGL>
-    </>
+    </Styled.Map>
   );
 };
 

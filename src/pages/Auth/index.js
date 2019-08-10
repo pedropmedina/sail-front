@@ -237,7 +237,7 @@ const Auth = ({ history }) => {
   };
 
   return (
-    <Styled.Container>
+    <Styled.Auth>
       <Styled.Card signUpMode={signUpMode}>
         <Side
           textData={LOGIN_TEXT}
@@ -260,7 +260,7 @@ const Auth = ({ history }) => {
           back
         />
       </Styled.Card>
-    </Styled.Container>
+    </Styled.Auth>
   );
 };
 
