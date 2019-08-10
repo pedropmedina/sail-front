@@ -70,15 +70,6 @@ export const Link = styled(NavLink)`
     color: var(--color-light-grey);
     display: block;
     display: flex;
-    align-items: center;
+    text-transform: capitalize;
   }
 `;
-
-export const NavIcon = styled.svg`
-  fill: currentColor;
-  width: 2rem;
-  height: 2rem;
-  margin-right: 2rem;
-`;
-
-export const NavText = styled.span``;

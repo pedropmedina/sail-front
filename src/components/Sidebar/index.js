@@ -2,16 +2,24 @@
 import React from 'react';
 
 import * as Styled from './styled';
-import svgicons from '../../assets/sprite.svg';
+
+// SVG icons
+import MapIcon from '../../assets/SVG/map.svg';
+import CompassIcon from '../../assets/SVG/compass.svg';
+import PinIcon from '../../assets/SVG/map-pin.svg';
+import UsersPin from '../../assets/SVG/users.svg';
+import MessageIcon from '../../assets/SVG/message-square.svg';
+import BellIcon from '../../assets/SVG/bell.svg';
+import SettingsIcon from '../../assets/SVG/settings.svg';
 
 const ITEMS = [
-  { text: 'map', icon: '#icon-map' },
-  { text: 'plans', icon: '#icon-compass' },
-  { text: 'pins', icon: '#icon-map-pin' },
-  { text: 'friends', icon: '#icon-users' },
-  { text: 'chats', icon: '#icon-message-square' },
-  { text: 'notifications', icon: '#icon-bell' },
-  { text: 'settings', icon: '#icon-settings' }
+  { text: 'map', icon: MapIcon },
+  { text: 'plans', icon: CompassIcon },
+  { text: 'pins', icon: PinIcon },
+  { text: 'friends', icon: UsersPin },
+  { text: 'chats', icon: MessageIcon },
+  { text: 'notifications', icon: BellIcon },
+  { text: 'settings', icon: SettingsIcon }
 ];
 
 const Profile = () => {
@@ -45,17 +53,15 @@ const Sidebar = () => {
     <Styled.Sidebar>
       <Profile />
       <Styled.List>
-        {ITEMS.map(({ text, icon }, i) => (
+        {ITEMS.map(({ text, icon: Icon }, i) => (
           <Styled.Item key={i}>
             <Styled.Link
               to={text === 'map' ? '/' : `/${text}`}
               activeClassName="selected-navLink"
               exact
             >
-              <Styled.NavIcon>
-                <use href={svgicons + icon} />
-              </Styled.NavIcon>
-              <Styled.NavText>{text}</Styled.NavText>
+              <Icon fill="currentColor" className="nav-icon" />
+              {text}
             </Styled.Link>
           </Styled.Item>
         ))}

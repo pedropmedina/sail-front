@@ -12,3 +12,7 @@
 .selected-navLink {
   color: var(--color-earth-red) !important;
 }
+
+.nav-icon {
+  margin-right: 2rem;
+}

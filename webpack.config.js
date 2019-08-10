@@ -43,8 +43,12 @@ module.exports = (env = { mode: 'production', presets: [] }) => {
             ]
           },
           {
-            test: /\.(jpg|png|svg|gif)$/,
+            test: /\.(jpg|png|gif)$/,
             use: { loader: 'file-loader' }
+          },
+          {
+            test: /\.svg$/,
+            use: {loader: '@svgr/webpack' }
           }
         ]
       },
