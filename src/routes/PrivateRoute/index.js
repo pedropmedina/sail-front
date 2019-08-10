@@ -5,13 +5,13 @@ import { Route, Redirect } from 'react-router-dom';
 import * as Styled from './styled';
 import Sidebar from '../../components/Sidebar';
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+const PrivateRoute = ({ component: Component, create = false, ...rest }) => {
   return rest.isLoggedIn ? (
     <Route
       {...rest}
       render={props => (
         <Styled.Container>
-          <Sidebar />
+          {!create && <Sidebar />}
           <Component {...props} />
         </Styled.Container>
       )}

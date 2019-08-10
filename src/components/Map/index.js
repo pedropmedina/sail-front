@@ -1,9 +1,10 @@
 /* eslint-disable no-console, react/prop-types */
 import React, { useState, useContext } from 'react';
-import ReactMapGL, { GeolocateControl, NavigationControl } from 'react-map-gl';
+import ReactMapGL from 'react-map-gl';
 
 import * as Styled from './styled';
 import Context from '../../context';
+import history from '../../history';
 
 const MAPBOX_TOKEN =
   'pk.eyJ1IjoicGVkcm9wbWVkaW5hIiwiYSI6ImNqdzQ1ZHR3dDFiOTk0MHBzNzl1MGhkdjEifQ._BtibRIagOlzgXg1tat1Yg';
@@ -36,16 +37,20 @@ const Map = () => {
         mapStyle="mapbox://styles/mapbox/light-v9"
         onViewportChange={viewport => setViewport(viewport)}
         onClick={handleMapClick}
+      />
+      <div
+        style={{
+          backgroundColor: 'green',
+          padding: '2rem',
+          zIndex: '100',
+          position: 'absolute',
+          top: 5,
+          left: 5
+        }}
+        onClick={() => history.push('/createPin')}
       >
-        <div className="controls">
-          <GeolocateControl
-            className="controls-geolocate"
-            positionOptions={{ enableHighAccuracy: true }}
-            trackUserLocation={true}
-          />
-          <NavigationControl />
-        </div>
-      </ReactMapGL>
+        Create Pin
+      </div>
     </Styled.Map>
   );
 };
