@@ -1,7 +1,7 @@
 import styled from 'styled-components/macro';
 
 export const Auth = styled.div`
-  flex-grow: 1;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -22,17 +22,20 @@ const Palette = () => (
   </Styled.Palette>
 );
 
-const PublicRoute = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={props => (
-      <Styled.Container>
-        <Palette />
-        {rest.isLoggedIn && <Sidebar />}
-        <Component {...props} />
-      </Styled.Container>
-    )}
-  />
-);
+const PublicRoute = ({ component: Component, ...rest }) => {
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || false;
+  return (
+    <Route
+      {...rest}
+      render={props => (
+        <Styled.Container>
+          <Palette />
+          {isLoggedIn && <Sidebar />}
+          <Component {...props} />
+        </Styled.Container>
+      )}
+    />
+  );
+};
 
 export default PublicRoute;

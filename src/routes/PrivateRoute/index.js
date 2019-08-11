@@ -6,7 +6,8 @@ import * as Styled from './styled';
 import Sidebar from '../../components/Sidebar';
 
 const PrivateRoute = ({ component: Component, create = false, ...rest }) => {
-  return rest.isLoggedIn ? (
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || false;
+  return isLoggedIn ? (
     <Route
       {...rest}
       render={props => (
