@@ -6,6 +6,8 @@ import * as Styled from './styled';
 import Context from '../../context';
 import history from '../../history';
 
+import PlusIcon from '../../assets/SVG/plus.svg';
+
 const MAPBOX_TOKEN =
   'pk.eyJ1IjoicGVkcm9wbWVkaW5hIiwiYSI6ImNqdzQ1ZHR3dDFiOTk0MHBzNzl1MGhkdjEifQ._BtibRIagOlzgXg1tat1Yg';
 
@@ -38,19 +40,9 @@ const Map = () => {
         onViewportChange={viewport => setViewport(viewport)}
         onClick={handleMapClick}
       />
-      <div
-        style={{
-          backgroundColor: 'green',
-          padding: '2rem',
-          zIndex: '100',
-          position: 'absolute',
-          top: 5,
-          left: 5
-        }}
-        onClick={() => history.push('/createPin')}
-      >
-        Create Pin
-      </div>
+      <Styled.CreatePinBtn onClick={() => history.push('/createPin')}>
+        <PlusIcon fill="currentColor" className="create-icon" />
+      </Styled.CreatePinBtn>
     </Styled.Map>
   );
 };

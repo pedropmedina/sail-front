@@ -14,5 +14,10 @@
 }
 
 .nav-icon {
+  font-size: 2.5rem;
   margin-right: 2rem;
+}
+
+.create-icon {
+  font-size: 2.5rem;
 }

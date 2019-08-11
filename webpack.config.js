@@ -48,7 +48,7 @@ module.exports = (env = { mode: 'production', presets: [] }) => {
           },
           {
             test: /\.svg$/,
-            use: {loader: '@svgr/webpack' }
+            use: { loader: '@svgr/webpack', options: { icon: true } }
           }
         ]
       },
