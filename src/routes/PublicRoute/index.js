@@ -1,6 +1,10 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useContext } from 'react';
 import { Route } from 'react-router-dom';
+import { useApolloClient } from '@apollo/react-hooks';
+
+import Context from '../../context';
+import { getCurrentUser } from '../../utils';
 
 import * as Styled from './styled';
 import Sidebar from '../../components/Sidebar';
@@ -23,7 +27,14 @@ const Palette = () => (
 );
 
 const PublicRoute = ({ component: Component, ...rest }) => {
+  const client = useApolloClient();
+  const { state, dispatch } = useContext(Context);
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || false;
+
+  if (isLoggedIn && !state.currentUser) {
+    getCurrentUser(client, dispatch);
+  }
+
   return (
     <Route
       {...rest}
