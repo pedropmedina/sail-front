@@ -1,12 +1,14 @@
 /* eslint-disable no-console, react/prop-types */
 import React, { useState, useContext } from 'react';
-import ReactMapGL from 'react-map-gl';
+import ReactMapGL, { Marker } from 'react-map-gl';
 
 import * as Styled from './styled';
 import Context from '../../context';
 import history from '../../history';
+import { CREATE_DRAFT_PIN, UPDATE_DRAFT_PIN } from '../../reducer';
 
 import PlusIcon from '../../assets/SVG/plus.svg';
+import MapPin from '../../assets/SVG/map-pin.svg';
 
 const MAPBOX_TOKEN =
   'pk.eyJ1IjoicGVkcm9wbWVkaW5hIiwiYSI6ImNqdzQ1ZHR3dDFiOTk0MHBzNzl1MGhkdjEifQ._BtibRIagOlzgXg1tat1Yg';
@@ -24,9 +26,16 @@ const Map = () => {
 
   const handleMapClick = ({ lngLat, leftButton }) => {
     if (!leftButton) return;
-    if (!draftPin) dispatch({ type: 'CREATE_DRAFT_PIN' });
+    if (!draftPin) dispatch({ type: CREATE_DRAFT_PIN });
+    if (draftPin && (draftPin.longitude === 0 && draftPin.latitude === 0)) {
+      const [longitude, latitude] = lngLat;
+      dispatch({ type: UPDATE_DRAFT_PIN, payload: { longitude, latitude } });
+    }
+  };
+
+  const handleDragEnd = ({ lngLat }) => {
     const [longitude, latitude] = lngLat;
-    dispatch({ type: 'UPDATE_DRAFT_PIN', payload: { longitude, latitude } });
+    dispatch({ type: UPDATE_DRAFT_PIN, payload: { longitude, latitude } });
   };
 
   return (
@@ -39,7 +48,13 @@ const Map = () => {
         mapStyle="mapbox://styles/mapbox/light-v9"
         onViewportChange={viewport => setViewport(viewport)}
         onClick={handleMapClick}
-      />
+      >
+        {draftPin && (
+          <Marker {...draftPin} draggable={true} onDragEnd={handleDragEnd} className="tt">
+            <MapPin className="map-pin" />
+          </Marker>
+        )}
+      </ReactMapGL>
       <Styled.CreatePinBtn onClick={() => history.push('/createPin')}>
         <PlusIcon fill="currentColor" className="create-icon" />
       </Styled.CreatePinBtn>
