@@ -4,11 +4,12 @@ import ReactMapGL, { Marker } from 'react-map-gl';
 
 import * as Styled from './styled';
 import Context from '../../context';
-import history from '../../history';
 import { CREATE_DRAFT_PIN, UPDATE_DRAFT_PIN } from '../../reducer';
 
 import PlusIcon from '../../assets/SVG/plus.svg';
 import MapPin from '../../assets/SVG/map-pin.svg';
+import CompassIcon from '../../assets/SVG/compass.svg';
+import PinIcon from '../../assets/SVG/map-pin.svg';
 
 const MAPBOX_TOKEN =
   'pk.eyJ1IjoicGVkcm9wbWVkaW5hIiwiYSI6ImNqdzQ1ZHR3dDFiOTk0MHBzNzl1MGhkdjEifQ._BtibRIagOlzgXg1tat1Yg';
@@ -50,14 +51,22 @@ const Map = () => {
         onClick={handleMapClick}
       >
         {draftPin && (
-          <Marker {...draftPin} draggable={true} onDragEnd={handleDragEnd} className="tt">
+          <Marker {...draftPin} draggable={true} onDragEnd={handleDragEnd}>
             <MapPin className="map-pin" />
           </Marker>
         )}
       </ReactMapGL>
-      <Styled.CreatePinBtn onClick={() => history.push('/createPin')}>
-        <PlusIcon fill="currentColor" className="create-icon" />
-      </Styled.CreatePinBtn>
+      <Styled.NewButton>
+        <PlusIcon className="button-icon" />
+      </Styled.NewButton>
+      <Styled.CreateNew>
+        <Styled.NewPinButton>
+          <CompassIcon className="button-icon"/>
+        </Styled.NewPinButton>
+        <Styled.NewPlanButton>
+          <PinIcon className="button-icon"/>
+        </Styled.NewPlanButton>
+      </Styled.CreateNew>
     </Styled.Map>
   );
 };

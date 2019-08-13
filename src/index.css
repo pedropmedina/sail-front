@@ -18,8 +18,9 @@
   margin-right: 2rem;
 }
 
-.create-icon {
-  font-size: 2.5rem;
+.button-icon {
+  font-size: 2rem;
+  fill: var(--color-almost-white);
 }
 
 .map-pin {

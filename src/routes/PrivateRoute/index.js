@@ -9,7 +9,7 @@ import { getCurrentUser } from '../../utils';
 import * as Styled from './styled';
 import Sidebar from '../../components/Sidebar';
 
-const PrivateRoute = ({ component: Component, create = false, ...rest }) => {
+const PrivateRoute = ({ component: Component, ...rest }) => {
   const client = useApolloClient();
   const { state, dispatch } = useContext(Context);
 
@@ -24,7 +24,7 @@ const PrivateRoute = ({ component: Component, create = false, ...rest }) => {
       {...rest}
       render={props => (
         <Styled.Container>
-          {!create && <Sidebar />}
+          <Sidebar />
           <Component {...props} />
         </Styled.Container>
       )}

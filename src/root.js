@@ -22,7 +22,6 @@ import Chats from './pages/Chats';
 import Friends from './pages/Friends';
 import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
-import CreatePin from './pages/CreatePin';
 
 const PRIVATE_ROUTES = [
   { path: '/plans', component: Plans },
@@ -30,8 +29,7 @@ const PRIVATE_ROUTES = [
   { path: '/chats', component: Chats },
   { path: '/friends', component: Friends },
   { path: '/notifications', component: Notifications },
-  { path: '/settings', component: Settings },
-  { path: '/createPin', component: CreatePin, create: true }
+  { path: '/settings', component: Settings }
 ];
 
 const PUBLIC_ROUTES = [
