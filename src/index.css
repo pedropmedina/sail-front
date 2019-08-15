@@ -32,3 +32,8 @@
   fill: var(--color-light-grey);
   transform: translateY(-0.2rem);
 }
+
+.download-icon {
+  fill: var(--color-light-grey);
+  font-size: 5rem;
+}

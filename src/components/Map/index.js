@@ -11,6 +11,9 @@ import MapPin from '../../assets/SVG/map-pin.svg';
 import CompassIcon from '../../assets/SVG/compass.svg';
 import PinIcon from '../../assets/SVG/map-pin.svg';
 
+import PinQuery from '../PinQuery';
+import PinMutation from '../PinMutation';
+
 const MAPBOX_TOKEN =
   'pk.eyJ1IjoicGVkcm9wbWVkaW5hIiwiYSI6ImNqdzQ1ZHR3dDFiOTk0MHBzNzl1MGhkdjEifQ._BtibRIagOlzgXg1tat1Yg';
 
@@ -22,22 +25,36 @@ const INITIAL_VIEWPORT = {
 
 const Map = () => {
   const { state, dispatch } = useContext(Context);
-  const { draftPin } = state;
+  const { draftPin, currentPin } = state;
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
+  const [showAddNewButtons, setShowAddNewButtons] = useState(false);
 
-  const handleMapClick = ({ lngLat, leftButton }) => {
-    if (!leftButton) return;
-    if (!draftPin) dispatch({ type: CREATE_DRAFT_PIN });
-    if (draftPin && (draftPin.longitude === 0 && draftPin.latitude === 0)) {
-      const [longitude, latitude] = lngLat;
-      dispatch({ type: UPDATE_DRAFT_PIN, payload: { longitude, latitude } });
-    }
+  const handleCreateDraftPin = () => {
+    // make sure there's not existing draft pin
+    if (draftPin) return;
+    // start with a clean slate
+    dispatch({ type: CREATE_DRAFT_PIN });
+    // get longitude and latitude from the current viewport and update draft pin
+    const { longitude, latitude } = viewport;
+    dispatch({
+      type: UPDATE_DRAFT_PIN,
+      payload: { longitude, latitude }
+    });
+    // hide buttons
+    setShowAddNewButtons(false);
   };
 
   const handleDragEnd = ({ lngLat }) => {
     const [longitude, latitude] = lngLat;
     dispatch({ type: UPDATE_DRAFT_PIN, payload: { longitude, latitude } });
   };
+
+  let Pin =
+    !!draftPin && !currentPin
+      ? PinMutation
+      : !draftPin && !!currentPin
+      ? PinQuery
+      : null;
 
   return (
     <Styled.Map>
@@ -48,7 +65,6 @@ const Map = () => {
         mapboxApiAccessToken={MAPBOX_TOKEN}
         mapStyle="mapbox://styles/mapbox/light-v9"
         onViewportChange={viewport => setViewport(viewport)}
-        onClick={handleMapClick}
       >
         {draftPin && (
           <Marker {...draftPin} draggable={true} onDragEnd={handleDragEnd}>
@@ -56,16 +72,24 @@ const Map = () => {
           </Marker>
         )}
       </ReactMapGL>
-      <Styled.NewButton>
+
+      {/* Create/Edit Pin or display current Pin */}
+      {Pin && <Pin isMutation={!!draftPin} isQuery={!!currentPin} />}
+
+      {/* Create New Pins and Plans Buttons */}
+      <Styled.NewButton
+        showAddNewButtons={showAddNewButtons}
+        onClick={() => setShowAddNewButtons(!showAddNewButtons)}
+      >
         <PlusIcon className="button-icon" />
       </Styled.NewButton>
       <Styled.CreateNew>
-        <Styled.NewPinButton>
-          <CompassIcon className="button-icon"/>
-        </Styled.NewPinButton>
-        <Styled.NewPlanButton>
-          <PinIcon className="button-icon"/>
+        <Styled.NewPlanButton onClick={() => setShowAddNewButtons(false)}>
+          <CompassIcon className="button-icon" />
         </Styled.NewPlanButton>
+        <Styled.NewPinButton onClick={handleCreateDraftPin}>
+          <PinIcon className="button-icon" />
+        </Styled.NewPinButton>
       </Styled.CreateNew>
     </Styled.Map>
   );

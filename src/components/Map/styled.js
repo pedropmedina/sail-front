@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 
 export const Map = styled.div`
   height: 100vh;
@@ -31,7 +31,7 @@ export const CreateNew = styled.div`
   display: flex;
 `;
 
-export const Button = styled.button`
+const Button = styled.button`
   width: 5rem;
   height: 5rem;
   border: none;
@@ -53,20 +53,22 @@ export const NewButton = styled(Button)`
     transition: all 0.2s;
   }
 
-  &:focus {
-    transform: scale(0.9);
-    background-color: var(--color-medium-grey);
-  }
+  ${({ showAddNewButtons }) =>
+    showAddNewButtons &&
+    css`
+      transform: scale(0.9);
+      background-color: var(--color-medium-grey);
 
-  &:focus > svg {
-    transform: rotate(45deg);
-  }
+      & > svg {
+        transform: rotate(45deg);
+      }
 
-  &:focus + div {
-    opacity: 1;
-    transform: translateX(-5rem);
-    width: fit-content;
-  }
+      & + div {
+        opacity: 1;
+        transform: translateX(-5rem);
+        width: fit-content;
+      }
+    `}
 `;
 
 export const NewPinButton = styled(Button)`
