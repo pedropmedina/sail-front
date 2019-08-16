@@ -1,15 +1,32 @@
 /* eslint-disable no-console, react/prop-types */
-import React, { useState } from 'react';
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications
+import React, { useState, useContext } from 'react';
+import { useMutation } from '@apollo/react-hooks';
+import { object, string } from 'yup';
+import keyBy from 'lodash/keyBy';
+
+import Context from '../../context';
+import { DELETE_DRAFT_PIN } from '../../reducer';
+import { CREATE_PIN } from '../../graphql/mutations';
 
 import * as Styled from './styled';
 import DownloadIcon from '../../assets/SVG/download.svg';
+import CancelIcon from '../../assets/SVG/x.svg';
 
 const PinMutation = ({ isQuery, isMutation }) => {
+  const {
+    state: { draftPin },
+    dispatch
+  } = useContext(Context);
   const [dragging, setDragging] = useState(false);
   const [dragCounter, setDragCounter] = useState(0);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState('');
+  const [titleError, setTitleError] = useState('');
+  const [contentError, setContentError] = useState('');
+  const [imageError, setImageError] = useState('');
+  const [createPin] = useMutation(CREATE_PIN, { ignoreResults: true });
 
   const handleDrag = e => {
     e.preventDefault();
@@ -53,12 +70,20 @@ const PinMutation = ({ isQuery, isMutation }) => {
   const handleFieldChange = e => {
     const name = e.target.name;
     const value = name === 'image' ? e.target.files[0] : e.target.value;
-    const mappedSetters = {
+    const keyedSetters = {
       title: setTitle,
       content: setContent,
       image: setImage
     };
-    mappedSetters[name](value);
+    keyedSetters[name](value);
+
+    // clear errors upon changing field's value
+    const keyedErrors = {
+      title: { message: titleError, setter: setTitleError },
+      content: { message: contentError, setter: setContentError },
+      image: { message: imageError, setter: setImageError }
+    };
+    if (keyedErrors[name]['message']) keyedErrors[name]['setter']('');
   };
 
   const handleFileUpload = async () => {
@@ -75,14 +100,56 @@ const PinMutation = ({ isQuery, isMutation }) => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+
+    // validate fields
+    const valid = await validateForm();
+    if (!valid) return;
+
+    const { longitude, latitude } = draftPin;
     const { url } = await handleFileUpload();
-    console.log(url);
+    await createPin({
+      variables: { input: { title, content, image: url, longitude, latitude } }
+    });
+    setTitle('');
+    setContent('');
+    setImage('');
+    dispatch({ type: DELETE_DRAFT_PIN });
+  };
+
+  const validateForm = async () => {
+    try {
+      const schema = object().shape({
+        title: string().required(),
+        content: string().required(),
+        image: string()
+          .url()
+          .required()
+      });
+
+      return await schema.validate(
+        { title, content, image },
+        { abortEarly: false }
+      );
+    } catch (error) {
+      const keyedErrors = keyBy(error.inner, 'path');
+      const keyedSetters = {
+        title: setTitleError,
+        content: setContentError,
+        image: setImageError
+      };
+      for (let prop in keyedErrors) {
+        if (keyedErrors.hasOwnProperty(prop)) {
+          const { message } = keyedErrors[prop];
+          keyedSetters[prop](message);
+        }
+      }
+    }
   };
 
   return (
     <Styled.PinMutation isMutation={isMutation} isQuery={isQuery}>
       <Styled.Form onSubmit={handleSubmit}>
-        <Styled.FieldLabel>
+        <Styled.FieldLabel error={titleError}>
           Title
           <Styled.Field
             type="text"
@@ -90,9 +157,10 @@ const PinMutation = ({ isQuery, isMutation }) => {
             value={title}
             placeholder="Name the location."
             onChange={handleFieldChange}
+            error={titleError}
           />
         </Styled.FieldLabel>
-        <Styled.FieldLabel>
+        <Styled.FieldLabel error={contentError}>
           Description
           <Styled.TextField
             as="textarea"
@@ -100,30 +168,52 @@ const PinMutation = ({ isQuery, isMutation }) => {
             value={content}
             placeholder="Briefly describe the location."
             onChange={handleFieldChange}
+            error={contentError}
           />
         </Styled.FieldLabel>
-        <Styled.Upload
-          dragging={dragging}
-          onDragOver={handleDrag}
-          onDragEnter={handleDragIn}
-          onDragLeave={handleDragOut}
-          onDrop={handleDrop}
-        >
-          <Styled.UploadPreview />
-          <DownloadIcon className="download-icon" />
-          <Styled.UploadButton>
-            <strong>Choose an image</strong> or drag it here.
-            <Styled.FileField
-              type="file"
-              name="image"
-              accept=".jpg, .jpeg, png"
-              placeholder="Add a photo of the location."
-              onChange={handleFieldChange}
-            />
-          </Styled.UploadButton>
-        </Styled.Upload>
+        {!image ? (
+          <Styled.Upload
+            error={imageError}
+            dragging={dragging}
+            onDragOver={handleDrag}
+            onDragEnter={handleDragIn}
+            onDragLeave={handleDragOut}
+            onDrop={handleDrop}
+          >
+            <DownloadIcon className="download-icon" />
+            <Styled.FieldLabel>
+              <strong>Choose an image</strong> or drag it here.
+              <Styled.Field
+                fileType
+                type="file"
+                name="image"
+                accept=".jpg, .jpeg, png"
+                placeholder="Add a photo of the location."
+                onChange={handleFieldChange}
+              />
+            </Styled.FieldLabel>
+          </Styled.Upload>
+        ) : (
+          <Styled.UploadPreview
+            dragging={dragging}
+            onDragOver={handleDrag}
+            onDragEnter={handleDragIn}
+            onDragLeave={handleDragOut}
+            onDrop={handleDrop}
+          >
+            <Styled.PreviewButton type="button" onClick={() => setImage('')}>
+              <CancelIcon className="preview-icon" />
+            </Styled.PreviewButton>
+            <Styled.PreviewImg src={window.URL.createObjectURL(image)} />
+          </Styled.UploadPreview>
+        )}
         <Styled.SaveButton type="submit">Save</Styled.SaveButton>
-        <Styled.CancelButton type="button">Cancel</Styled.CancelButton>
+        <Styled.CancelButton
+          type="button"
+          onClick={() => dispatch({ type: DELETE_DRAFT_PIN })}
+        >
+          Cancel
+        </Styled.CancelButton>
       </Styled.Form>
     </Styled.PinMutation>
   );

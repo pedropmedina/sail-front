@@ -71,3 +71,25 @@ export const LOGIN_USER = gql`
     }
   }
 `;
+
+export const CREATE_PIN = gql`
+  mutation CreatePin($input: CreatePinInput!) {
+    createPin(input: $input) {
+      _id
+      title
+      content
+      image
+      longitude
+      latitude
+      author {
+        username
+        email
+      }
+      comments {
+        _id
+        text
+      }
+      createdAt
+    }
+  }
+`;

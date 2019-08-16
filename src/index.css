@@ -37,3 +37,7 @@
   fill: var(--color-light-grey);
   font-size: 5rem;
 }
+
+.preview-icon {
+  fill: currentColor;
+}
