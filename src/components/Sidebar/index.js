@@ -60,7 +60,7 @@ const Sidebar = () => {
               activeClassName="selected-navLink"
               exact
             >
-              <Icon fill="currentColor" className="nav-icon" />
+              <Icon fill="currentColor" className="icon icon-small nav-icon" />
               {text}
             </Styled.Link>
           </Styled.Item>

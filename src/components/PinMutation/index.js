@@ -101,13 +101,12 @@ const PinMutation = ({ isQuery, isMutation }) => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const { longitude, latitude } = draftPin;
-    const { url } = await handleFileUpload();
-
     // validated fields and return early if found errors
-    const validatedFields = await validateForm(title, content, url);
+    const validatedFields = await validateForm();
     if (!validatedFields) return;
 
+    const { longitude, latitude } = draftPin;
+    const { url } = await handleFileUpload();
     await createPin({
       variables: { input: { title, content, image: url, longitude, latitude } }
     });
@@ -117,18 +116,16 @@ const PinMutation = ({ isQuery, isMutation }) => {
     dispatch({ type: DELETE_DRAFT_PIN });
   };
 
-  const validateForm = async (title, content, imageUrl) => {
+  const validateForm = async () => {
     try {
       const schema = object().shape({
         title: string().required(),
         content: string().required(),
-        image: string()
-          .url()
-          .required()
+        image: string().required()
       });
 
       return await schema.validate(
-        { title, content, image: imageUrl },
+        { title, content, image },
         { abortEarly: false }
       );
     } catch (error) {
@@ -181,7 +178,7 @@ const PinMutation = ({ isQuery, isMutation }) => {
             onDragLeave={handleDragOut}
             onDrop={handleDrop}
           >
-            <DownloadIcon className="download-icon" />
+            <DownloadIcon className="icon icon-large" />
             <Styled.FieldLabel>
               <strong>Choose an image</strong> or drag it here.
               <Styled.Field
@@ -203,20 +200,23 @@ const PinMutation = ({ isQuery, isMutation }) => {
             onDragLeave={handleDragOut}
             onDrop={handleDrop}
           >
-            <Styled.PreviewButton type="button" onClick={() => setImage('')}>
-              <CancelIcon className="preview-icon" />
-            </Styled.PreviewButton>
+            <Styled.CancelPreviewButton
+              type="button"
+              onClick={() => setImage('')}
+            >
+              <CancelIcon className="icon icon-smallest" />
+            </Styled.CancelPreviewButton>
             <Styled.PreviewImg src={window.URL.createObjectURL(image)} />
           </Styled.UploadPreview>
         )}
         <Styled.SaveButton type="submit">Save</Styled.SaveButton>
-        <Styled.CancelButton
-          type="button"
-          onClick={() => dispatch({ type: DELETE_DRAFT_PIN })}
-        >
-          Cancel
-        </Styled.CancelButton>
       </Styled.Form>
+      <Styled.CancelButton
+        type="button"
+        onClick={() => dispatch({ type: DELETE_DRAFT_PIN })}
+      >
+        <CancelIcon className="icon icon-small" />
+      </Styled.CancelButton>
     </Styled.PinMutation>
   );
 };

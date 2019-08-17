@@ -85,13 +85,13 @@ const Map = () => {
         {pins &&
           pins.map(({ _id, longitude, latitude }) => (
             <Marker key={_id} longitude={longitude} latitude={latitude}>
-              <MapPin className="map-pin" />
+              <MapPin className="icon icon-medium pin-icon" />
             </Marker>
           ))}
 
         {draftPin && (
           <Marker {...draftPin} draggable={true} onDragEnd={handleDragEnd}>
-            <MapPin className="map-pin" />
+            <MapPin className="icon icon-medium pin-icon" />
           </Marker>
         )}
       </ReactMapGL>
@@ -104,14 +104,14 @@ const Map = () => {
         showAddNewButtons={showAddNewButtons}
         onClick={() => setShowAddNewButtons(!showAddNewButtons)}
       >
-        <PlusIcon className="button-icon" />
+        <PlusIcon className="icon icon-small" />
       </Styled.NewButton>
       <Styled.CreateNew>
         <Styled.NewPlanButton onClick={() => setShowAddNewButtons(false)}>
-          <CompassIcon className="button-icon" />
+          <CompassIcon className="icon icon-smallest" />
         </Styled.NewPlanButton>
         <Styled.NewPinButton onClick={handleCreateDraftPin}>
-          <PinIcon className="button-icon" />
+          <PinIcon className="icon icon-smallest" />
         </Styled.NewPinButton>
       </Styled.CreateNew>
     </Styled.Map>

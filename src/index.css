@@ -13,31 +13,35 @@
   color: var(--color-earth-red) !important;
 }
 
+.icon {
+  fill: currentColor;
+}
+
+.icon-smallest {
+  font-size: 2rem;
+}
+
+.icon-small {
+  font-size: 2.4rem;
+}
+
+.icon-medium {
+  font-size: 3.5rem;
+}
+
+.icon-large {
+  font-size: 4.5rem;
+}
+
 .nav-icon {
-  font-size: 2.5rem;
   margin-right: 2rem;
 }
 
-.button-icon {
-  font-size: 2rem;
-  fill: var(--color-almost-white);
-}
-
-.map-pin {
-  font-size: 3rem;
+.pin-icon {
   fill: var(--color-earth-red);
 }
 
-.map-pin:hover {
+.pin-icon:hover {
   fill: var(--color-light-grey);
   transform: translateY(-0.2rem);
-}
-
-.download-icon {
-  fill: var(--color-light-grey);
-  font-size: 5rem;
-}
-
-.preview-icon {
-  fill: currentColor;
 }

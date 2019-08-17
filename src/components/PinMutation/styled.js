@@ -7,7 +7,7 @@ export const PinMutation = styled.div`
   position: absolute;
   left: ${({ isMutation }) => (isMutation ? '-30rem' : '-60rem')};
   top: 0;
-  padding: 5rem 2rem;
+  padding: 10rem 2rem;
   background-color: var(--color-almost-white);
   transition: all 0.2s;
 `;
@@ -66,6 +66,7 @@ export const TextField = styled(Field)`
 export const Upload = styled.div`
   grid-column: 1 / -1;
   background-color: ${({ dragging }) => (dragging ? 'rgba(0,0,0,.1)' : '#fff')};
+  color: var(--color-light-grey);
   height: 20rem;
   outline: 0.1rem dashed var(--color-light-grey);
   outline-offset: -1.5rem;
@@ -137,30 +138,21 @@ export const Button = styled.button`
   outline: none;
   border: 0.2rem solid transparent;
   cursor: pointer;
+  line-height: 1;
 `;
 
 export const SaveButton = styled(Button)`
+  grid-column: 1 / -1;
   background-color: var(--color-sky-blue);
   color: var(--color-almost-white);
+  border-radius: 3rem;
 
   &:hover {
     background-color: rgba(71, 131, 230, 0.7);
   }
 `;
 
-export const CancelButton = styled(Button)`
-  background-color: transparent;
-  border: 0.2rem solid currentColor;
-  color: var(--color-earth-red);
-
-  &:hover {
-    border: none;
-    background-color: var(--color-earth-red);
-    color: var(--color-almost-white);
-  }
-`;
-
-export const PreviewButton = styled(Button)`
+export const CancelPreviewButton = styled(Button)`
   position: absolute;
   top: 0;
   right: -1rem;
@@ -168,12 +160,26 @@ export const PreviewButton = styled(Button)`
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
-  /* box-shadow: 0 0.5rem 0.5rem 0.2rem rgba(0, 0, 0, 0.3); */
   background-color: var(--color-light-grey);
   color: var(--color-almost-white);
   cursor: pointer;
   transition: all 0.2s;
   opacity: 0;
+
+  &:hover {
+    background-color: var(--color-earth-red);
+    color: var(--color-almost-white);
+  }
+`;
+
+export const CancelButton = styled(CancelPreviewButton)`
+  top: 4rem;
+  right: -2rem;
+  width: 4rem;
+  height: 4rem;
+  background-color: var(--color-light-grey);
+  color: var(--color-almost-white);
+  opacity: 1;
 
   &:hover {
     background-color: var(--color-earth-red);
