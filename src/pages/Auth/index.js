@@ -6,7 +6,10 @@ import keyBy from 'lodash/keyBy';
 
 import Context from '../../context';
 import { IS_LOGGED_IN, ADD_CURRENT_USER } from '../../reducer';
-import { SIGNUP_USER, LOGIN_USER } from '../../graphql/mutations';
+import {
+  SIGNUP_USER_MUTATION,
+  LOGIN_USER_MUTATION
+} from '../../graphql/mutations';
 
 import * as Styled from './styled';
 
@@ -127,8 +130,10 @@ const Auth = ({ history }) => {
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [signUpMode, setSignUpMode] = useState(false);
-  const [signupUser] = useMutation(SIGNUP_USER, { ignoreResults: true });
-  const [loginUser] = useMutation(LOGIN_USER, { ignoreResults: true });
+  const [signupUser] = useMutation(SIGNUP_USER_MUTATION, {
+    ignoreResults: true
+  });
+  const [loginUser] = useMutation(LOGIN_USER_MUTATION, { ignoreResults: true });
 
   const handleAuthData = data => {
     const {

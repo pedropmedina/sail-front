@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const GET_PINS = gql`
+export const GET_PINS_QUERY = gql`
   {
     getPins {
       _id
@@ -22,7 +22,7 @@ export const GET_PINS = gql`
   }
 `;
 
-export const ME = gql`
+export const ME_QUERY = gql`
   {
     me {
       email

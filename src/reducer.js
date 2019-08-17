@@ -5,6 +5,8 @@ export const UPDATE_DRAFT_PIN = 'UPDATE_DRAFT_PIN';
 export const DELETE_DRAFT_PIN = 'DELETE_DRAFT_PIN';
 export const ADD_CURRENT_USER = 'ADD_CURRENT_USER';
 export const UPDATE_CURRENT_PIN = 'UPDATE_CURRENT_PIN';
+export const GET_PINS = 'GET_PINS';
+export const PIN_CREATED = 'PIN_CREATED';
 
 export default function reducer(state, { type, payload }) {
   switch (type) {
@@ -20,6 +22,8 @@ export default function reducer(state, { type, payload }) {
       return { ...state, draftPin: null };
     case UPDATE_CURRENT_PIN:
       return { ...state, currentPin: payload };
+    case GET_PINS:
+      return { ...state, pins: payload };
     default:
       state;
   }

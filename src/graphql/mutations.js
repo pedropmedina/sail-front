@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const SIGNUP_USER = gql`
+export const SIGNUP_USER_MUTATION = gql`
   mutation SignupUser($input: SignupUserInput!) {
     auth: signupUser(input: $input) {
       token
@@ -13,7 +13,7 @@ export const SIGNUP_USER = gql`
   }
 `;
 
-export const LOGIN_USER = gql`
+export const LOGIN_USER_MUTATION = gql`
   mutation LoginUser($input: LoginUserInput!) {
     auth: loginUser(input: $input) {
       token
@@ -72,7 +72,7 @@ export const LOGIN_USER = gql`
   }
 `;
 
-export const CREATE_PIN = gql`
+export const CREATE_PIN_MUTATION = gql`
   mutation CreatePin($input: CreatePinInput!) {
     createPin(input: $input) {
       _id

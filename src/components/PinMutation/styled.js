@@ -101,10 +101,22 @@ export const UploadPreview = styled.figure`
   height: 20rem;
   position: relative;
   opacity: ${({ dragging }) => (dragging ? 0.5 : 1)};
+  border: ${({ error }) =>
+    error ? '.1rem solid var(--color-earth-red)' : 'none'};
 
   &:hover button {
     opacity: 1;
     top: -1.5rem;
+  }
+
+  &::after {
+    content: ${({ error }) => (error ? `"${error}"` : '')};
+    display: block;
+    color: var(--color-earth-red);
+    position: absolute;
+    bottom: -2.5rem;
+    left: 0;
+    font-size: 1.2rem;
   }
 `;
 

@@ -7,7 +7,7 @@ import keyBy from 'lodash/keyBy';
 
 import Context from '../../context';
 import { DELETE_DRAFT_PIN } from '../../reducer';
-import { CREATE_PIN } from '../../graphql/mutations';
+import { CREATE_PIN_MUTATION } from '../../graphql/mutations';
 
 import * as Styled from './styled';
 import DownloadIcon from '../../assets/SVG/download.svg';
@@ -26,7 +26,7 @@ const PinMutation = ({ isQuery, isMutation }) => {
   const [titleError, setTitleError] = useState('');
   const [contentError, setContentError] = useState('');
   const [imageError, setImageError] = useState('');
-  const [createPin] = useMutation(CREATE_PIN, { ignoreResults: true });
+  const [createPin] = useMutation(CREATE_PIN_MUTATION, { ignoreResults: true });
 
   const handleDrag = e => {
     e.preventDefault();
@@ -101,12 +101,13 @@ const PinMutation = ({ isQuery, isMutation }) => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    // validate fields
-    const valid = await validateForm();
-    if (!valid) return;
-
     const { longitude, latitude } = draftPin;
     const { url } = await handleFileUpload();
+
+    // validated fields and return early if found errors
+    const validatedFields = await validateForm(title, content, url);
+    if (!validatedFields) return;
+
     await createPin({
       variables: { input: { title, content, image: url, longitude, latitude } }
     });
@@ -116,7 +117,7 @@ const PinMutation = ({ isQuery, isMutation }) => {
     dispatch({ type: DELETE_DRAFT_PIN });
   };
 
-  const validateForm = async () => {
+  const validateForm = async (title, content, imageUrl) => {
     try {
       const schema = object().shape({
         title: string().required(),
@@ -127,7 +128,7 @@ const PinMutation = ({ isQuery, isMutation }) => {
       });
 
       return await schema.validate(
-        { title, content, image },
+        { title, content, image: imageUrl },
         { abortEarly: false }
       );
     } catch (error) {
@@ -195,6 +196,7 @@ const PinMutation = ({ isQuery, isMutation }) => {
           </Styled.Upload>
         ) : (
           <Styled.UploadPreview
+            error={imageError}
             dragging={dragging}
             onDragOver={handleDrag}
             onDragEnter={handleDragIn}

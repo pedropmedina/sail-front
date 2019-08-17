@@ -1,10 +1,13 @@
 /* eslint-disable no-console, react/prop-types */
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
+import { useApolloClient } from '@apollo/react-hooks';
 
 import * as Styled from './styled';
 import Context from '../../context';
-import { CREATE_DRAFT_PIN, UPDATE_DRAFT_PIN } from '../../reducer';
+import { GET_PINS_QUERY } from '../../graphql/queries';
+import { PIN_CREATED_SUBSCRIPTION } from '../../graphql/subscriptions';
+import { CREATE_DRAFT_PIN, UPDATE_DRAFT_PIN, GET_PINS } from '../../reducer';
 
 import PlusIcon from '../../assets/SVG/plus.svg';
 import MapPin from '../../assets/SVG/map-pin.svg';
@@ -25,9 +28,22 @@ const INITIAL_VIEWPORT = {
 
 const Map = () => {
   const { state, dispatch } = useContext(Context);
-  const { draftPin, currentPin } = state;
+  const { draftPin, currentPin, pins } = state;
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [showAddNewButtons, setShowAddNewButtons] = useState(false);
+  const client = useApolloClient();
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await client.query({ query: GET_PINS_QUERY });
+      dispatch({ type: GET_PINS, payload: data.getPins });
+    })();
+
+    (async () => {
+      const d = await client.subscribe({ query: PIN_CREATED_SUBSCRIPTION });
+      console.log({ d });
+    })();
+  }, []);
 
   const handleCreateDraftPin = () => {
     // make sure there's not existing draft pin
@@ -66,6 +82,13 @@ const Map = () => {
         mapStyle="mapbox://styles/mapbox/light-v9"
         onViewportChange={viewport => setViewport(viewport)}
       >
+        {pins &&
+          pins.map(({ _id, longitude, latitude }) => (
+            <Marker key={_id} longitude={longitude} latitude={latitude}>
+              <MapPin className="map-pin" />
+            </Marker>
+          ))}
+
         {draftPin && (
           <Marker {...draftPin} draggable={true} onDragEnd={handleDragEnd}>
             <MapPin className="map-pin" />
