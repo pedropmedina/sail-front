@@ -1,12 +1,11 @@
 /* eslint-disable no-console, react/prop-types */
 import React, { useState, useEffect, useContext } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
-import { useApolloClient } from '@apollo/react-hooks';
+import { useLazyQuery } from '@apollo/react-hooks';
 
 import * as Styled from './styled';
 import Context from '../../context';
 import { GET_PINS_QUERY } from '../../graphql/queries';
-import { PIN_CREATED_SUBSCRIPTION } from '../../graphql/subscriptions';
 import { CREATE_DRAFT_PIN, UPDATE_DRAFT_PIN, GET_PINS } from '../../reducer';
 
 import PlusIcon from '../../assets/SVG/plus.svg';
@@ -31,19 +30,17 @@ const Map = () => {
   const { draftPin, currentPin, pins } = state;
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [showAddNewButtons, setShowAddNewButtons] = useState(false);
-  const client = useApolloClient();
+  const [getPins, { data: getPinsData }] = useLazyQuery(GET_PINS_QUERY);
 
   useEffect(() => {
-    (async () => {
-      const { data } = await client.query({ query: GET_PINS_QUERY });
-      dispatch({ type: GET_PINS, payload: data.getPins });
-    })();
-
-    (async () => {
-      const d = await client.subscribe({ query: PIN_CREATED_SUBSCRIPTION });
-      console.log({ d });
-    })();
+    getPins();
   }, []);
+
+  useEffect(() => {
+    if (getPinsData) {
+      dispatch({ type: GET_PINS, payload: getPinsData.getPins });
+    }
+  }, [getPinsData]);
 
   const handleCreateDraftPin = () => {
     // make sure there's not existing draft pin

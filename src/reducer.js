@@ -24,6 +24,8 @@ export default function reducer(state, { type, payload }) {
       return { ...state, currentPin: payload };
     case GET_PINS:
       return { ...state, pins: payload };
+    case PIN_CREATED:
+      return { ...state, pins: [...state.pins, payload] };
     default:
       state;
   }

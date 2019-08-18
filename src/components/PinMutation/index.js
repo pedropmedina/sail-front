@@ -7,6 +7,7 @@ import keyBy from 'lodash/keyBy';
 
 import Context from '../../context';
 import { DELETE_DRAFT_PIN } from '../../reducer';
+import { GET_PINS_QUERY } from '../../graphql/queries';
 import { CREATE_PIN_MUTATION } from '../../graphql/mutations';
 
 import * as Styled from './styled';
@@ -108,7 +109,14 @@ const PinMutation = ({ isQuery, isMutation }) => {
     const { longitude, latitude } = draftPin;
     const { url } = await handleFileUpload();
     await createPin({
-      variables: { input: { title, content, image: url, longitude, latitude } }
+      variables: { input: { title, content, image: url, longitude, latitude } },
+      update: (cache, { data: { createPin } }) => {
+        const { getPins } = cache.readQuery({ query: GET_PINS_QUERY });
+        cache.writeQuery({
+          query: GET_PINS_QUERY,
+          data: { getPins: getPins.concat([createPin]) }
+        });
+      }
     });
     setTitle('');
     setContent('');
