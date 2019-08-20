@@ -11,8 +11,9 @@ import { GET_PINS_QUERY } from '../../graphql/queries';
 import { CREATE_PIN_MUTATION } from '../../graphql/mutations';
 
 import * as Styled from './styled';
+import { CloseBtn } from '../../stylesShare';
 import DownloadIcon from '../../assets/SVG/download.svg';
-import CancelIcon from '../../assets/SVG/x.svg';
+import XIcon from '../../assets/SVG/x.svg';
 
 const PinMutation = ({ isQuery, isMutation }) => {
   const {
@@ -208,12 +209,9 @@ const PinMutation = ({ isQuery, isMutation }) => {
             onDragLeave={handleDragOut}
             onDrop={handleDrop}
           >
-            <Styled.CancelPreviewButton
-              type="button"
-              onClick={() => setImage('')}
-            >
-              <CancelIcon className="icon icon-smallest" />
-            </Styled.CancelPreviewButton>
+            <CloseBtn type="button" onClick={() => setImage('')}>
+              <XIcon className="icon icon-smallest" />
+            </CloseBtn>
             <Styled.PreviewImg src={window.URL.createObjectURL(image)} />
           </Styled.UploadPreview>
         )}
@@ -223,7 +221,7 @@ const PinMutation = ({ isQuery, isMutation }) => {
         type="button"
         onClick={() => dispatch({ type: DELETE_DRAFT_PIN })}
       >
-        <CancelIcon className="icon icon-small" />
+        <XIcon className="icon icon-small" />
       </Styled.CancelButton>
     </Styled.PinMutation>
   );

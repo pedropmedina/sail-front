@@ -38,10 +38,17 @@
 }
 
 .pin-icon {
+  cursor: pointer;
+  fill: var(--color-medium-grey);
+}
+
+.draft-pin-icon {
+  cursor: pointer;
   fill: var(--color-earth-red);
 }
 
-.pin-icon:hover {
+.draft-pin-icon:hover {
   fill: var(--color-light-grey);
   transform: translateY(-0.2rem);
+  cursor: grab;
 }

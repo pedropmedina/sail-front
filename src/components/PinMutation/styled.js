@@ -1,9 +1,11 @@
 import styled from 'styled-components/macro';
 
+import { Btn, CloseBtn } from '../../stylesShare';
+
 export const PinMutation = styled.div`
   z-index: 15;
   height: 100vh;
-  width: 30rem;
+  width: 40rem;
   position: absolute;
   left: ${({ isMutation }) => (isMutation ? '-30rem' : '-60rem')};
   top: 0;
@@ -129,19 +131,7 @@ export const PreviewImg = styled.img`
   border: 0.5rem solid white;
 `;
 
-export const Button = styled.button`
-  padding: 2rem;
-  font-size: 1.6rem;
-  border: none;
-  background-color: var(--color-light-grey);
-  color: var(--color-almost-white);
-  outline: none;
-  border: 0.2rem solid transparent;
-  cursor: pointer;
-  line-height: 1;
-`;
-
-export const SaveButton = styled(Button)`
+export const SaveButton = styled(Btn)`
   grid-column: 1 / -1;
   background-color: var(--color-sky-blue);
   color: var(--color-almost-white);
@@ -152,27 +142,7 @@ export const SaveButton = styled(Button)`
   }
 `;
 
-export const CancelPreviewButton = styled(Button)`
-  position: absolute;
-  top: 0;
-  right: -1rem;
-  padding: 0;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  background-color: var(--color-light-grey);
-  color: var(--color-almost-white);
-  cursor: pointer;
-  transition: all 0.2s;
-  opacity: 0;
-
-  &:hover {
-    background-color: var(--color-earth-red);
-    color: var(--color-almost-white);
-  }
-`;
-
-export const CancelButton = styled(CancelPreviewButton)`
+export const CancelButton = styled(CloseBtn)`
   top: 4rem;
   right: -2rem;
   width: 4rem;

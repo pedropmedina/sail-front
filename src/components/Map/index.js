@@ -6,7 +6,14 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import * as Styled from './styled';
 import Context from '../../context';
 import { GET_PINS_QUERY } from '../../graphql/queries';
-import { CREATE_DRAFT_PIN, UPDATE_DRAFT_PIN, GET_PINS } from '../../reducer';
+import {
+  CREATE_DRAFT_PIN,
+  UPDATE_DRAFT_PIN,
+  DELETE_DRAFT_PIN,
+  GET_PINS,
+  UPDATE_CURRENT_PIN,
+  DELETE_CURRENT_PIN
+} from '../../reducer';
 
 import PlusIcon from '../../assets/SVG/plus.svg';
 import MapPin from '../../assets/SVG/map-pin.svg';
@@ -37,6 +44,9 @@ const Map = () => {
   }, []);
 
   useEffect(() => {
+    // getPinsData is updated upon the creation of new pin via cache.writeQuery in
+    // PinMutation component making obsolete the need to dispath the new pin to Context
+    // as we dispatch all pins in apollo cache at once
     if (getPinsData) {
       dispatch({ type: GET_PINS, payload: getPinsData.getPins });
     }
@@ -45,16 +55,26 @@ const Map = () => {
   const handleCreateDraftPin = () => {
     // make sure there's not existing draft pin
     if (draftPin) return;
+    // remove existing current pin
+    dispatch({ type: DELETE_CURRENT_PIN });
     // start with a clean slate
     dispatch({ type: CREATE_DRAFT_PIN });
     // get longitude and latitude from the current viewport and update draft pin
     const { longitude, latitude } = viewport;
+    // update draft pin
     dispatch({
       type: UPDATE_DRAFT_PIN,
       payload: { longitude, latitude }
     });
     // hide buttons
     setShowAddNewButtons(false);
+  };
+
+  const handleCurrentPin = pin => {
+    // remove existing draft pin
+    dispatch({ type: DELETE_DRAFT_PIN });
+    // dispatch clicked pin's info to context
+    dispatch({ type: UPDATE_CURRENT_PIN, payload: pin });
   };
 
   const handleDragEnd = ({ lngLat }) => {
@@ -80,15 +100,21 @@ const Map = () => {
         onViewportChange={viewport => setViewport(viewport)}
       >
         {pins &&
-          pins.map(({ _id, longitude, latitude }) => (
-            <Marker key={_id} longitude={longitude} latitude={latitude}>
-              <MapPin className="icon icon-medium pin-icon" />
-            </Marker>
-          ))}
+          pins.map(pin => {
+            const { _id, longitude, latitude } = pin;
+            return (
+              <Marker key={_id} longitude={longitude} latitude={latitude}>
+                <MapPin
+                  className="icon icon-small pin-icon"
+                  onClick={() => handleCurrentPin(pin)}
+                />
+              </Marker>
+            );
+          })}
 
         {draftPin && (
           <Marker {...draftPin} draggable={true} onDragEnd={handleDragEnd}>
-            <MapPin className="icon icon-medium pin-icon" />
+            <MapPin className="icon icon-small draft-pin-icon" />
           </Marker>
         )}
       </ReactMapGL>
