@@ -1,17 +1,18 @@
 import styled from 'styled-components/macro';
+import { animated } from 'react-spring';
 
 import { Btn, CloseBtn } from '../../stylesShare';
 
-export const PinMutation = styled.div`
-  z-index: 15;
-  height: 100vh;
+export const PinMutation = styled(animated.div)`
+  height: calc(100vh - 3rem);
   width: 40rem;
   position: absolute;
-  left: ${({ isMutation }) => (isMutation ? '-30rem' : '-60rem')};
-  top: 0;
+  top: 3rem;
+  left: 3rem;
+  z-index: 2;
   padding: 10rem 2rem;
+  border-radius: 3rem 3rem 0 0;
   background-color: var(--color-almost-white);
-  transition: all 0.2s;
 `;
 
 export const Form = styled.form`

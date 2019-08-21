@@ -1,17 +1,18 @@
 import styled from 'styled-components/macro';
+import { animated } from 'react-spring';
 
 import { CloseBtn } from '../../stylesShare';
 
-export const PinQuery = styled.div`
-  z-index: 15;
-  height: 100vh;
+export const PinQuery = styled(animated.div)`
+  height: calc(100vh - 3rem);
   width: 40rem;
   position: absolute;
-  left: ${({ isQuery }) => (isQuery ? '-30rem' : '-60rem')};
-  top: 0;
+  top: 3rem;
+  left: 3rem;
+  z-index: 2;
+  overflow: hidden;
+  border-radius: 3rem 3rem 0 0;
   background-color: var(--color-almost-white);
-  transition: all 0.2s;
-  box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.2);
 
   & > * {
     &:not(:last-child) {
@@ -23,7 +24,7 @@ export const PinQuery = styled.div`
 
 export const BgImage = styled.figure`
   width: 100%;
-  height: 25rem;
+  height: 30rem;
   padding: 0;
 `;
 

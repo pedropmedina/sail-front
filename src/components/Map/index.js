@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
 import { useLazyQuery } from '@apollo/react-hooks';
+import { useTransition, config } from 'react-spring';
 
 import * as Styled from './styled';
 import Context from '../../context';
@@ -38,6 +39,12 @@ const Map = () => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [showAddNewButtons, setShowAddNewButtons] = useState(false);
   const [getPins, { data: getPinsData }] = useLazyQuery(GET_PINS_QUERY);
+  const transitions = useTransition([draftPin, currentPin], null, {
+    from: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
+    enter: { opacity: 1, transform: 'translate3d(0%,0,0)' },
+    leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
+    config: config.stiff
+  });
 
   useEffect(() => {
     getPins();
@@ -120,7 +127,10 @@ const Map = () => {
       </ReactMapGL>
 
       {/* Create/Edit Pin or display current Pin */}
-      {Pin && <Pin isMutation={!!draftPin} isQuery={!!currentPin} />}
+      {Pin &&
+        transitions.map(
+          ({ item, key, props }) => item && <Pin key={key} style={props} />
+        )}
 
       {/* Create New Pins and Plans Buttons */}
       <Styled.NewButton

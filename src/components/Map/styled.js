@@ -1,8 +1,10 @@
 import styled, { css } from 'styled-components/macro';
 
 export const Map = styled.div`
-  height: 100vh;
-  flex-grow: 1;
+  /* height: 100vh; */
+  /* flex-grow: 1; */
+  grid-column: col-1-start / col-3-end;
+  grid-row: 1 / -1;
   position: relative;
 `;
 

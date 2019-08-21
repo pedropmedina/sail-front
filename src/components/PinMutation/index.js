@@ -15,7 +15,7 @@ import { CloseBtn } from '../../stylesShare';
 import DownloadIcon from '../../assets/SVG/download.svg';
 import XIcon from '../../assets/SVG/x.svg';
 
-const PinMutation = ({ isQuery, isMutation }) => {
+const PinMutation = ({ style }) => {
   const {
     state: { draftPin },
     dispatch
@@ -154,7 +154,7 @@ const PinMutation = ({ isQuery, isMutation }) => {
   };
 
   return (
-    <Styled.PinMutation isMutation={isMutation} isQuery={isQuery}>
+    <Styled.PinMutation style={style}>
       <Styled.Form onSubmit={handleSubmit}>
         <Styled.FieldLabel error={titleError}>
           Title

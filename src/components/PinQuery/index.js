@@ -7,12 +7,15 @@ import XIcon from '../../assets/SVG/x.svg';
 import Context from '../../context';
 import { DELETE_CURRENT_PIN } from '../../reducer';
 
-const PinQuery = ({ isQuery, isMutation }) => {
-  const { state, dispatch } = useContext(Context);
-  const { title, content, image } = state.currentPin;
+const PinQuery = ({ style }) => {
+  const {
+    state: { currentPin },
+    dispatch
+  } = useContext(Context);
+  const { title, content, image } = currentPin;
 
   return (
-    <Styled.PinQuery isQuery={isQuery} isMutation={isMutation}>
+    <Styled.PinQuery style={style}>
       <Styled.BgImage>
         <Styled.Image src={image} alt="current pin" />
         <Styled.Title>{title}</Styled.Title>
