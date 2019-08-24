@@ -55,7 +55,7 @@ const Map = () => {
     // PinMutation component making obsolete the need to dispath the new pin to Context
     // as we dispatch all pins in apollo cache at once
     if (getPinsData) {
-      dispatch({ type: GET_PINS, payload: getPinsData.getPins });
+      dispatch({ type: GET_PINS, payload: getPinsData.pins });
     }
   }, [getPinsData]);
 

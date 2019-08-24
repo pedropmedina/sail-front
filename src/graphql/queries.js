@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 export const GET_PINS_QUERY = gql`
   {
-    getPins {
+    pins: getPins {
       _id
       title
       content
@@ -24,7 +24,7 @@ export const GET_PINS_QUERY = gql`
 
 export const ME_QUERY = gql`
   {
-    me {
+    user: me {
       email
       username
       name

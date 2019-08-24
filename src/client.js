@@ -9,9 +9,8 @@ import { getMainDefinition } from 'apollo-utilities';
 
 // call on each request with requestLink middleware to set authorization headers
 const setAuthorizationHeader = async operation => {
-  const token = localStorage.getItem('token');
   operation.setContext({
-    headers: { authorization: token ? `Bearer ${token}` : null }
+    headers: {}
   });
 };
 
@@ -38,7 +37,7 @@ const requestLink = new ApolloLink((operation, forward) => {
 
 // http link handling queries and mutations
 const httpLink = new HttpLink({
-  uri: 'http://localhost:4000/'
+  uri: 'http://localhost:4000/graphql'
 });
 
 // websocket link handling subscriptions
@@ -46,9 +45,6 @@ const wsLink = new WebSocketLink({
   uri: 'ws://localhost:4000/graphql',
   options: {
     reconnect: true,
-    connectionParams: {
-      authorization: `Bearer ${localStorage.getItem('token')}`
-    }
   }
 });
 

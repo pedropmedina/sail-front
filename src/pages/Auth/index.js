@@ -135,15 +135,11 @@ const Auth = ({ history }) => {
   });
   const [loginUser] = useMutation(LOGIN_USER_MUTATION, { ignoreResults: true });
 
-  const handleAuthData = data => {
-    const {
-      data: {
-        auth: { token, user }
-      }
-    } = data;
-    dispatch({ type: ADD_CURRENT_USER, payload: user });
+  const handleAuthData = authData => {
+    const { data } = authData;
+    console.log({ data }); // check data coming in <---------------------------- remove console
+    dispatch({ type: ADD_CURRENT_USER, payload: data.user });
     dispatch({ type: IS_LOGGED_IN, payload: true });
-    localStorage.setItem('token', token);
     localStorage.setItem('isLoggedIn', true);
     history.push('/');
   };

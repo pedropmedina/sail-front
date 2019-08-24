@@ -16,10 +16,7 @@ import DownloadIcon from '../../assets/SVG/download.svg';
 import XIcon from '../../assets/SVG/x.svg';
 
 const PinMutation = ({ style }) => {
-  const {
-    state: { draftPin },
-    dispatch
-  } = useContext(Context);
+  const { state, dispatch } = useContext(Context);
   const [dragging, setDragging] = useState(false);
   const [dragCounter, setDragCounter] = useState(0);
   const [title, setTitle] = useState('');
@@ -107,15 +104,15 @@ const PinMutation = ({ style }) => {
     const validatedFields = await validateForm();
     if (!validatedFields) return;
 
-    const { longitude, latitude } = draftPin;
+    const { longitude, latitude } = state.draftPin;
     const { url } = await handleFileUpload();
     await createPin({
       variables: { input: { title, content, image: url, longitude, latitude } },
-      update: (cache, { data: { createPin } }) => {
-        const { getPins } = cache.readQuery({ query: GET_PINS_QUERY });
+      update: (cache, { data: { pin } }) => {
+        const { pins } = cache.readQuery({ query: GET_PINS_QUERY });
         cache.writeQuery({
           query: GET_PINS_QUERY,
-          data: { getPins: getPins.concat([createPin]) }
+          data: { pins: pins.concat([pin]) }
         });
       }
     });
