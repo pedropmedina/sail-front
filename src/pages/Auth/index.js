@@ -137,10 +137,8 @@ const Auth = ({ history }) => {
 
   const handleAuthData = authData => {
     const { data } = authData;
-    console.log({ data }); // check data coming in <---------------------------- remove console
     dispatch({ type: ADD_CURRENT_USER, payload: data.user });
     dispatch({ type: IS_LOGGED_IN, payload: true });
-    localStorage.setItem('isLoggedIn', true);
     history.push('/');
   };
 

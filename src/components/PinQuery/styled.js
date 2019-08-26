@@ -4,11 +4,11 @@ import { animated } from 'react-spring';
 import { CloseBtn } from '../../stylesShare';
 
 export const PinQuery = styled(animated.div)`
-  height: calc(100vh - 3rem);
+  height: calc(100vh - 1.5rem);
   width: 40rem;
   position: absolute;
-  top: 3rem;
-  left: 3rem;
+  top: 1.5rem;
+  left: 1.5rem;
   z-index: 2;
   overflow: hidden;
   border-radius: 3rem 3rem 0 0;

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useReducer, useContext } from 'react';
-import { Router, Switch, Route, Redirect } from 'react-router-dom';
+import { Router, Switch } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
 import { ApolloProvider } from '@apollo/react-hooks';
 
@@ -42,40 +42,32 @@ const Root = () => {
   const initialState = useContext(Context);
   // initialize reducer with intial state
   const [state, dispatch] = useReducer(reducer, initialState);
-  // get current user's auth state from the local storage
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || false;
 
   return (
     <>
       <GlobalStyles />
-      <Router history={history}>
-        <ApolloProvider client={client}>
-          <Context.Provider value={{ state, dispatch }}>
+      <ApolloProvider client={client}>
+        <Context.Provider value={{ state, dispatch }}>
+          <Router history={history}>
             <Switch>
-              {PUBLIC_ROUTES.map(route =>
-                route.path === '/auth' ? (
-                  <Route
-                    key={route.path}
-                    path={route.path}
-                    render={props =>
-                      isLoggedIn ? (
-                        <Redirect to="/" />
-                      ) : (
-                        <route.component {...props} />
-                      )
-                    }
-                  />
-                ) : (
-                  <PublicRoute key={route.path} {...route} />
-                )
-              )}
+              {PUBLIC_ROUTES.map(route => (
+                <PublicRoute
+                  key={route.path}
+                  isLoggedIn={state.isLoggedIn}
+                  {...route}
+                />
+              ))}
               {PRIVATE_ROUTES.map(route => (
-                <PrivateRoute key={route.path} {...route} />
+                <PrivateRoute
+                  key={route.path}
+                  isLoggedIn={state.isLoggedIn}
+                  {...route}
+                />
               ))}
             </Switch>
-          </Context.Provider>
-        </ApolloProvider>
-      </Router>
+          </Router>
+        </Context.Provider>
+      </ApolloProvider>
     </>
   );
 };

@@ -1,9 +1,11 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import { Route } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Route, Redirect } from 'react-router-dom';
+import { useApolloClient } from '@apollo/react-hooks';
 
+import Context from '../../context';
+import { checkSession, establishSession } from '../../utils';
 import * as Styled from './styled';
-import Sidebar from '../../components/Sidebar';
 
 // Just for refenrence. To be remove once finished
 const Palette = () => (
@@ -23,15 +25,23 @@ const Palette = () => (
 );
 
 const PublicRoute = ({ component: Component, ...rest }) => {
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || false;
+  const client = useApolloClient();
+  const { dispatch } = useContext(Context);
 
-  return (
+  // establish session for current user
+  const [isLoggedIn, setIsLoggedIn] = useState(checkSession());
+  useEffect(() => {
+    establishSession(client, dispatch, setIsLoggedIn);
+  }, [isLoggedIn, setIsLoggedIn, dispatch]);
+
+  return rest.path === '/auth' && isLoggedIn ? (
+    <Redirect to="/" />
+  ) : (
     <Route
       {...rest}
       render={props => (
         <Styled.Container>
-          <Palette />
-          {isLoggedIn && <Sidebar />}
+          {isLoggedIn && <Palette />}
           <Component {...props} />
         </Styled.Container>
       )}

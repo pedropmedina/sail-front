@@ -1,12 +1,22 @@
 /* eslint-disable no-console, react/prop-types */
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
+import { useApolloClient } from '@apollo/react-hooks';
 
+import Context from '../../context';
+import { checkSession, establishSession } from '../../utils';
 import * as Styled from './styled';
 import Sidebar from '../../components/Sidebar';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || false;
+  const client = useApolloClient();
+  const { dispatch } = useContext(Context);
+
+  // establish session for current user
+  const [isLoggedIn, setIsLoggedIn] = useState(checkSession());
+  useEffect(() => {
+    establishSession(client, dispatch, setIsLoggedIn);
+  }, [isLoggedIn, setIsLoggedIn, dispatch]);
 
   return isLoggedIn ? (
     <Route

@@ -1,8 +1,6 @@
 import styled, { css } from 'styled-components/macro';
 
 export const Map = styled.div`
-  /* height: 100vh; */
-  /* flex-grow: 1; */
   grid-column: col-1-start / col-3-end;
   grid-row: 1 / -1;
   position: relative;
@@ -23,17 +21,7 @@ export const CreatePinBtn = styled.button`
   outline: none;
 `;
 
-export const CreateNew = styled.div`
-  width: 5rem;
-  height: 5rem;
-  position: absolute;
-  right: 7rem;
-  bottom: 10rem;
-  opacity: 0;
-  display: flex;
-`;
-
-const Button = styled.button`
+const Btn = styled.button`
   width: 5rem;
   height: 5rem;
   border: none;
@@ -46,7 +34,7 @@ const Button = styled.button`
   z-index: 10;
 `;
 
-export const NewButton = styled(Button)`
+export const ExpandBtn = styled(Btn)`
   position: absolute;
   bottom: 10rem;
   right: 7rem;
@@ -55,8 +43,8 @@ export const NewButton = styled(Button)`
     transition: all 0.2s;
   }
 
-  ${({ showAddNewButtons }) =>
-    showAddNewButtons &&
+  ${({ showBtns }) =>
+    showBtns &&
     css`
       transform: scale(0.9);
       background-color: var(--color-medium-grey);
@@ -73,10 +61,16 @@ export const NewButton = styled(Button)`
     `}
 `;
 
-export const NewPinButton = styled(Button)`
+export const AddBtn = styled(Btn)`
   margin: 0 0.5rem;
 `;
 
-export const NewPlanButton = styled(Button)`
-  margin: 0 0.5rem;
+export const AddBtnWrapper = styled.div`
+  width: 5rem;
+  height: 5rem;
+  position: absolute;
+  right: 7rem;
+  bottom: 10rem;
+  opacity: 0;
+  display: flex;
 `;
