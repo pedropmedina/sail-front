@@ -10,29 +10,34 @@ export const PinQuery = styled(animated.div)`
   top: 1.5rem;
   left: 1.5rem;
   z-index: 2;
-  overflow: hidden;
+  /* overflow: hidden; */
   border-radius: 3rem 3rem 0 0;
   background-color: var(--color-almost-white);
 
   & > * {
     &:not(:last-child) {
       margin-bottom: 2rem;
-      border-bottom: 0.1rem solid var(--color-light-grey);
+      border-bottom: 0.1rem solid var(--color-almost-white);
     }
   }
 `;
 
 export const BgImage = styled.figure`
-  width: 100%;
-  height: 30rem;
   padding: 0;
+  border-radius: 3rem 3rem 0 0;
+  overflow: hidden;
 `;
 
 export const Image = styled.img`
-  height: 100%;
+  height: 30rem;
   width: 100%;
   object-position: center;
   object-fit: cover;
+  transition: all 0.2s;
+
+  &:hover {
+    filter: opacity(90%) brightness(93%);
+  }
 `;
 
 export const Title = styled.figcaption`
@@ -49,16 +54,15 @@ export const Content = styled.p`
 `;
 
 export const CancelBtn = styled(CloseBtn)`
-  top: 4rem;
-  right: -2rem;
+  right: -5rem;
   width: 4rem;
   height: 4rem;
-  background-color: var(--color-almost-white);
-  color: var(--color-light-grey);
+  background-color: var(--color-light-grey);
+  color: var(--color-almost-white);
   opacity: 1;
 
   &:hover {
-    background-color: var(--color-earth-red);
-    color: var(--color-almost-white);
+    background-color: var(--color-almost-white);
+    color: var(--color-light-grey);
   }
 `;

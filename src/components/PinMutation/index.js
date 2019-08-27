@@ -14,6 +14,7 @@ import * as Styled from './styled';
 import { CloseBtn } from '../../stylesShare';
 import DownloadIcon from '../../assets/SVG/download.svg';
 import XIcon from '../../assets/SVG/x.svg';
+import ArrowLIcon from '../../assets/SVG/arrow-left.svg';
 
 const PinMutation = ({ style }) => {
   const { state, dispatch } = useContext(Context);
@@ -218,7 +219,7 @@ const PinMutation = ({ style }) => {
         type="button"
         onClick={() => dispatch({ type: DELETE_DRAFT_PIN })}
       >
-        <XIcon className="icon icon-small" />
+        <ArrowLIcon className="icon icon-small" />
       </Styled.CancelButton>
     </Styled.PinMutation>
   );

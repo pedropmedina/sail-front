@@ -20,6 +20,7 @@ export default createGlobalStyle`
     font-family: Arial, Helvetica, sans-serif;
     color: #eee;
     line-height: 1.6;
+    background-color: var(--color-almost-white);
   }
 
   *,

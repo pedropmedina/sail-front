@@ -144,16 +144,16 @@ export const SaveButton = styled(Btn)`
 `;
 
 export const CancelButton = styled(CloseBtn)`
-  top: 4rem;
-  right: -2rem;
+  top: 2rem;
+  left: 2rem;
   width: 4rem;
   height: 4rem;
-  background-color: var(--color-light-grey);
-  color: var(--color-almost-white);
+  background-color: transparent;
+  color: var(--color-light-grey);
   opacity: 1;
 
   &:hover {
-    background-color: var(--color-earth-red);
+    background-color: var(--color-light-grey);
     color: var(--color-almost-white);
   }
 `;
