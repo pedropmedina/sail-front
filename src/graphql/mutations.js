@@ -68,7 +68,7 @@ export const LOGIN_USER_MUTATION = gql`
 
 export const CREATE_PIN_MUTATION = gql`
   mutation CreatePin($input: CreatePinInput!) {
-    pin:createPin(input: $input) {
+    pin: createPin(input: $input) {
       _id
       title
       content
@@ -82,6 +82,29 @@ export const CREATE_PIN_MUTATION = gql`
       comments {
         _id
         text
+        author {
+          email
+          username
+          name
+        }
+        createdAt
+      }
+      createdAt
+    }
+  }
+`;
+
+export const CREATE_COMMENT_MUTATION = gql`
+  mutation CreateComment($input: CreateCommentInput!) {
+    comment: createComment(input: $input) {
+      _id
+      text
+      pin {
+        _id
+      }
+      author {
+        username
+        email
       }
       createdAt
     }

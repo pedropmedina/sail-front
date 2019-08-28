@@ -14,7 +14,6 @@ import * as Styled from './styled';
 import { CloseBtn } from '../../stylesShare';
 import DownloadIcon from '../../assets/SVG/download.svg';
 import XIcon from '../../assets/SVG/x.svg';
-import ArrowLIcon from '../../assets/SVG/arrow-left.svg';
 
 const PinMutation = ({ style }) => {
   const { state, dispatch } = useContext(Context);
@@ -213,14 +212,14 @@ const PinMutation = ({ style }) => {
             <Styled.PreviewImg src={window.URL.createObjectURL(image)} />
           </Styled.UploadPreview>
         )}
-        <Styled.SaveButton type="submit">Save</Styled.SaveButton>
+        <Styled.SaveBtn type="submit">Save</Styled.SaveBtn>
       </Styled.Form>
-      <Styled.CancelButton
+      <Styled.CancelBtn
         type="button"
         onClick={() => dispatch({ type: DELETE_DRAFT_PIN })}
       >
-        <ArrowLIcon className="icon icon-small" />
-      </Styled.CancelButton>
+        <XIcon className="icon icon-small" />
+      </Styled.CancelBtn>
     </Styled.PinMutation>
   );
 };

@@ -9,6 +9,7 @@ export const UPDATE_CURRENT_PIN = 'UPDATE_CURRENT_PIN';
 export const GET_PINS = 'GET_PINS';
 export const PIN_CREATED = 'PIN_CREATED';
 export const DELETE_CURRENT_PIN = 'DELETE_CURRENT_PIN';
+export const UPDATE_PIN = 'UPDATE_PIN';
 
 export default function reducer(state, { type, payload }) {
   switch (type) {
@@ -32,6 +33,11 @@ export default function reducer(state, { type, payload }) {
       return { ...state, pins: payload };
     case PIN_CREATED:
       return { ...state, pins: [...state.pins, payload] };
+    case UPDATE_PIN:
+      const pins = state.pins.map(pin =>
+        pin._id === payload._id ? payload : pin
+      );
+      return { ...state, pins };
     default:
       return state;
   }

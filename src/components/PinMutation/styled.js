@@ -132,7 +132,7 @@ export const PreviewImg = styled.img`
   border: 0.5rem solid white;
 `;
 
-export const SaveButton = styled(Btn)`
+export const SaveBtn = styled(Btn)`
   grid-column: 1 / -1;
   background-color: var(--color-sky-blue);
   color: var(--color-almost-white);
@@ -143,17 +143,17 @@ export const SaveButton = styled(Btn)`
   }
 `;
 
-export const CancelButton = styled(CloseBtn)`
-  top: 2rem;
-  left: 2rem;
+
+export const CancelBtn = styled(CloseBtn)`
+  right: -5rem;
   width: 4rem;
   height: 4rem;
-  background-color: transparent;
-  color: var(--color-light-grey);
+  background-color: var(--color-light-grey);
+  color: var(--color-almost-white);
   opacity: 1;
 
   &:hover {
-    background-color: var(--color-light-grey);
-    color: var(--color-almost-white);
+    background-color: var(--color-almost-white);
+    color: var(--color-light-grey);
   }
 `;

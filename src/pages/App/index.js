@@ -30,7 +30,9 @@ const App = () => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [showBtns, setShowBtns] = useState(false);
 
-  const [getPins, { data: getPinsData }] = useLazyQuery(GET_PINS_QUERY);
+  const [getPins, { data: getPinsData }] = useLazyQuery(
+    GET_PINS_QUERY
+  );
   useEffect(() => {
     getPins();
   }, [getPins]);

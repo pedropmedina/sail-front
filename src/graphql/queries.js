@@ -16,6 +16,12 @@ export const GET_PINS_QUERY = gql`
       comments {
         _id
         text
+        author {
+          email
+          username
+          name
+        }
+        createdAt
       }
       createdAt
     }
