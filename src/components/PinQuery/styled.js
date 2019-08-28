@@ -1,17 +1,12 @@
 import styled from 'styled-components/macro';
-import { animated } from 'react-spring';
 
 import { CloseBtn } from '../../stylesShare';
 
-export const PinQuery = styled(animated.div)`
-  height: calc(100vh - 1.5rem);
-  width: 40rem;
-  position: absolute;
-  top: 1.5rem;
-  left: 1.5rem;
-  z-index: 2;
+export const PinQuery = styled.div`
+  height: 100%;
+  width: 100%;
   border-radius: 3rem 3rem 0 0;
-  background-color: var(--color-almost-white);
+  overflow-y: auto;
 
   & > * {
     &:not(:last-child) {
@@ -107,8 +102,8 @@ export const CommentText = styled.p`
 `;
 
 export const CommentForm = styled.form`
-  height: 5rem;
   position: relative;
+  line-height: 1;
 `;
 
 export const CommentTextarea = styled.textarea`
@@ -127,12 +122,27 @@ export const CommentTextarea = styled.textarea`
 
 export const SendComment = styled.button`
   position: absolute;
-  right: 2rem;
-  top: 75%;
-  transform: translateY(-75%);
+  right: 2.5rem;
+  bottom: 3.4rem;
+  transform: translateY(1.2rem);
   border: none;
   background-color: transparent;
-  color: var(--color-light-grey);
+  outline: none;
+  color: ${({ existingText }) =>
+    existingText ? 'var(--color-sky-blue)' : 'var(--color-light-grey)'};
+  cursor: pointer;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  line-height: 1;
+  transition: all 0.2s;
+
+  &:hover {
+    color: ${({ existingText }) =>
+      existingText ? 'var(--color-almost-white)' : 'var(--color-light-grey)'};
+    background-color: ${({ existingText }) =>
+      existingText ? 'var(--color-sky-blue)' : 'var(--color-almost-white)'};
+  }
 `;
 
 export const Profile = styled.figure`

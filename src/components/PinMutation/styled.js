@@ -4,15 +4,11 @@ import { animated } from 'react-spring';
 import { Btn, CloseBtn } from '../../stylesShare';
 
 export const PinMutation = styled(animated.div)`
-  height: calc(100vh - 1.5rem);
-  width: 40rem;
-  position: absolute;
-  top: 1.5rem;
-  left: 1.5rem;
-  z-index: 2;
-  padding: 10rem 2rem;
+  height: 100%;
+  width: 100%;
   border-radius: 3rem 3rem 0 0;
-  background-color: var(--color-almost-white);
+  overflow-y: auto;
+  padding: 10rem 2rem;
 `;
 
 export const Form = styled.form`
@@ -142,7 +138,6 @@ export const SaveBtn = styled(Btn)`
     background-color: rgba(71, 131, 230, 0.7);
   }
 `;
-
 
 export const CancelBtn = styled(CloseBtn)`
   right: -5rem;

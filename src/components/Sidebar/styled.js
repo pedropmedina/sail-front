@@ -9,8 +9,9 @@ export const Sidebar = styled.nav`
   box-shadow: 0 1rem 1rem 1rem rgba(0, 0, 0, 0.1);
   border-radius: 3rem 3rem 0 0;
   display: grid;
-  grid-template-rows: minmax(33vh, min-content) 1fr;
+  grid-template-rows: min-content 1fr;
   grid-gap: 10rem;
+  overflow: auto;
 `;
 
 export const Profile = styled.aside`

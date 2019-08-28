@@ -11,7 +11,7 @@ import { GET_PINS_QUERY } from '../../graphql/queries';
 import { CREATE_PIN_MUTATION } from '../../graphql/mutations';
 
 import * as Styled from './styled';
-import { CloseBtn } from '../../stylesShare';
+import { CloseBtn, PinWrapper } from '../../stylesShare';
 import DownloadIcon from '../../assets/SVG/download.svg';
 import XIcon from '../../assets/SVG/x.svg';
 
@@ -151,76 +151,78 @@ const PinMutation = ({ style }) => {
   };
 
   return (
-    <Styled.PinMutation style={style}>
-      <Styled.Form onSubmit={handleSubmit}>
-        <Styled.FieldLabel error={titleError}>
-          Title
-          <Styled.Field
-            type="text"
-            name="title"
-            value={title}
-            placeholder="Name the location."
-            onChange={handleFieldChange}
-            error={titleError}
-          />
-        </Styled.FieldLabel>
-        <Styled.FieldLabel error={contentError}>
-          Description
-          <Styled.TextField
-            as="textarea"
-            name="content"
-            value={content}
-            placeholder="Briefly describe the location."
-            onChange={handleFieldChange}
-            error={contentError}
-          />
-        </Styled.FieldLabel>
-        {!image ? (
-          <Styled.Upload
-            error={imageError}
-            dragging={dragging}
-            onDragOver={handleDrag}
-            onDragEnter={handleDragIn}
-            onDragLeave={handleDragOut}
-            onDrop={handleDrop}
-          >
-            <DownloadIcon className="icon icon-large" />
-            <Styled.FieldLabel>
-              <strong>Choose an image</strong> or drag it here.
-              <Styled.Field
-                fileType
-                type="file"
-                name="image"
-                accept=".jpg, .jpeg, png"
-                placeholder="Add a photo of the location."
-                onChange={handleFieldChange}
-              />
-            </Styled.FieldLabel>
-          </Styled.Upload>
-        ) : (
-          <Styled.UploadPreview
-            error={imageError}
-            dragging={dragging}
-            onDragOver={handleDrag}
-            onDragEnter={handleDragIn}
-            onDragLeave={handleDragOut}
-            onDrop={handleDrop}
-          >
-            <CloseBtn type="button" onClick={() => setImage('')}>
-              <XIcon className="icon icon-smallest" />
-            </CloseBtn>
-            <Styled.PreviewImg src={window.URL.createObjectURL(image)} />
-          </Styled.UploadPreview>
-        )}
-        <Styled.SaveBtn type="submit">Save</Styled.SaveBtn>
-      </Styled.Form>
+    <PinWrapper style={style}>
+      <Styled.PinMutation>
+        <Styled.Form onSubmit={handleSubmit}>
+          <Styled.FieldLabel error={titleError}>
+            Title
+            <Styled.Field
+              type="text"
+              name="title"
+              value={title}
+              placeholder="Name the location."
+              onChange={handleFieldChange}
+              error={titleError}
+            />
+          </Styled.FieldLabel>
+          <Styled.FieldLabel error={contentError}>
+            Description
+            <Styled.TextField
+              as="textarea"
+              name="content"
+              value={content}
+              placeholder="Briefly describe the location."
+              onChange={handleFieldChange}
+              error={contentError}
+            />
+          </Styled.FieldLabel>
+          {!image ? (
+            <Styled.Upload
+              error={imageError}
+              dragging={dragging}
+              onDragOver={handleDrag}
+              onDragEnter={handleDragIn}
+              onDragLeave={handleDragOut}
+              onDrop={handleDrop}
+            >
+              <DownloadIcon className="icon icon-large" />
+              <Styled.FieldLabel>
+                <strong>Choose an image</strong> or drag it here.
+                <Styled.Field
+                  fileType
+                  type="file"
+                  name="image"
+                  accept=".jpg, .jpeg, png"
+                  placeholder="Add a photo of the location."
+                  onChange={handleFieldChange}
+                />
+              </Styled.FieldLabel>
+            </Styled.Upload>
+          ) : (
+            <Styled.UploadPreview
+              error={imageError}
+              dragging={dragging}
+              onDragOver={handleDrag}
+              onDragEnter={handleDragIn}
+              onDragLeave={handleDragOut}
+              onDrop={handleDrop}
+            >
+              <CloseBtn type="button" onClick={() => setImage('')}>
+                <XIcon className="icon icon-smallest" />
+              </CloseBtn>
+              <Styled.PreviewImg src={window.URL.createObjectURL(image)} />
+            </Styled.UploadPreview>
+          )}
+          <Styled.SaveBtn type="submit">Save</Styled.SaveBtn>
+        </Styled.Form>
+      </Styled.PinMutation>
       <Styled.CancelBtn
         type="button"
         onClick={() => dispatch({ type: DELETE_DRAFT_PIN })}
       >
         <XIcon className="icon icon-small" />
       </Styled.CancelBtn>
-    </Styled.PinMutation>
+    </PinWrapper>
   );
 };
 

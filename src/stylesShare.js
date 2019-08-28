@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro';
+import { animated } from 'react-spring';
 
 export const Btn = styled.button`
   padding: 2rem;
@@ -30,4 +31,16 @@ export const CloseBtn = styled(Btn)`
     background-color: var(--color-earth-red);
     color: var(--color-almost-white);
   }
+`;
+
+// necessary wrapper to handle overflow: auto without affecting the visibility of cancel btn
+export const PinWrapper = styled(animated.div)`
+  height: calc(100vh - 1.5rem);
+  width: 40rem;
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 2;
+  border-radius: 3rem 3rem 0 0;
+  background-color: var(--color-almost-white);
 `;

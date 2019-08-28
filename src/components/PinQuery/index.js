@@ -4,6 +4,7 @@ import { useMutation, useSubscription } from '@apollo/react-hooks';
 import { formatDistance } from 'date-fns';
 
 import * as Styled from './styled';
+import { PinWrapper } from '../../stylesShare';
 import XIcon from '../../assets/SVG/x.svg';
 import SendIcon from '../../assets/SVG/send.svg';
 
@@ -78,61 +79,63 @@ const PinQuery = ({ style }) => {
   };
 
   return (
-    <Styled.PinQuery style={style}>
-      {/* Pin's detail */}
-      <Styled.BgImage>
-        <Styled.Image src={image} alt="current pin" />
-        <Styled.Title>{title}</Styled.Title>
-        <Styled.Content>{content}</Styled.Content>
-      </Styled.BgImage>
-      {/* Comments sesison */}
-      <Styled.Comments>
-        <Styled.CommentsList>
-          {comments.map((comment, index, arr) => {
-            return (
-              <Styled.Comment
-                key={comment._id}
-                ref={arr.length - 1 === index ? commentListEndEl : null}
-              >
-                <Styled.Profile>
-                  <Styled.ProfileImg
-                    src="https://via.placeholder.com/50"
-                    alt="profile image"
-                  />
-                </Styled.Profile>
-                <Styled.CommentDetails>
-                  <Styled.CommentAuthor>
-                    {comment.author.name || comment.author.username}
-                  </Styled.CommentAuthor>
-                  <Styled.CommentDate>
-                    {formatDistance(Date.now(), parseInt(comment.createdAt), {
-                      includeSeconds: true
-                    })}
-                  </Styled.CommentDate>
-                  <Styled.CommentText>{comment.text}</Styled.CommentText>
-                </Styled.CommentDetails>
-              </Styled.Comment>
-            );
-          })}
-        </Styled.CommentsList>
-        <Styled.CommentForm onSubmit={handleSubmit}>
-          <Styled.CommentTextarea
-            rows={rows}
-            name="comment"
-            type="text"
-            placeholder="message"
-            value={text}
-            onChange={handleOnChange}
-          />
-          <Styled.SendComment>
-            <SendIcon className="icon icon-smallest" />
-          </Styled.SendComment>
-        </Styled.CommentForm>
-      </Styled.Comments>
+    <PinWrapper style={style}>
+      <Styled.PinQuery>
+        {/* Pin's detail */}
+        <Styled.BgImage>
+          <Styled.Image src={image} alt="current pin" />
+          <Styled.Title>{title}</Styled.Title>
+          <Styled.Content>{content}</Styled.Content>
+        </Styled.BgImage>
+        {/* Comments sesison */}
+        <Styled.Comments>
+          <Styled.CommentsList>
+            {comments.map((comment, index, arr) => {
+              return (
+                <Styled.Comment
+                  key={comment._id}
+                  ref={arr.length - 1 === index ? commentListEndEl : null}
+                >
+                  <Styled.Profile>
+                    <Styled.ProfileImg
+                      src="https://via.placeholder.com/50"
+                      alt="profile image"
+                    />
+                  </Styled.Profile>
+                  <Styled.CommentDetails>
+                    <Styled.CommentAuthor>
+                      {comment.author.name || comment.author.username}
+                    </Styled.CommentAuthor>
+                    <Styled.CommentDate>
+                      {formatDistance(Date.now(), parseInt(comment.createdAt), {
+                        includeSeconds: true
+                      })}
+                    </Styled.CommentDate>
+                    <Styled.CommentText>{comment.text}</Styled.CommentText>
+                  </Styled.CommentDetails>
+                </Styled.Comment>
+              );
+            })}
+          </Styled.CommentsList>
+          <Styled.CommentForm onSubmit={handleSubmit}>
+            <Styled.CommentTextarea
+              rows={rows}
+              name="comment"
+              type="text"
+              placeholder="message"
+              value={text}
+              onChange={handleOnChange}
+            />
+            <Styled.SendComment existingText={text.length > 0}>
+              <SendIcon className="icon icon-smallest" />
+            </Styled.SendComment>
+          </Styled.CommentForm>
+        </Styled.Comments>
+      </Styled.PinQuery>
       <Styled.CancelBtn onClick={() => dispatch({ type: DELETE_CURRENT_PIN })}>
         <XIcon className="icon icon-smallest" />
       </Styled.CancelBtn>
-    </Styled.PinQuery>
+    </PinWrapper>
   );
 };
 
