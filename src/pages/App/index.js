@@ -11,7 +11,9 @@ import {
   DELETE_DRAFT_PIN,
   GET_PINS,
   UPDATE_CURRENT_PIN,
-  DELETE_CURRENT_PIN
+  DELETE_CURRENT_PIN,
+  SET_POPUP_PIN,
+  DELETE_POPUP_PIN
 } from '../../reducer';
 
 import Map from '../../components/Map';
@@ -26,13 +28,11 @@ const INITIAL_VIEWPORT = {
 
 const App = () => {
   const { state, dispatch } = useContext(Context);
-  const { draftPin, currentPin, pins, isLoggedIn } = state;
+  const { draftPin, currentPin, pins, isLoggedIn, popupPin } = state;
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [showBtns, setShowBtns] = useState(false);
 
-  const [getPins, { data: getPinsData }] = useLazyQuery(
-    GET_PINS_QUERY
-  );
+  const [getPins, { data: getPinsData }] = useLazyQuery(GET_PINS_QUERY);
   useEffect(() => {
     getPins();
   }, [getPins]);
@@ -51,6 +51,14 @@ const App = () => {
     dispatch({ type: DELETE_DRAFT_PIN });
     // dispatch clicked pin's info to context
     dispatch({ type: UPDATE_CURRENT_PIN, payload: pin });
+  };
+
+  const handleOnMouseEnterMarker = pin => {
+    dispatch({ type: SET_POPUP_PIN, payload: pin });
+  };
+
+  const handleOnMouseLeaveMarker = () => {
+    dispatch({ type: DELETE_POPUP_PIN });
   };
 
   const handleCreateDraftPin = () => {
@@ -101,7 +109,10 @@ const App = () => {
         onClickMarker={handleClickMarker}
         onToggleNewBtns={handleToggleNewBtns}
         onChangeShowBtnsState={handleShowBtnsState}
+        onMouseEnterMarker={handleOnMouseEnterMarker}
+        onMouseLeaveMarker={handleOnMouseLeaveMarker}
         isLoggedIn={isLoggedIn}
+        popupPin={popupPin}
       />
     </Styled.App>
   );

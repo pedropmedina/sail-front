@@ -10,6 +10,8 @@ export const GET_PINS = 'GET_PINS';
 export const PIN_CREATED = 'PIN_CREATED';
 export const DELETE_CURRENT_PIN = 'DELETE_CURRENT_PIN';
 export const UPDATE_PIN = 'UPDATE_PIN';
+export const SET_POPUP_PIN = 'SET_POPUP_PIN';
+export const DELETE_POPUP_PIN = 'DELETE_POPUP_PIN';
 
 export default function reducer(state, { type, payload }) {
   switch (type) {
@@ -38,6 +40,10 @@ export default function reducer(state, { type, payload }) {
         pin._id === payload._id ? payload : pin
       );
       return { ...state, pins };
+    case SET_POPUP_PIN:
+      return { ...state, popupPin: payload };
+    case DELETE_POPUP_PIN:
+      return { ...state, popupPin: null };
     default:
       return state;
   }

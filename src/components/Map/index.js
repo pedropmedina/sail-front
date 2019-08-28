@@ -1,6 +1,6 @@
 /* eslint-disable no-console, react/prop-types */
 import React from 'react';
-import ReactMapGL, { Marker } from 'react-map-gl';
+import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 import { useTransition, config } from 'react-spring';
 
 import * as Styled from './styled';
@@ -28,7 +28,10 @@ const Map = ({
   onClickMarker,
   onToggleNewBtns,
   onChangeShowBtnsState,
-  isLoggedIn
+  onMouseEnterMarker,
+  onMouseLeaveMarker,
+  isLoggedIn,
+  popupPin
 }) => {
   const transitions = useTransition([draftPin, currentPin], null, {
     from: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
@@ -62,11 +65,31 @@ const Map = ({
                 <MapPin
                   className="icon icon-small pin-icon"
                   onClick={() => onClickMarker(pin)}
+                  onMouseEnter={() => onMouseEnterMarker(pin)}
+                  onMouseLeave={onMouseLeaveMarker}
                 />
               </Marker>
             );
           })}
 
+        {/* Show popup on hover over pin */}
+        {popupPin && (
+          <Popup
+            latitude={popupPin.latitude}
+            longitude={popupPin.longitude}
+            closeButton={false}
+            closeOnClick={false}
+            offsetLeft={12}
+            offsetTop={-7}
+          >
+            <Styled.PopupFigure>
+              <Styled.PopupImg src={popupPin.image} alt={popupPin.title} />
+              <Styled.PopupCaption>{popupPin.title}</Styled.PopupCaption>
+            </Styled.PopupFigure>
+          </Popup>
+        )}
+
+        {/* Show marker for draft pin */}
         {draftPin && (
           <Marker {...draftPin} draggable={true} onDragEnd={onDragEnd}>
             <MapPin className="icon icon-small draft-pin-icon" />

@@ -74,3 +74,17 @@ export const AddBtnWrapper = styled.div`
   opacity: 0;
   display: flex;
 `;
+
+export const PopupFigure = styled.figure``;
+
+export const PopupImg = styled.img`
+  width: 15rem;
+  height: 10rem;
+  object-fit: cover;
+  object-position: center;
+`;
+
+export const PopupCaption = styled.figcaption`
+  color: var(--color-light-grey);
+  font-size: 1.2rem;
+`;
