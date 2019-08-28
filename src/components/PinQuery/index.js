@@ -89,34 +89,44 @@ const PinQuery = ({ style }) => {
         </Styled.BgImage>
         {/* Comments sesison */}
         <Styled.Comments>
-          <Styled.CommentsList>
-            {comments.map((comment, index, arr) => {
-              return (
-                <Styled.Comment
-                  key={comment._id}
-                  ref={arr.length - 1 === index ? commentListEndEl : null}
-                >
-                  <Styled.Profile>
-                    <Styled.ProfileImg
-                      src="https://via.placeholder.com/50"
-                      alt="profile image"
-                    />
-                  </Styled.Profile>
-                  <Styled.CommentDetails>
-                    <Styled.CommentAuthor>
-                      {comment.author.name || comment.author.username}
-                    </Styled.CommentAuthor>
-                    <Styled.CommentDate>
-                      {formatDistance(Date.now(), parseInt(comment.createdAt), {
-                        includeSeconds: true
-                      })}
-                    </Styled.CommentDate>
-                    <Styled.CommentText>{comment.text}</Styled.CommentText>
-                  </Styled.CommentDetails>
-                </Styled.Comment>
-              );
-            })}
-          </Styled.CommentsList>
+          {comments.length === 0 ? (
+            <Styled.NoExisingComments>
+              Be the first to leave a comment.
+            </Styled.NoExisingComments>
+          ) : (
+            <Styled.CommentsList>
+              {comments.map((comment, index, arr) => {
+                return (
+                  <Styled.Comment
+                    key={comment._id}
+                    ref={arr.length - 1 === index ? commentListEndEl : null}
+                  >
+                    <Styled.Profile>
+                      <Styled.ProfileImg
+                        src="https://via.placeholder.com/50"
+                        alt="profile image"
+                      />
+                    </Styled.Profile>
+                    <Styled.CommentDetails>
+                      <Styled.CommentAuthor>
+                        {comment.author.name || comment.author.username}
+                      </Styled.CommentAuthor>
+                      <Styled.CommentDate>
+                        {formatDistance(
+                          Date.now(),
+                          parseInt(comment.createdAt),
+                          {
+                            includeSeconds: true
+                          }
+                        )}
+                      </Styled.CommentDate>
+                      <Styled.CommentText>{comment.text}</Styled.CommentText>
+                    </Styled.CommentDetails>
+                  </Styled.Comment>
+                );
+              })}
+            </Styled.CommentsList>
+          )}
           <Styled.CommentForm onSubmit={handleSubmit}>
             <Styled.CommentTextarea
               rows={rows}

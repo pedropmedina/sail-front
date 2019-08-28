@@ -65,6 +65,13 @@ export const Comments = styled.div`
   padding: 2rem;
 `;
 
+export const NoExisingComments = styled.p`
+  height: 40vh;
+  color: var(--color-light-grey);
+  font-size: 3rem;
+  padding: 2rem 0;
+`;
+
 export const CommentsList = styled.ul`
   height: 40vh;
   color: var(--color-dark-grey);
