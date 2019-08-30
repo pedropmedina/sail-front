@@ -88,3 +88,7 @@ export const PopupCaption = styled.figcaption`
   color: var(--color-light-grey);
   font-size: 1.2rem;
 `;
+
+export const GeocodingSearch = styled.form``
+
+export const GeocodingInput = styled.input``

@@ -1,6 +1,7 @@
 /* eslint-disable no-console, react/prop-types */
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactMapGL, { Marker, Popup } from 'react-map-gl';
+import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 import { useTransition, config } from 'react-spring';
 
 import * as Styled from './styled';
@@ -15,6 +16,8 @@ import PinMutation from '../PinMutation';
 
 const MAPBOX_TOKEN =
   'pk.eyJ1IjoicGVkcm9wbWVkaW5hIiwiYSI6ImNqdzQ1ZHR3dDFiOTk0MHBzNzl1MGhkdjEifQ._BtibRIagOlzgXg1tat1Yg';
+
+const geocondingService = mbxGeocoding({ accessToken: MAPBOX_TOKEN });
 
 const Map = ({
   viewport,
@@ -40,6 +43,19 @@ const Map = ({
     config: config.stiff
   });
 
+  // this is to test the geocoding sdk
+  // useEffect(() => {
+  //   geocondingService
+  //     .forwardGeocode({
+  //       query: 'Paris, France',
+  //       limit: 2
+  //     })
+  //     .send()
+  //     .then(res => {
+  //       console.log(res.body);
+  //     });
+  // }, []);
+
   let Pin =
     !!draftPin && !currentPin
       ? PinMutation
@@ -49,6 +65,11 @@ const Map = ({
 
   return (
     <Styled.Map>
+      {/* Geocoding search bar */}
+      {/* <Styled.GeocodingSearch>
+        <Styled.GeocodingInput type="text" placeholder="search a place" />
+      </Styled.GeocodingSearch> */}
+
       <ReactMapGL
         {...viewport}
         width="100%"
@@ -57,6 +78,7 @@ const Map = ({
         mapStyle="mapbox://styles/mapbox/light-v9"
         onViewportChange={onViewportChange}
       >
+        {/* Add markers for all existing pins */}
         {pins &&
           pins.map(pin => {
             const { _id, longitude, latitude } = pin;

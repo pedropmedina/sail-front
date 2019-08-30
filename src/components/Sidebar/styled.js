@@ -2,40 +2,38 @@ import styled from 'styled-components/macro';
 import { NavLink } from 'react-router-dom';
 
 export const Sidebar = styled.nav`
-  grid-column: col-2-start / col-3-start;
-  grid-row: row-2-start / row-3-end;
+  grid-column: col-1-start / col-1-start;
+  grid-row: row-1-start / row-3-end;
   z-index: 1;
   background-color: var(--color-almost-white);
   box-shadow: 0 1rem 1rem 1rem rgba(0, 0, 0, 0.1);
-  border-radius: 3rem 3rem 0 0;
   display: grid;
-  grid-template-rows: min-content 1fr;
-  grid-gap: 10rem;
+  grid-template-rows: repeat(20, 5vh);
+  grid-template-columns: repeat(6, 16.6%);
   overflow: auto;
 `;
 
 export const Profile = styled.aside`
-  border-bottom: 0.1rem solid rgba(255, 255, 255, 0.3);
+  grid-column: 2 / 6;
+  grid-row: 3 / 6;
   color: var(--color-light-grey);
-  background-color: var(--color-sky-blue);
-  border-radius: 3rem 3rem 0 0;
+  background-color: var(--color-medium-grey);
+  padding: 2rem 1rem;
+  border-radius: 2rem;
 `;
 
 export const Figure = styled.figure`
   text-align: center;
-  padding-top: 10rem;
 `;
 
 export const Pic = styled.img`
   border-radius: 50%;
-  padding: 0.7rem;
-  border: 0.2rem solid var(--color-almost-white);
 `;
 
 export const Name = styled.figcaption`
-  margin-top: 2rem;
-  font-size: 1.6rem;
-  color: var(--color-almost-black);
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: var(--color-almost-white);
 `;
 
 export const Location = styled.span`
@@ -43,42 +41,43 @@ export const Location = styled.span`
   color: var(--color-almost-white);
 `;
 
-export const Stats = styled.div`
-  display: flex;
-  justify-content: space-around;
-  text-align: center;
-  padding: 5rem;
-  color: var(--color-almost-white);
-
-  h4 {
-    color: var(--color-almost-black);
-    font-weight: normal;
-    font-size: 1.4rem;
-  }
-`;
-
 export const List = styled.ul`
   list-style: none;
   font-size: 1.2rem;
+  grid-column: 3 / 5;
+  grid-row: 7 / 15;
 `;
 
 export const Item = styled.li`
-  width: 40%;
-  margin: 0 auto;
+  display: flex;
+  justify-content: center;
 
   &:not(:last-child) {
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
   }
 `;
 
 export const Link = styled(NavLink)`
+  height: 5rem;
+  width: 5rem;
+  border-radius: 50%;
+  transition: all 0.2s;
+
   &:link,
   &:visited {
     font-size: 1.6rem;
     text-decoration: none;
     color: var(--color-light-grey);
+  }
+
+  &:hover {
+    background-color: var(--color-light-grey);
+    color: var(--color-almost-white);
+  }
+
+  > * {
     display: block;
-    display: flex;
-    text-transform: capitalize;
+    margin: 50% auto 0 auto;
+    transform: translateY(-50%);
   }
 `;

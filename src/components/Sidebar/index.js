@@ -26,24 +26,10 @@ const Profile = () => {
   return (
     <Styled.Profile>
       <Styled.Figure>
-        <Styled.Pic src="https://via.placeholder.com/100" alt="profile pic" />
+        <Styled.Pic src="https://via.placeholder.com/70" alt="profile pic" />
         <Styled.Name>Luca Medina</Styled.Name>
         <Styled.Location>Miami, FL</Styled.Location>
       </Styled.Figure>
-      <Styled.Stats>
-        <div>
-          <h4>friends</h4>
-          <span>500</span>
-        </div>
-        <div>
-          <h4>plans</h4>
-          <span>23</span>
-        </div>
-        <div>
-          <h4>pins</h4>
-          <span>43</span>
-        </div>
-      </Styled.Stats>
     </Styled.Profile>
   );
 };
@@ -60,8 +46,7 @@ const Sidebar = () => {
               activeClassName="selected-navLink"
               exact
             >
-              <Icon fill="currentColor" className="icon icon-small nav-icon" />
-              {text}
+              <Icon fill="currentColor" className="icon icon-small" />
             </Styled.Link>
           </Styled.Item>
         ))}

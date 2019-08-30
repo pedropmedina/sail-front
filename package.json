@@ -47,6 +47,8 @@
   "dependencies": {
     "@apollo/react-hooks": "^3.0.0",
     "@babel/runtime": "^7.5.5",
+    "@mapbox/mapbox-sdk": "^0.6.0",
+    "@mapbox/react-geocoder": "^2.5.0",
     "apollo-cache-inmemory": "^1.6.2",
     "apollo-client": "^2.6.3",
     "apollo-link": "^1.2.12",

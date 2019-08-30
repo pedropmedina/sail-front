@@ -10,7 +10,8 @@
 }
 
 .selected-navLink {
-  color: var(--color-earth-red) !important;
+  color: var(--color-almost-white) !important;
+  background-color: var(--color-medium-grey);
 }
 
 .icon {
@@ -31,10 +32,6 @@
 
 .icon-large {
   font-size: 4.5rem;
-}
-
-.nav-icon {
-  margin-right: 3rem;
 }
 
 .pin-icon {
