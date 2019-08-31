@@ -5,7 +5,6 @@ import { CloseBtn } from '../../stylesShare';
 export const PinQuery = styled.div`
   height: 100%;
   width: 100%;
-  border-radius: 3rem 3rem 0 0;
   overflow-y: auto;
 
   & > * {
@@ -18,8 +17,6 @@ export const PinQuery = styled.div`
 
 export const BgImage = styled.figure`
   padding: 0;
-  border-radius: 3rem 3rem 0 0;
-  overflow: hidden;
 `;
 
 export const Image = styled.img`
@@ -49,6 +46,7 @@ export const Content = styled.p`
 
 export const CancelBtn = styled(CloseBtn)`
   right: -5rem;
+  top: 1rem;
   width: 4rem;
   height: 4rem;
   background-color: var(--color-light-grey);

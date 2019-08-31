@@ -35,12 +35,11 @@ export const CloseBtn = styled(Btn)`
 
 // necessary wrapper to handle overflow: auto without affecting the visibility of cancel btn
 export const PinWrapper = styled(animated.div)`
-  height: calc(100vh - 1.5rem);
-  width: 40rem;
   position: absolute;
-  top: 1.5rem;
-  left: 1.5rem;
-  z-index: 2;
-  border-radius: 3rem 3rem 0 0;
+  top: 0;
+  bottom: 0;
+  left: 20rem;
+  width: 40rem;
   background-color: var(--color-almost-white);
+  box-shadow: 0 1rem 1rem 1rem rgba(0, 0, 0, 0.1);
 `;

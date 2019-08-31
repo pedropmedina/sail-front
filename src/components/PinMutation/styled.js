@@ -141,6 +141,7 @@ export const SaveBtn = styled(Btn)`
 
 export const CancelBtn = styled(CloseBtn)`
   right: -5rem;
+  top: 1rem;
   width: 4rem;
   height: 4rem;
   background-color: var(--color-light-grey);
