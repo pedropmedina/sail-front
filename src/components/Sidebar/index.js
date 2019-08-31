@@ -12,14 +12,9 @@ import UsersPin from '../../assets/SVG/users.svg';
 import MessageIcon from '../../assets/SVG/message-square.svg';
 import BellIcon from '../../assets/SVG/bell.svg';
 import SettingsIcon from '../../assets/SVG/settings.svg';
-<<<<<<< HEAD
 import MoreIcon from '../../assets/SVG/more-horizontal.svg';
 import LoginIcon from '../../assets/SVG/log-in.svg';
 import LogoutIcon from '../../assets/SVG/log-out.svg';
-=======
-import MenuIcon from '../../assets/SVG/more-horizontal.svg';
-import PowerIcon from '../../assets/SVG/power.svg';
->>>>>>> 2bb36f59a5fa3a91c9ce08abc1df907cb12940dc
 
 const ITEMS = [
   { text: 'map', icon: MapIcon },
@@ -39,15 +34,9 @@ const Profile = () => {
         <Styled.Name>Luca Medina</Styled.Name>
         <Styled.Location>Miami, FL</Styled.Location>
       </Styled.Figure>
-<<<<<<< HEAD
       <Styled.ProfileMoreBtn>
         <MoreIcon className="icon icon-small" />
       </Styled.ProfileMoreBtn>
-=======
-      <Styled.MenuBtn>
-        <MenuIcon className="icon icon-small" />
-      </Styled.MenuBtn>
->>>>>>> 2bb36f59a5fa3a91c9ce08abc1df907cb12940dc
     </Styled.Profile>
   );
 };
@@ -75,15 +64,11 @@ const Sidebar = () => {
       </Styled.List>
       <Styled.AuthWrapper>
         <Styled.AuthBtn>
-<<<<<<< HEAD
           {state.isLoggedIn ? (
             <LogoutIcon className="icon icon-small" />
           ) : (
             <LoginIcon className="icon icon-small" />
           )}
-=======
-          <PowerIcon className="icon icon-small" />
->>>>>>> 2bb36f59a5fa3a91c9ce08abc1df907cb12940dc
         </Styled.AuthBtn>
       </Styled.AuthWrapper>
     </Styled.Sidebar>
