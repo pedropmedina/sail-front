@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useContext } from 'react';
 
+import Context from '../../context';
 import * as Styled from './styled';
 
 // SVG icons
@@ -11,6 +12,9 @@ import UsersPin from '../../assets/SVG/users.svg';
 import MessageIcon from '../../assets/SVG/message-square.svg';
 import BellIcon from '../../assets/SVG/bell.svg';
 import SettingsIcon from '../../assets/SVG/settings.svg';
+import MoreIcon from '../../assets/SVG/more-horizontal.svg';
+import LoginIcon from '../../assets/SVG/log-in.svg';
+import LogoutIcon from '../../assets/SVG/log-out.svg';
 
 const ITEMS = [
   { text: 'map', icon: MapIcon },
@@ -30,13 +34,20 @@ const Profile = () => {
         <Styled.Name>Luca Medina</Styled.Name>
         <Styled.Location>Miami, FL</Styled.Location>
       </Styled.Figure>
+      <Styled.ProfileMoreBtn>
+        <MoreIcon className="icon icon-small" />
+      </Styled.ProfileMoreBtn>
     </Styled.Profile>
   );
 };
 
 const Sidebar = () => {
+  const { state } = useContext(Context);
   return (
-    <Styled.Sidebar>
+    <Styled.Sidebar
+      showingCurrentPin={state.currentPin}
+      showingDraftPin={state.draftPin}
+    >
       <Profile />
       <Styled.List>
         {ITEMS.map(({ text, icon: Icon }, i) => (
@@ -51,6 +62,15 @@ const Sidebar = () => {
           </Styled.Item>
         ))}
       </Styled.List>
+      <Styled.AuthWrapper>
+        <Styled.AuthBtn>
+          {state.isLoggedIn ? (
+            <LogoutIcon className="icon icon-small" />
+          ) : (
+            <LoginIcon className="icon icon-small" />
+          )}
+        </Styled.AuthBtn>
+      </Styled.AuthWrapper>
     </Styled.Sidebar>
   );
 };

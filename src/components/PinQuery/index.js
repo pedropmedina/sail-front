@@ -43,6 +43,8 @@ const PinQuery = ({ style }) => {
       dispatch({ type: UPDATE_PIN, payload: data.pin });
       dispatch({ type: UPDATE_CURRENT_PIN, payload: data.pin });
       comments.length > 0 && scrollToBottom(commentListEndEl);
+    } else {
+      comments.length > 0 && scrollToBottom(commentListEndEl);
     }
   }, [data, dispatch]);
 
@@ -127,19 +129,21 @@ const PinQuery = ({ style }) => {
               })}
             </Styled.CommentsList>
           )}
-          <Styled.CommentForm onSubmit={handleSubmit}>
-            <Styled.CommentTextarea
-              rows={rows}
-              name="comment"
-              type="text"
-              placeholder="message"
-              value={text}
-              onChange={handleOnChange}
-            />
-            <Styled.SendComment existingText={text.length > 0}>
-              <SendIcon className="icon icon-smallest" />
-            </Styled.SendComment>
-          </Styled.CommentForm>
+          <Styled.FormWrapper>
+            <Styled.CommentForm onSubmit={handleSubmit}>
+              <Styled.CommentTextarea
+                rows={rows}
+                name="comment"
+                type="text"
+                placeholder="message"
+                value={text}
+                onChange={handleOnChange}
+              />
+              <Styled.SendComment existingText={text.length > 0}>
+                <SendIcon className="icon icon-smallest" />
+              </Styled.SendComment>
+            </Styled.CommentForm>
+          </Styled.FormWrapper>
         </Styled.Comments>
       </Styled.PinQuery>
       <Styled.CancelBtn onClick={() => dispatch({ type: DELETE_CURRENT_PIN })}>

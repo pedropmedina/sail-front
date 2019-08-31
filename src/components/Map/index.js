@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
-import { useTransition, config } from 'react-spring';
+import { useTransition } from 'react-spring';
 
 import * as Styled from './styled';
 
@@ -38,9 +38,8 @@ const Map = ({
 }) => {
   const transitions = useTransition([draftPin, currentPin], null, {
     from: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
-    enter: { opacity: 1, transform: 'translate3d(0%,0,0)' },
-    leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
-    config: config.stiff
+    enter: { opacity: 1, zIndex: 1, transform: 'translate3d(0%,0,0)' },
+    leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' }
   });
 
   // this is to test the geocoding sdk

@@ -4,7 +4,7 @@ export const Container = styled.div`
   height: 100vh;
   display: grid;
   grid-template-columns:
-    [col-1-start] 1.5rem [col-1-end col-2-start] 40rem
+    [col-1-start] 20rem [col-1-end col-2-start] 40rem
     [col-2-end col-3-start] 1fr [col-3-end];
   grid-template-rows:
     [row-1-start] 1.5rem [row-1-end row-2-start] calc(100vh - 3rem)
@@ -12,7 +12,7 @@ export const Container = styled.div`
   background-color: var(--color-almost-white);
 
   > div {
-    grid-column: col-3-start / col-3-end;
+    grid-column: col-2-start / col-3-end;
     grid-row: 1 / -1;
   }
 `;

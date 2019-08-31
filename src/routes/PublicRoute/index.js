@@ -41,7 +41,7 @@ const PublicRoute = ({ component: Component, ...rest }) => {
       {...rest}
       render={props => (
         <Styled.Container>
-          {isLoggedIn && <Palette />}
+          {/* {isLoggedIn && <Palette />} */}
           <Component {...props} />
         </Styled.Container>
       )}

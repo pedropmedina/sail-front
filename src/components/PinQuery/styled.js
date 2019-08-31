@@ -5,25 +5,20 @@ import { CloseBtn } from '../../stylesShare';
 export const PinQuery = styled.div`
   height: 100%;
   width: 100%;
-  border-radius: 3rem 3rem 0 0;
   overflow-y: auto;
 
-  & > * {
-    &:not(:last-child) {
-      margin-bottom: 2rem;
-      border-bottom: 0.1rem solid var(--color-almost-white);
-    }
-  }
+  display: grid;
+  grid-template-rows: minmax(min-content, 47rem) 1fr;
+  grid-gap: 2rem;
 `;
 
 export const BgImage = styled.figure`
-  padding: 0;
-  border-radius: 3rem 3rem 0 0;
-  overflow: hidden;
+  grid-row: 1 / 2;
+  border-bottom: 0.1rem solid var(--color-light-grey);
 `;
 
 export const Image = styled.img`
-  height: 30rem;
+  height: 60%;
   width: 100%;
   object-position: center;
   object-fit: cover;
@@ -43,12 +38,12 @@ export const Title = styled.figcaption`
 export const Content = styled.p`
   color: var(--color-almost-black);
   font-size: 1.2rem;
-  border-bottom: 0.1rem solid rgba(255, 255, 255, 0.5);
   padding: 2rem;
 `;
 
 export const CancelBtn = styled(CloseBtn)`
   right: -5rem;
+  top: 1rem;
   width: 4rem;
   height: 4rem;
   background-color: var(--color-light-grey);
@@ -62,18 +57,24 @@ export const CancelBtn = styled(CloseBtn)`
 `;
 
 export const Comments = styled.div`
-  padding: 2rem;
+  grid-row: 2 / -1;
+  /* padding: 2rem; */
+  position: relative;
+
+  display: grid;
+  grid-template-rows: minmax(30rem, calc(100vh - 47rem - 29rem)) 1fr;
 `;
 
+// When no existing comments display text else display list of comments
 export const NoExisingComments = styled.p`
-  height: 40vh;
+  padding: 2rem;
   color: var(--color-light-grey);
   font-size: 3rem;
-  padding: 2rem 0;
 `;
 
 export const CommentsList = styled.ul`
-  height: 40vh;
+  grid-row: 1 / 2;
+  padding: 0 2rem;
   color: var(--color-dark-grey);
   list-style: none;
   overflow-y: auto;
@@ -88,6 +89,7 @@ export const CommentDetails = styled.div`
   flex-basis: calc(100% - 5rem);
   margin-left: 1rem;
   font-size: 1.4rem;
+
   display: grid;
   grid-template-columns: max-content 1fr;
 
@@ -108,19 +110,32 @@ export const CommentText = styled.p`
   grid-column: 1 / -1;
 `;
 
+export const FormWrapper = styled.div`
+  grid-row: 2 / -1;
+  padding: 1rem;
+  background-color: var(--color-medium-grey);
+`;
+
 export const CommentForm = styled.form`
   position: relative;
+  width: 95%;
+  display: block;
+  margin: 0 auto;
   line-height: 1;
 `;
 
 export const CommentTextarea = styled.textarea`
   width: 100%;
+  background-color: var(--color-medium-grey);
+  border: none;
+  border-bottom: 0.1rem solid var(--color-light-grey);
+  outline: none;
   text-indent: 1rem;
   font-size: 1.6rem;
-  border: none;
   resize: none;
   padding: 1.5rem 0 0 0;
   line-height: 2.4rem;
+  color: var(--color-almost-white);
 
   &::placeholder {
     color: var(--color-light-grey);
@@ -130,25 +145,22 @@ export const CommentTextarea = styled.textarea`
 export const SendComment = styled.button`
   position: absolute;
   right: 2.5rem;
-  bottom: 3.4rem;
+  bottom: 3rem;
   transform: translateY(1.2rem);
   border: none;
   background-color: transparent;
   outline: none;
   color: ${({ existingText }) =>
-    existingText ? 'var(--color-sky-blue)' : 'var(--color-light-grey)'};
+    existingText ? 'var(--color-almost-white)' : 'var(--color-light-grey)'};
   cursor: pointer;
-  width: 3rem;
-  height: 3rem;
+  width: 4rem;
+  height: 4rem;
   border-radius: 50%;
   line-height: 1;
   transition: all 0.2s;
 
   &:hover {
-    color: ${({ existingText }) =>
-      existingText ? 'var(--color-almost-white)' : 'var(--color-light-grey)'};
-    background-color: ${({ existingText }) =>
-      existingText ? 'var(--color-sky-blue)' : 'var(--color-almost-white)'};
+    background-color: rgba(255, 255, 255, 0.2);
   }
 `;
 
