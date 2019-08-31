@@ -13,8 +13,12 @@ export const PinQuery = styled.div`
 `;
 
 export const BgImage = styled.figure`
+<<<<<<< HEAD
   grid-row: 1 / 2;
   border-bottom: 0.1rem solid var(--color-light-grey);
+=======
+  padding: 0;
+>>>>>>> 2bb36f59a5fa3a91c9ce08abc1df907cb12940dc
 `;
 
 export const Image = styled.img`

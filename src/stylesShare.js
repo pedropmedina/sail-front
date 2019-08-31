@@ -38,9 +38,16 @@ export const PinWrapper = styled(animated.div)`
   position: absolute;
   top: 0;
   bottom: 0;
+<<<<<<< HEAD
   left: 0;
   width: 40rem;
   background-color: var(--color-almost-white);
   box-shadow: 0 1rem 1rem 1rem rgba(0, 0, 0, 0.1);
   border-left: 0.3rem solid var(--color-light-grey);
+=======
+  left: 20rem;
+  width: 40rem;
+  background-color: var(--color-almost-white);
+  box-shadow: 0 1rem 1rem 1rem rgba(0, 0, 0, 0.1);
+>>>>>>> 2bb36f59a5fa3a91c9ce08abc1df907cb12940dc
 `;
