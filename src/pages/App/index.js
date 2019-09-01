@@ -1,5 +1,6 @@
 /* eslint-disable no-console, react/prop-types */
 import React, { useState, useEffect, useContext } from 'react';
+import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 import { useLazyQuery } from '@apollo/react-hooks';
 
 import * as Styled from './styled';
@@ -19,6 +20,11 @@ import {
 import Map from '../../components/Map';
 import Sidebar from '../../components/Sidebar';
 
+// Initialize mapbox geocoding service
+const geocondingService = mbxGeocoding({
+  accessToken: process.env.MAPBOX_TOKEN
+});
+
 // set viewport to this initial values upon mounting component
 const INITIAL_VIEWPORT = {
   longitude: -122.4376,
@@ -31,6 +37,11 @@ const App = () => {
   const { draftPin, currentPin, pins, isLoggedIn, popupPin } = state;
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [showBtns, setShowBtns] = useState(false);
+  const [gelocationResults, setGeolocationResults] = useState([]);
+
+  useEffect(() => {
+    console.log({ gelocationResults });
+  }, [gelocationResults]);
 
   const [getPins, { data: getPinsData }] = useLazyQuery(GET_PINS_QUERY);
   useEffect(() => {
@@ -94,6 +105,19 @@ const App = () => {
     setShowBtns(bool);
   };
 
+  const handleForwardGeocode = async searchText => {
+    const { body } = await geocondingService
+      .forwardGeocode({
+        query: searchText,
+        limit: 5,
+        proximity: [viewport.longitude, viewport.latitude]
+      })
+      .send();
+    setGeolocationResults(body.features);
+  };
+
+  const handleReverseGeocode = () => {};
+
   return (
     <Styled.App>
       {isLoggedIn && <Sidebar />}
@@ -111,6 +135,8 @@ const App = () => {
         onChangeShowBtnsState={handleShowBtnsState}
         onMouseEnterMarker={handleOnMouseEnterMarker}
         onMouseLeaveMarker={handleOnMouseLeaveMarker}
+        onForwardGeocode={handleForwardGeocode}
+        onReverseGeocode={handleReverseGeocode}
         isLoggedIn={isLoggedIn}
         popupPin={popupPin}
       />

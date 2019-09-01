@@ -59,6 +59,10 @@ module.exports = (env = { mode: 'production', presets: [] }) => {
           chunkFilename: devMode ? '[id].css' : '[id].[hahs].css'
         }),
         new HTMLPlugin({ template: './public/index.html' }),
+        new webpack.EnvironmentPlugin({
+          MAPBOX_TOKEN:
+            'pk.eyJ1IjoicGVkcm9wbWVkaW5hIiwiYSI6ImNqdzQ1ZHR3dDFiOTk0MHBzNzl1MGhkdjEifQ._BtibRIagOlzgXg1tat1Yg'
+        }),
         new CleanWebpackPlugin()
       ]
     },

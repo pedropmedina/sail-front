@@ -1,7 +1,6 @@
 /* eslint-disable no-console, react/prop-types */
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactMapGL, { Marker, Popup } from 'react-map-gl';
-import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 import { useTransition } from 'react-spring';
 
 import * as Styled from './styled';
@@ -13,11 +12,10 @@ import PinIcon from '../../assets/SVG/map-pin.svg';
 
 import PinQuery from '../PinQuery';
 import PinMutation from '../PinMutation';
+import GeocodingSearch from '../GeocodingSearch';
 
-const MAPBOX_TOKEN =
-  'pk.eyJ1IjoicGVkcm9wbWVkaW5hIiwiYSI6ImNqdzQ1ZHR3dDFiOTk0MHBzNzl1MGhkdjEifQ._BtibRIagOlzgXg1tat1Yg';
-
-const geocondingService = mbxGeocoding({ accessToken: MAPBOX_TOKEN });
+// const MAPBOX_TOKEN =
+//   'pk.eyJ1IjoicGVkcm9wbWVkaW5hIiwiYSI6ImNqdzQ1ZHR3dDFiOTk0MHBzNzl1MGhkdjEifQ._BtibRIagOlzgXg1tat1Yg';
 
 const Map = ({
   viewport,
@@ -33,6 +31,7 @@ const Map = ({
   onChangeShowBtnsState,
   onMouseEnterMarker,
   onMouseLeaveMarker,
+  onForwardGeocode,
   isLoggedIn,
   popupPin
 }) => {
@@ -41,19 +40,6 @@ const Map = ({
     enter: { opacity: 1, zIndex: 1, transform: 'translate3d(0%,0,0)' },
     leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' }
   });
-
-  // this is to test the geocoding sdk
-  // useEffect(() => {
-  //   geocondingService
-  //     .forwardGeocode({
-  //       query: 'Paris, France',
-  //       limit: 2
-  //     })
-  //     .send()
-  //     .then(res => {
-  //       console.log(res.body);
-  //     });
-  // }, []);
 
   let Pin =
     !!draftPin && !currentPin
@@ -65,15 +51,13 @@ const Map = ({
   return (
     <Styled.Map>
       {/* Geocoding search bar */}
-      {/* <Styled.GeocodingSearch>
-        <Styled.GeocodingInput type="text" placeholder="search a place" />
-      </Styled.GeocodingSearch> */}
+      <GeocodingSearch onForwardGeocode={onForwardGeocode} />
 
       <ReactMapGL
         {...viewport}
         width="100%"
         height="100vh"
-        mapboxApiAccessToken={MAPBOX_TOKEN}
+        mapboxApiAccessToken={process.env.MAPBOX_TOKEN}
         mapStyle="mapbox://styles/mapbox/light-v9"
         onViewportChange={onViewportChange}
       >
