@@ -31,9 +31,8 @@ const Map = ({
   onChangeShowBtnsState,
   onMouseEnterMarker,
   onMouseLeaveMarker,
-  onForwardGeocode,
   isLoggedIn,
-  popupPin
+  popupPin,
 }) => {
   const transitions = useTransition([draftPin, currentPin], null, {
     from: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
@@ -49,9 +48,9 @@ const Map = ({
       : null;
 
   return (
-    <Styled.Map>
+    <Styled.Map isLoggedIn={isLoggedIn}>
       {/* Geocoding search bar */}
-      <GeocodingSearch onForwardGeocode={onForwardGeocode} />
+      <GeocodingSearch  viewport={viewport} />
 
       <ReactMapGL
         {...viewport}

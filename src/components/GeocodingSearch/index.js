@@ -1,11 +1,23 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
+import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 
 import * as Styled from './styled';
 import SearchIcon from '../../assets/SVG/search.svg';
 
-const GeocodingSearch = ({ onForwardGeocode }) => {
+// Initialize mapbox geocoding service
+const geocondingService = mbxGeocoding({
+  accessToken: process.env.MAPBOX_TOKEN
+});
+
+const DEFAULT_VIEWPORT = {
+  longitude: -122.4376,
+  latitude: 37.7577
+};
+
+const GeocodingSearch = ({ viewport = DEFAULT_VIEWPORT }) => {
   const [text, setText] = useState('');
+  const [geocodingResults, setGeocodingResults] = useState([]);
 
   useEffect(() => {
     let timeout = undefined;
@@ -13,9 +25,12 @@ const GeocodingSearch = ({ onForwardGeocode }) => {
       // clear previous timeout
       clearTimeout(timeout);
       // set new timeout
-      timeout = setTimeout(() => onForwardGeocode(text), 400);
+      timeout = setTimeout(() => handleForwardGeocode(text), 400);
+    } else {
+      setGeocodingResults([]);
     }
 
+    // clear any timeout on unmount
     return () => {
       clearTimeout(timeout);
     };
@@ -26,12 +41,26 @@ const GeocodingSearch = ({ onForwardGeocode }) => {
     setText(value);
   };
 
+  const handleForwardGeocode = async searchText => {
+    const { body } = await geocondingService
+      .forwardGeocode({
+        query: searchText,
+        limit: 5,
+        proximity: [viewport.longitude, viewport.latitude]
+      })
+      .send();
+    setGeocodingResults(body.features);
+  };
+
+  const handleReverseGeocode = () => {};
+
   const hanldeSubmit = e => {
     e.preventDefault();
   };
 
   return (
-    <Styled.GeocodingSearch>
+    <Styled.GeocodingWrapper>
+      {/* Geocoding Search form */}
       <Styled.GeocodingForm onSubmit={hanldeSubmit}>
         <Styled.GeocodingInput
           type="text"
@@ -43,7 +72,19 @@ const GeocodingSearch = ({ onForwardGeocode }) => {
           <SearchIcon className="icon icon-small" />
         </Styled.SearchBtn>
       </Styled.GeocodingForm>
-    </Styled.GeocodingSearch>
+      {/* Geocoding search results  */}
+      <Styled.GeocodingResults existingResults={geocodingResults.length > 0}>
+        <Styled.ResultList>
+          {geocodingResults.map((result, index) => {
+            return (
+              <Styled.ResultItem key={index}>
+                {result.place_name}
+              </Styled.ResultItem>
+            );
+          })}
+        </Styled.ResultList>
+      </Styled.GeocodingResults>
+    </Styled.GeocodingWrapper>
   );
 };
 

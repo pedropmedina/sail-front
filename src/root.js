@@ -51,18 +51,10 @@ const Root = () => {
           <Router history={history}>
             <Switch>
               {PUBLIC_ROUTES.map(route => (
-                <PublicRoute
-                  key={route.path}
-                  isLoggedIn={state.isLoggedIn}
-                  {...route}
-                />
+                <PublicRoute key={route.path} {...route} />
               ))}
               {PRIVATE_ROUTES.map(route => (
-                <PrivateRoute
-                  key={route.path}
-                  isLoggedIn={state.isLoggedIn}
-                  {...route}
-                />
+                <PrivateRoute key={route.path} {...route} />
               ))}
             </Switch>
           </Router>

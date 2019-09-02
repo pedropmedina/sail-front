@@ -6,7 +6,8 @@ const Context = createContext({
   currentPin: null,
   popupPin: null,
   currentUser: null,
-  pins: []
+  pins: [],
+  geocodingResults: []
 });
 
 export default Context;

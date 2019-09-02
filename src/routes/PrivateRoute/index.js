@@ -3,9 +3,12 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { useApolloClient } from '@apollo/react-hooks';
 
+import history from '../../history';
 import Context from '../../context';
 import { checkSession, establishSession } from '../../utils';
+
 import * as Styled from './styled';
+
 import Sidebar from '../../components/Sidebar';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
@@ -15,6 +18,10 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   // establish session for current user
   const [isLoggedIn, setIsLoggedIn] = useState(checkSession());
   useEffect(() => {
+    // send to login page when unauthenticated
+    if (!isLoggedIn) {
+      history.push('/auth');
+    }
     establishSession(client, dispatch, setIsLoggedIn);
   }, [isLoggedIn, setIsLoggedIn, dispatch]);
 

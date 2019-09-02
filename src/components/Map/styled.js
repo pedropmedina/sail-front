@@ -1,7 +1,8 @@
 import styled, { css } from 'styled-components/macro';
 
 export const Map = styled.div`
-  grid-column: col-2-start / col-3-end;
+  grid-column: ${({ isLoggedIn }) =>
+    isLoggedIn ? 'col-2-start / col-3-end' : 'col-1-start / col-3-end'};
   grid-row: 1 / -1;
   position: relative;
 `;
@@ -88,4 +89,3 @@ export const PopupCaption = styled.figcaption`
   color: var(--color-light-grey);
   font-size: 1.2rem;
 `;
-
