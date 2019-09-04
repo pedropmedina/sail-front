@@ -13,13 +13,12 @@ import {
   UPDATE_CURRENT_PIN,
   DELETE_CURRENT_PIN,
   SET_POPUP_PIN,
-  DELETE_POPUP_PIN
+  DELETE_POPUP_PIN,
+  SHOW_DRAFT_PIN_POPUP
 } from '../../reducer';
 
 import Map from '../../components/Map';
 import Sidebar from '../../components/Sidebar';
-
-
 
 // set viewport to this initial values upon mounting component
 const INITIAL_VIEWPORT = {
@@ -30,7 +29,14 @@ const INITIAL_VIEWPORT = {
 
 const App = () => {
   const { state, dispatch } = useContext(Context);
-  const { draftPin, currentPin, pins, isLoggedIn, popupPin } = state;
+  const {
+    draftPin,
+    currentPin,
+    pins,
+    isLoggedIn,
+    popupPin,
+    showDraftPinPopup
+  } = state;
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [showBtns, setShowBtns] = useState(false);
 
@@ -96,7 +102,31 @@ const App = () => {
     setShowBtns(bool);
   };
 
+  const handleClickGeocodingResult = result => {
+    // set viewport based on clicked result
+    const [longitude, latitude] = result.center;
+    setViewport({ longitude, latitude, zoom: 13 });
+    // check for matching pin with given coordinates
+    const pin = pins.find(
+      pin => pin.longitude === longitude && pin.latitude === latitude
+    );
+    // if pin set currentPin else new draft pin
+    if (pin) {
+      dispatch({ type: UPDATE_CURRENT_PIN, payload: pin });
+    } else {
+      dispatch({ type: DELETE_CURRENT_PIN });
+      dispatch({ type: CREATE_DRAFT_PIN });
+      dispatch({ type: UPDATE_DRAFT_PIN, payload: { longitude, latitude } });
+      dispatch({ type: SHOW_DRAFT_PIN_POPUP, payload: true });
+    }
+  };
 
+  const handleClickDraftPinPopup = (action = 'create') => {
+    if (action === 'cancel') {
+      dispatch({ type: DELETE_DRAFT_PIN });
+    }
+    dispatch({ type: SHOW_DRAFT_PIN_POPUP, payload: false });
+  };
 
   return (
     <Styled.App>
@@ -115,8 +145,11 @@ const App = () => {
         onChangeShowBtnsState={handleShowBtnsState}
         onMouseEnterMarker={handleOnMouseEnterMarker}
         onMouseLeaveMarker={handleOnMouseLeaveMarker}
+        onClickGeocodingResult={handleClickGeocodingResult}
         isLoggedIn={isLoggedIn}
         popupPin={popupPin}
+        showDraftPinPopup={showDraftPinPopup}
+        onClickDraftPinPopup={handleClickDraftPinPopup}
       />
     </Styled.App>
   );

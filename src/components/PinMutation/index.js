@@ -6,7 +6,7 @@ import { object, string } from 'yup';
 import keyBy from 'lodash/keyBy';
 
 import Context from '../../context';
-import { DELETE_DRAFT_PIN } from '../../reducer';
+import { DELETE_DRAFT_PIN, SHOW_DRAFT_PIN_POPUP } from '../../reducer';
 import { GET_PINS_QUERY } from '../../graphql/queries';
 import { CREATE_PIN_MUTATION } from '../../graphql/mutations';
 
@@ -62,7 +62,7 @@ const PinMutation = ({ style }) => {
   };
 
   const validateFileType = file => {
-    const fileTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/pjpeg'];
+    const fileTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/jpeg'];
     return fileTypes.some(type => type === file.type);
   };
 
@@ -120,6 +120,7 @@ const PinMutation = ({ style }) => {
     setContent('');
     setImage('');
     dispatch({ type: DELETE_DRAFT_PIN });
+    dispatch({ type: SHOW_DRAFT_PIN_POPUP, payload: false });
   };
 
   const validateForm = async () => {

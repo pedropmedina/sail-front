@@ -13,6 +13,7 @@ export const UPDATE_PIN = 'UPDATE_PIN';
 export const SET_POPUP_PIN = 'SET_POPUP_PIN';
 export const DELETE_POPUP_PIN = 'DELETE_POPUP_PIN';
 export const GET_GEOCODING_RESULTS = 'GET_GEOCODING_RESULTS';
+export const SHOW_DRAFT_PIN_POPUP = 'SHOW_DRAFT_PIN_POPUP';
 
 export default function reducer(state, { type, payload }) {
   switch (type) {
@@ -47,6 +48,8 @@ export default function reducer(state, { type, payload }) {
       return { ...state, popupPin: null };
     case GET_GEOCODING_RESULTS:
       return { ...state, geocodingResults: payload };
+    case SHOW_DRAFT_PIN_POPUP:
+      return { ...state, showDraftPinPopup: payload };
     default:
       return state;
   }

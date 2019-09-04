@@ -46,7 +46,7 @@ const Sidebar = () => {
   return (
     <Styled.Sidebar
       showingCurrentPin={state.currentPin}
-      showingDraftPin={state.draftPin}
+      showingDraftPin={state.draftPin && !state.showDraftPinPopup}
     >
       <Profile />
       <Styled.List>

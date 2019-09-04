@@ -15,7 +15,10 @@ const DEFAULT_VIEWPORT = {
   latitude: 37.7577
 };
 
-const GeocodingSearch = ({ viewport = DEFAULT_VIEWPORT }) => {
+const GeocodingSearch = ({
+  viewport = DEFAULT_VIEWPORT,
+  onClickGeocodingResult
+}) => {
   const wrapperRef = useRef(null);
   const [text, setText] = useState('');
   const [geocodingResults, setGeocodingResults] = useState([]);
@@ -63,10 +66,6 @@ const GeocodingSearch = ({ viewport = DEFAULT_VIEWPORT }) => {
     setText(value);
   };
 
-  const handleClickItem = result => {
-    console.log({ result });
-  };
-
   const handleForwardGeocode = async searchText => {
     const { body } = await geocondingService
       .forwardGeocode({
@@ -108,7 +107,10 @@ const GeocodingSearch = ({ viewport = DEFAULT_VIEWPORT }) => {
             return (
               <Styled.ResultItem
                 key={index}
-                onClick={() => handleClickItem(result)}
+                onClick={() => {
+                  setShowResults(false);
+                  onClickGeocodingResult(result);
+                }}
               >
                 {result.place_name}
               </Styled.ResultItem>

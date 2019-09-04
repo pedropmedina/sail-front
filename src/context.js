@@ -5,6 +5,7 @@ const Context = createContext({
   draftPin: null,
   currentPin: null,
   popupPin: null,
+  showDraftPinPopup: false,
   currentUser: null,
   pins: [],
   geocodingResults: []

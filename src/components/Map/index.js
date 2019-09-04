@@ -9,13 +9,11 @@ import PlusIcon from '../../assets/SVG/plus.svg';
 import MapPin from '../../assets/SVG/map-pin.svg';
 import CompassIcon from '../../assets/SVG/compass.svg';
 import PinIcon from '../../assets/SVG/map-pin.svg';
+import XIcon from '../../assets/SVG/x.svg';
 
 import PinQuery from '../PinQuery';
 import PinMutation from '../PinMutation';
 import GeocodingSearch from '../GeocodingSearch';
-
-// const MAPBOX_TOKEN =
-//   'pk.eyJ1IjoicGVkcm9wbWVkaW5hIiwiYSI6ImNqdzQ1ZHR3dDFiOTk0MHBzNzl1MGhkdjEifQ._BtibRIagOlzgXg1tat1Yg';
 
 const Map = ({
   viewport,
@@ -31,8 +29,11 @@ const Map = ({
   onChangeShowBtnsState,
   onMouseEnterMarker,
   onMouseLeaveMarker,
+  onClickGeocodingResult,
   isLoggedIn,
   popupPin,
+  showDraftPinPopup,
+  onClickDraftPinPopup
 }) => {
   const transitions = useTransition([draftPin, currentPin], null, {
     from: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
@@ -41,7 +42,7 @@ const Map = ({
   });
 
   let Pin =
-    !!draftPin && !currentPin
+    !!draftPin && !showDraftPinPopup && !currentPin
       ? PinMutation
       : !draftPin && !!currentPin
       ? PinQuery
@@ -50,7 +51,10 @@ const Map = ({
   return (
     <Styled.Map isLoggedIn={isLoggedIn}>
       {/* Geocoding search bar */}
-      <GeocodingSearch  viewport={viewport} />
+      <GeocodingSearch
+        viewport={viewport}
+        onClickGeocodingResult={onClickGeocodingResult}
+      />
 
       <ReactMapGL
         {...viewport}
@@ -98,6 +102,25 @@ const Map = ({
           <Marker {...draftPin} draggable={true} onDragEnd={onDragEnd}>
             <MapPin className="icon icon-small draft-pin-icon" />
           </Marker>
+        )}
+        {/* show popup for draft pin when selecting geocoding result */}
+        {draftPin && showDraftPinPopup && (
+          <Styled.CustomPopup
+            longitude={draftPin.longitude}
+            latitude={draftPin.latitude}
+            offsetLeft={24}
+            offsetTop={12}
+            anchor="left"
+            closeButton={false}
+          >
+            <p>Create new pin</p>
+            <button onClick={onClickDraftPinPopup}>
+              <PlusIcon className="icon icon-smallest" />
+            </button>
+            <button onClick={() => onClickDraftPinPopup('cancel')}>
+              <XIcon className="icon icon-smallest" />
+            </button>
+          </Styled.CustomPopup>
         )}
       </ReactMapGL>
 

@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components/macro';
+import { Popup } from 'react-map-gl';
 
 export const Map = styled.div`
   grid-column: ${({ isLoggedIn }) =>
@@ -88,4 +89,49 @@ export const PopupImg = styled.img`
 export const PopupCaption = styled.figcaption`
   color: var(--color-light-grey);
   font-size: 1.2rem;
+`;
+
+export const CustomPopup = styled(Popup)`
+  z-index: 3;
+
+  div.mapboxgl-popup-content {
+    background-color: var(--color-medium-grey);
+    color: var(--color-almost-white);
+    font-size: 1.2rem;
+    border: none;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    button {
+      border: none;
+      border-radius: 50%;
+      width: 3rem;
+      height: 3rem;
+      color: var(--color-dark-grey);
+      background-color: inherit;
+      outline: none;
+      cursor: pointer;
+      background-color: rgba(255, 255, 255, 0.2);
+      margin-left: 0.5rem;
+
+      &:first-of-type {
+        margin-left: 1rem;
+      }
+
+      &:last-of-type {
+        color: var(--color-earth-red);
+      }
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+    }
+  }
+
+  div.mapboxgl-popup-tip {
+    border-right-color: var(--color-medium-grey);
+    border-left-color: var(--color-medium-grey);
+  }
 `;
