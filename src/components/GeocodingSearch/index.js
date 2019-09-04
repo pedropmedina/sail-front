@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 
 import * as Styled from './styled';
@@ -16,9 +16,12 @@ const DEFAULT_VIEWPORT = {
 };
 
 const GeocodingSearch = ({ viewport = DEFAULT_VIEWPORT }) => {
+  const wrapperRef = useRef(null);
   const [text, setText] = useState('');
   const [geocodingResults, setGeocodingResults] = useState([]);
+  const [showResults, setShowResults] = useState(false);
 
+  // trigger http request to mapbox geocoding api on timeout to avoid excessive requests
   useEffect(() => {
     let timeout = undefined;
     if (text) {
@@ -28,6 +31,7 @@ const GeocodingSearch = ({ viewport = DEFAULT_VIEWPORT }) => {
       timeout = setTimeout(() => handleForwardGeocode(text), 400);
     } else {
       setGeocodingResults([]);
+      setShowResults(false);
     }
 
     // clear any timeout on unmount
@@ -36,9 +40,31 @@ const GeocodingSearch = ({ viewport = DEFAULT_VIEWPORT }) => {
     };
   }, [text]);
 
+  // reset geocodingResults on click outside wrapper
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // toggle show results based on click in and out of element
+  const handleClickOutside = e => {
+    if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+      setShowResults(false);
+    } else {
+      setShowResults(true);
+    }
+  };
+
   const handleChange = e => {
     const value = e.target.value;
     setText(value);
+  };
+
+  const handleClickItem = result => {
+    console.log({ result });
   };
 
   const handleForwardGeocode = async searchText => {
@@ -50,6 +76,7 @@ const GeocodingSearch = ({ viewport = DEFAULT_VIEWPORT }) => {
       })
       .send();
     setGeocodingResults(body.features);
+    setShowResults(true);
   };
 
   const handleReverseGeocode = () => {};
@@ -59,7 +86,7 @@ const GeocodingSearch = ({ viewport = DEFAULT_VIEWPORT }) => {
   };
 
   return (
-    <Styled.GeocodingWrapper>
+    <Styled.GeocodingWrapper ref={wrapperRef}>
       {/* Geocoding Search form */}
       <Styled.GeocodingForm onSubmit={hanldeSubmit}>
         <Styled.GeocodingInput
@@ -73,11 +100,16 @@ const GeocodingSearch = ({ viewport = DEFAULT_VIEWPORT }) => {
         </Styled.SearchBtn>
       </Styled.GeocodingForm>
       {/* Geocoding search results  */}
-      <Styled.GeocodingResults existingResults={geocodingResults.length > 0}>
+      <Styled.GeocodingResults
+        showResults={showResults && geocodingResults.length > 0}
+      >
         <Styled.ResultList>
           {geocodingResults.map((result, index) => {
             return (
-              <Styled.ResultItem key={index}>
+              <Styled.ResultItem
+                key={index}
+                onClick={() => handleClickItem(result)}
+              >
                 {result.place_name}
               </Styled.ResultItem>
             );

@@ -51,8 +51,8 @@ export const GeocodingResults = styled.div`
   padding: 2rem 0;
   background-color: var(--color-almost-white);
 
-  ${({ existingResults }) =>
-    existingResults &&
+  ${({ showResults }) =>
+    showResults &&
     css`
       display: block;
     `}
