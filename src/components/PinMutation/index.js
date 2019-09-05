@@ -177,6 +177,7 @@ const PinMutation = ({ style }) => {
               error={contentError}
             />
           </Styled.FieldLabel>
+          {/* Image upload and preview */}
           {!image ? (
             <Styled.Upload
               error={imageError}

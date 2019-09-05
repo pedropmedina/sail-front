@@ -32,13 +32,18 @@ export const Image = styled.img`
 export const Title = styled.figcaption`
   color: var(--color-almost-black);
   font-size: 1.6rem;
-  padding: 2rem;
+  padding: 1rem 2rem;
 `;
 
 export const Content = styled.p`
   color: var(--color-almost-black);
   font-size: 1.2rem;
-  padding: 2rem;
+  padding: 1rem 2rem;
+`;
+
+export const Address = styled(Content)`
+  font-size: 1.6rem;
+  color: var(--color-light-grey);
 `;
 
 export const CancelBtn = styled(CloseBtn)`

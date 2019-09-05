@@ -2,6 +2,7 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useMutation, useSubscription } from '@apollo/react-hooks';
 import { formatDistance } from 'date-fns';
+import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 
 import * as Styled from './styled';
 import { PinWrapper } from '../../stylesShare';
@@ -16,6 +17,11 @@ import {
 } from '../../reducer';
 import { CREATE_COMMENT_MUTATION } from '../../graphql/mutations';
 import { COMMENT_CREATED_SUBSCRIPTION } from '../../graphql/subscriptions';
+
+// authenticate geocoding service
+const geocodingService = mbxGeocoding({
+  accessToken: process.env.MAPBOX_TOKEN
+});
 
 const TEXTAREA_DEFAULTS = {
   rows: 2,
@@ -32,6 +38,7 @@ const PinQuery = ({ style }) => {
   } = useContext(Context);
   const { _id: pinId, title, content, image, comments } = currentPin;
   const [text, setText] = useState('');
+  const [address, setAddress] = useState('');
   const [rows, setRows] = useState(TEXTAREA_DEFAULTS.rows);
   const [createComment] = useMutation(CREATE_COMMENT_MUTATION, {
     ignoreResults: true
@@ -47,6 +54,13 @@ const PinQuery = ({ style }) => {
       comments.length > 0 && scrollToBottom(commentListEndEl);
     }
   }, [data, dispatch]);
+
+  useEffect(() => {
+    if (currentPin) {
+      const { longitude, latitude } = currentPin;
+      handleReverseGeocode(longitude, latitude);
+    }
+  }, [currentPin]);
 
   const handleOnChange = e => {
     const { minRows, maxRows, lineHeight } = TEXTAREA_DEFAULTS;
@@ -76,6 +90,16 @@ const PinQuery = ({ style }) => {
     comments.length > 0 && scrollToBottom(commentListEndEl);
   };
 
+  const handleReverseGeocode = async (longitude, latitude) => {
+    const { body } = await geocodingService
+      .reverseGeocode({
+        query: [longitude, latitude],
+        types: ['address']
+      })
+      .send();
+    setAddress(body.features[0].place_name);
+  };
+
   const scrollToBottom = ref => {
     ref.current.scrollIntoView({ block: 'start', behavior: 'smooth' });
   };
@@ -87,6 +111,7 @@ const PinQuery = ({ style }) => {
         <Styled.BgImage>
           <Styled.Image src={image} alt="current pin" />
           <Styled.Title>{title}</Styled.Title>
+          <Styled.Address>{address}</Styled.Address>
           <Styled.Content>{content}</Styled.Content>
         </Styled.BgImage>
         {/* Comments sesison */}

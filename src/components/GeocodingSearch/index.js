@@ -78,8 +78,6 @@ const GeocodingSearch = ({
     setShowResults(true);
   };
 
-  const handleReverseGeocode = () => {};
-
   const hanldeSubmit = e => {
     e.preventDefault();
   };
