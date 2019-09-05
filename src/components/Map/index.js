@@ -99,7 +99,11 @@ const Map = ({
 
         {/* Show marker for draft pin */}
         {draftPin && (
-          <Marker {...draftPin} draggable={true} onDragEnd={onDragEnd}>
+          <Marker
+            {...draftPin}
+            draggable={true}
+            onDragEnd={onDragEnd}
+          >
             <MapPin className="icon icon-small draft-pin-icon" />
           </Marker>
         )}

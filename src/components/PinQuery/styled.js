@@ -8,8 +8,8 @@ export const PinQuery = styled.div`
   overflow-y: auto;
 
   display: grid;
-  grid-template-rows: minmax(min-content, 47rem) 1fr;
-  grid-gap: 2rem;
+  grid-template-rows: min-content 1fr;
+  row-gap: 2rem;
 `;
 
 export const BgImage = styled.figure`
@@ -18,7 +18,7 @@ export const BgImage = styled.figure`
 `;
 
 export const Image = styled.img`
-  height: 60%;
+  height: 30rem;
   width: 100%;
   object-position: center;
   object-fit: cover;
@@ -30,20 +30,21 @@ export const Image = styled.img`
 `;
 
 export const Title = styled.figcaption`
-  color: var(--color-almost-black);
+  color: var(--color-dark-grey);
   font-size: 1.6rem;
-  padding: 1rem 2rem;
+  padding: 1.5rem 2rem 1rem 2rem;
 `;
 
 export const Content = styled.p`
   color: var(--color-almost-black);
   font-size: 1.2rem;
-  padding: 1rem 2rem;
+  padding: 2rem;
 `;
 
 export const Address = styled(Content)`
-  font-size: 1.6rem;
-  color: var(--color-light-grey);
+  font-size: 1.4rem;
+  color: var(--color-medium-grey);
+  padding: 0 2rem;
 `;
 
 export const CancelBtn = styled(CloseBtn)`

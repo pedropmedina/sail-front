@@ -6,7 +6,6 @@ import * as Styled from './styled';
 
 // SVG icons
 import MapIcon from '../../assets/SVG/map.svg';
-import CompassIcon from '../../assets/SVG/compass.svg';
 import PinIcon from '../../assets/SVG/map-pin.svg';
 import UsersPin from '../../assets/SVG/users.svg';
 import MessageIcon from '../../assets/SVG/message-square.svg';
@@ -15,10 +14,11 @@ import SettingsIcon from '../../assets/SVG/settings.svg';
 import MoreIcon from '../../assets/SVG/more-horizontal.svg';
 import LoginIcon from '../../assets/SVG/log-in.svg';
 import LogoutIcon from '../../assets/SVG/log-out.svg';
+import CalendarIcon from '../../assets/SVG/calendar.svg';
 
 const ITEMS = [
   { text: 'map', icon: MapIcon },
-  { text: 'plans', icon: CompassIcon },
+  { text: 'plans', icon: CalendarIcon },
   { text: 'pins', icon: PinIcon },
   { text: 'friends', icon: UsersPin },
   { text: 'chats', icon: MessageIcon },

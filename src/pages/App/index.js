@@ -110,7 +110,7 @@ const App = () => {
     const pin = pins.find(
       pin => pin.longitude === longitude && pin.latitude === latitude
     );
-    // if pin set currentPin else new draft pin
+    // if pin, set currentPin else new draft pin
     if (pin) {
       dispatch({ type: UPDATE_CURRENT_PIN, payload: pin });
     } else {

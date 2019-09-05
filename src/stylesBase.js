@@ -5,6 +5,7 @@ export default createGlobalStyle`
     --color-sky-blue: #4783e6;
     --color-earth-red: #CA433B;
     --color-almost-white: #EDECED;
+    --color-less-white: #e8e8e8;
     --color-almost-black: #0A0B0B;
     --color-dark-grey: #324C56;
     --color-medium-grey: #6C8C96;
