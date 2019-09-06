@@ -1,0 +1,40 @@
+import React, { useState } from 'react';
+
+import * as Styled from './styled';
+import PlusIcon from '../../assets/SVG/plus.svg';
+import FilterIcon from '../../assets/SVG/filter.svg';
+
+const Topbar = () => {
+  const [searchText, setSearchText] = useState('');
+
+  const handleSearch = e => {
+    const value = e.target.value;
+    setSearchText(value);
+  };
+
+  const hanldeSubmit = e => {
+    e.preventDefault();
+  };
+
+  return (
+    <Styled.Topbar>
+      <Styled.CreateNewBtn>
+        Create New <PlusIcon className="icon icon-small" />
+      </Styled.CreateNewBtn>
+      <Styled.Search onSubmit={hanldeSubmit}>
+        <Styled.Input
+          type="text"
+          name="search"
+          placeholder="Filter results"
+          value={searchText}
+          onChange={handleSearch}
+        />
+        <Styled.SearchBtn>
+          <FilterIcon className="icon icon-small" />
+        </Styled.SearchBtn>
+      </Styled.Search>
+    </Styled.Topbar>
+  );
+};
+
+export default Topbar;

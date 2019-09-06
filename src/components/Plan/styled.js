@@ -3,7 +3,7 @@ import styled from 'styled-components/macro';
 export const Plan = styled.div`
   width: 50rem;
   padding: 1rem;
-  box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.1);
   border-radius: 0.3rem;
 
   > * {
