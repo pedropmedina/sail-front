@@ -5,7 +5,8 @@ export const GeocodingWrapper = styled.div`
   top: 3rem;
   left: 50%;
   transform: translateX(-50%);
-  width: 70rem;
+  width: 70vw;
+  max-width: 70rem;
   z-index: 1;
   border-radius: 1rem;
   overflow: hidden;
