@@ -26,6 +26,9 @@ const css = `
   z-index: 1;
   box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.15);
   border-radius: 0.5rem;
+  color: var(--color-light-grey);
+  background-color: var(--color-almost-white);
+  font-size: 1.6rem;
 `;
 
 const Map = ({

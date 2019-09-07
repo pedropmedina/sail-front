@@ -6,11 +6,19 @@ export const GeocodingWrapper = styled.div``;
 
 export const Geocoding = styled.div`
   position: relative;
+  color: inherit;
+  background-color: inherit;
+  border-radius: inherit;
+  font-size: inherit;
 `;
 
 export const GeocodingSearch = styled.section`
   height: 6rem;
   width: 100%;
+  color: inherit;
+  background-color: inherit;
+  border-radius: inherit;
+  font-size: inherit;
   position: relative;
 `;
 
@@ -18,12 +26,12 @@ export const GeocodingInput = styled.input`
   width: 100%;
   height: 100%;
   text-indent: 2rem;
-  background-color: var(--color-almost-white);
-  color: var(--color-light-grey);
-  font-size: 1.6rem;
   border: none;
+  color: inherit;
+  background-color: inherit;
   outline: none;
-  border-radius: 0.5rem;
+  border-radius: inherit;
+  font-size: inherit;
 
   &::placeholder {
     color: var(--color-light-grey);

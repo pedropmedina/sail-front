@@ -6,6 +6,11 @@ import * as Styled from './styled';
 import Context from '../../context';
 import GeocodingSearch from '../../components/GeocodingSearch';
 
+const css = `
+  font-size: 1.6rem;
+  background-color: var(--color-less-white);
+`;
+
 const PlanCreate = () => {
   const { state } = useContext(Context);
 
@@ -17,11 +22,9 @@ const PlanCreate = () => {
     <Styled.PlanCreate>
       <Styled.Fields>
         <Styled.Field>
-          Title
           <Styled.Input type="text" name="title" placeholder="Title the plan" />
         </Styled.Field>
         <Styled.Field>
-          Description
           <Styled.Input
             type="text"
             name="description"
@@ -29,14 +32,13 @@ const PlanCreate = () => {
           />
         </Styled.Field>
         <Styled.Field>
-          Select a location
           <GeocodingSearch
             viewport={state.viewport}
             onClickGeocodingResult={handleClickGeocodingResult}
+            css={css}
           />
         </Styled.Field>
         <Styled.Field>
-          Pick a date
           <Styled.Input type="text" name="date" placeholder="Select a date" />
         </Styled.Field>
       </Styled.Fields>
