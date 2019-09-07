@@ -14,9 +14,12 @@ export const SET_POPUP_PIN = 'SET_POPUP_PIN';
 export const DELETE_POPUP_PIN = 'DELETE_POPUP_PIN';
 export const GET_GEOCODING_RESULTS = 'GET_GEOCODING_RESULTS';
 export const SHOW_DRAFT_PIN_POPUP = 'SHOW_DRAFT_PIN_POPUP';
+export const UPDATE_VIEWPORT = 'UPDATE_VIEWPORT';
 
 export default function reducer(state, { type, payload }) {
   switch (type) {
+    case UPDATE_VIEWPORT:
+      return { ...state, viewport: { ...state.viewport, ...payload } };
     case IS_LOGGED_IN:
       return { ...state, isLoggedIn: payload };
     case ADD_CURRENT_USER:

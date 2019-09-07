@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useRef } from 'react';
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
+import styled from 'styled-components/macro'; // eslint-disable-line
 
 import * as Styled from './styled';
-import SearchIcon from '../../assets/SVG/search.svg';
 
 // Initialize mapbox geocoding service
 const geocondingService = mbxGeocoding({
@@ -17,7 +17,8 @@ const DEFAULT_VIEWPORT = {
 
 const GeocodingSearch = ({
   viewport = DEFAULT_VIEWPORT,
-  onClickGeocodingResult
+  onClickGeocodingResult,
+  css = {}
 }) => {
   const wrapperRef = useRef(null);
   const [text, setText] = useState('');
@@ -83,39 +84,39 @@ const GeocodingSearch = ({
   };
 
   return (
-    <Styled.GeocodingWrapper ref={wrapperRef}>
-      {/* Geocoding Search form */}
-      <Styled.GeocodingForm onSubmit={hanldeSubmit}>
-        <Styled.GeocodingInput
-          type="text"
-          value={text}
-          placeholder="Search by location, category, city..."
-          onChange={handleChange}
-        />
-        <Styled.SearchBtn>
-          <SearchIcon className="icon icon-small" />
-        </Styled.SearchBtn>
-      </Styled.GeocodingForm>
-      {/* Geocoding search results  */}
-      <Styled.GeocodingResults
-        showResults={showResults && geocodingResults.length > 0}
-      >
-        <Styled.ResultList>
-          {geocodingResults.map((result, index) => {
-            return (
-              <Styled.ResultItem
-                key={index}
-                onClick={() => {
-                  setShowResults(false);
-                  onClickGeocodingResult(result);
-                }}
-              >
-                {result.place_name}
-              </Styled.ResultItem>
-            );
-          })}
-        </Styled.ResultList>
-      </Styled.GeocodingResults>
+    <Styled.GeocodingWrapper ref={wrapperRef} css={css}>
+      <Styled.Geocoding>
+        {/* Geocoding Search form */}
+        <Styled.GeocodingSearch onSubmit={hanldeSubmit}>
+          <Styled.GeocodingInput
+            type="text"
+            value={text}
+            placeholder="Search by location, category, city..."
+            onChange={handleChange}
+          />
+          <Styled.SearchIcon className="icon icon-small" />
+        </Styled.GeocodingSearch>
+        {/* Geocoding search results  */}
+        <Styled.GeocodingResults
+          showResults={showResults && geocodingResults.length > 0}
+        >
+          <Styled.ResultList>
+            {geocodingResults.map((result, index) => {
+              return (
+                <Styled.ResultItem
+                  key={index}
+                  onClick={() => {
+                    setShowResults(false);
+                    onClickGeocodingResult(result);
+                  }}
+                >
+                  {result.place_name}
+                </Styled.ResultItem>
+              );
+            })}
+          </Styled.ResultList>
+        </Styled.GeocodingResults>
+      </Styled.Geocoding>
     </Styled.GeocodingWrapper>
   );
 };

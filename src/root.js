@@ -17,6 +17,7 @@ import PrivateRoute from './routes/PrivateRoute';
 import App from './pages/App';
 import Auth from './pages/Auth';
 import Plans from './pages/Plans';
+import PlanCreate from './pages/PlanCreate';
 import Pins from './pages/Pins';
 import Chats from './pages/Chats';
 import Friends from './pages/Friends';
@@ -25,6 +26,7 @@ import Settings from './pages/Settings';
 
 const PRIVATE_ROUTES = [
   { path: '/plans', component: Plans },
+  { path: '/create-plan', component: PlanCreate },
   { path: '/pins', component: Pins },
   { path: '/chats', component: Chats },
   { path: '/friends', component: Friends },

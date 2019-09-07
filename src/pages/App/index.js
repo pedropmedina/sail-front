@@ -14,18 +14,12 @@ import {
   DELETE_CURRENT_PIN,
   SET_POPUP_PIN,
   DELETE_POPUP_PIN,
-  SHOW_DRAFT_PIN_POPUP
+  SHOW_DRAFT_PIN_POPUP,
+  UPDATE_VIEWPORT
 } from '../../reducer';
 
 import Map from '../../components/Map';
 import Sidebar from '../../components/Sidebar';
-
-// set viewport to this initial values upon mounting component
-const INITIAL_VIEWPORT = {
-  longitude: -122.4376,
-  latitude: 37.7577,
-  zoom: 13
-};
 
 const App = () => {
   const { state, dispatch } = useContext(Context);
@@ -35,9 +29,9 @@ const App = () => {
     pins,
     isLoggedIn,
     popupPin,
-    showDraftPinPopup
+    showDraftPinPopup,
+    viewport
   } = state;
-  const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [showBtns, setShowBtns] = useState(false);
 
   const [getPins, { data: getPinsData }] = useLazyQuery(GET_PINS_QUERY);
@@ -86,7 +80,8 @@ const App = () => {
   };
 
   const handleViewportChange = viewport => {
-    setViewport(viewport);
+    const { longitude, latitude, zoom } = viewport;
+    dispatch({ type: UPDATE_VIEWPORT, payload: { longitude, latitude, zoom } });
   };
 
   const handleToggleNewBtns = () => {
@@ -105,7 +100,10 @@ const App = () => {
   const handleClickGeocodingResult = result => {
     // set viewport based on clicked result
     const [longitude, latitude] = result.center;
-    setViewport({ longitude, latitude, zoom: 13 });
+    dispatch({
+      type: UPDATE_VIEWPORT,
+      payload: { longitude, latitude, zoom: 13 }
+    });
     // check for matching pin with given coordinates
     const pin = pins.find(
       pin => pin.longitude === longitude && pin.latitude === latitude

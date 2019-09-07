@@ -1,19 +1,14 @@
 import styled, { css } from 'styled-components/macro';
 
-export const GeocodingWrapper = styled.div`
-  position: absolute;
-  top: 3rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 70vw;
-  max-width: 70rem;
-  z-index: 1;
-  border-radius: 1rem;
-  overflow: hidden;
-  box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.15);
+import Icon from '../../assets/SVG/search.svg';
+
+export const GeocodingWrapper = styled.div``;
+
+export const Geocoding = styled.div`
+  position: relative;
 `;
 
-export const GeocodingForm = styled.form`
+export const GeocodingSearch = styled.section`
   height: 6rem;
   width: 100%;
   position: relative;
@@ -28,29 +23,34 @@ export const GeocodingInput = styled.input`
   font-size: 1.6rem;
   border: none;
   outline: none;
+  border-radius: 0.5rem;
 
   &::placeholder {
     color: var(--color-light-grey);
   }
 `;
 
-export const SearchBtn = styled.button`
+export const SearchIcon = styled(Icon)`
   position: absolute;
   right: 3rem;
   top: 50%;
   transform: translateY(-50%);
-  background-color: transparent;
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-  border: none;
+  font-size: 3rem;
   color: var(--color-light-grey);
 `;
 
-export const GeocodingResults = styled.div`
+export const GeocodingResults = styled.section`
   display: none;
   padding: 2rem 0;
   background-color: var(--color-almost-white);
+  box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.15);
+  border-radius: 0.5rem;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: translateY(calc(100% + 2rem));
+  z-index: 1;
 
   ${({ showResults }) =>
     showResults &&

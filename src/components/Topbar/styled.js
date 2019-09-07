@@ -12,7 +12,6 @@ export const Search = styled.form`
   border: none;
   position: relative;
   border-radius: 0.5rem;
-  border-radius: 0.5rem;
   overflow: hidden;
 `;
 

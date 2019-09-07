@@ -15,6 +15,19 @@ import PinQuery from '../PinQuery';
 import PinMutation from '../PinMutation';
 import GeocodingSearch from '../GeocodingSearch';
 
+// styles for geocoding search component
+const css = `
+  position: absolute;
+  top: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70vw;
+  max-width: 70rem;
+  z-index: 1;
+  box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.15);
+  border-radius: 0.5rem;
+`;
+
 const Map = ({
   viewport,
   pins,
@@ -54,6 +67,7 @@ const Map = ({
       <GeocodingSearch
         viewport={viewport}
         onClickGeocodingResult={onClickGeocodingResult}
+        css={css}
       />
 
       <ReactMapGL
@@ -99,11 +113,7 @@ const Map = ({
 
         {/* Show marker for draft pin */}
         {draftPin && (
-          <Marker
-            {...draftPin}
-            draggable={true}
-            onDragEnd={onDragEnd}
-          >
+          <Marker {...draftPin} draggable={true} onDragEnd={onDragEnd}>
             <MapPin className="icon icon-small draft-pin-icon" />
           </Marker>
         )}

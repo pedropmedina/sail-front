@@ -1,10 +1,11 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 
 import * as Styled from './styled';
 import PlusIcon from '../../assets/SVG/plus.svg';
 import FilterIcon from '../../assets/SVG/filter.svg';
 
-const Topbar = () => {
+const Topbar = props => {
   const [searchText, setSearchText] = useState('');
 
   const handleSearch = e => {
@@ -18,7 +19,7 @@ const Topbar = () => {
 
   return (
     <Styled.Topbar>
-      <Styled.CreateNewBtn>
+      <Styled.CreateNewBtn onClick={() => props.history.push('/create-plan')}>
         Create New <PlusIcon className="icon icon-small" />
       </Styled.CreateNewBtn>
       <Styled.Search onSubmit={hanldeSubmit}>

@@ -33,7 +33,7 @@ const Btn = styled.button`
   box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.6);
   outline: none;
   cursor: pointer;
-  z-index: 10;
+  z-index: 1;
 `;
 
 export const ExpandBtn = styled(Btn)`
@@ -92,7 +92,7 @@ export const PopupCaption = styled.figcaption`
 `;
 
 export const CustomPopup = styled(Popup)`
-  z-index: 3;
+  z-index: 1;
 
   div.mapboxgl-popup-content {
     background-color: var(--color-medium-grey);
