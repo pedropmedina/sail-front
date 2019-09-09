@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components/macro';
 
-import Icon from '../../assets/SVG/search.svg';
+import { ReactComponent as Icon } from '../../assets/SVG/search.svg';
 
 export const GeocodingWrapper = styled.div``;
 

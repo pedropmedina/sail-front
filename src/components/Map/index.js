@@ -5,11 +5,11 @@ import { useTransition } from 'react-spring';
 
 import * as Styled from './styled';
 
-import PlusIcon from '../../assets/SVG/plus.svg';
-import MapPin from '../../assets/SVG/map-pin.svg';
-import CompassIcon from '../../assets/SVG/compass.svg';
-import PinIcon from '../../assets/SVG/map-pin.svg';
-import XIcon from '../../assets/SVG/x.svg';
+import { ReactComponent as PlusIcon } from '../../assets/SVG/plus.svg';
+import { ReactComponent as MapPin } from '../../assets/SVG/map-pin.svg';
+import { ReactComponent as CompassIcon } from '../../assets/SVG/compass.svg';
+import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
+import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 
 import PinQuery from '../PinQuery';
 import PinMutation from '../PinMutation';

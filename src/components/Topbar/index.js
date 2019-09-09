@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 
 import * as Styled from './styled';
-import PlusIcon from '../../assets/SVG/plus.svg';
-import FilterIcon from '../../assets/SVG/filter.svg';
+import { ReactComponent as PlusIcon } from '../../assets/SVG/plus.svg';
+import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
 
 const Topbar = props => {
   const [searchText, setSearchText] = useState('');

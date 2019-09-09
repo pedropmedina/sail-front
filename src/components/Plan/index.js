@@ -2,7 +2,7 @@ import React from 'react';
 import { StaticMap } from 'react-map-gl';
 
 import * as Styled from './styled';
-import CalendarIcon from '../../assets/SVG/calendar.svg';
+import { ReactComponent as CalendarIcon } from '../../assets/SVG/calendar.svg';
 
 const Plan = () => (
   <Styled.Plan>

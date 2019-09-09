@@ -23,8 +23,9 @@ import {
 } from 'date-fns';
 
 import * as Styled from './styled';
-import LeftArrowIcon from '../../assets/SVG/arrow-left.svg';
-import RightArrowIcon from '../../assets/SVG/arrow-right.svg';
+import { ReactComponent as LeftArrowIcon } from '../../assets/SVG/arrow-left.svg';
+import { ReactComponent as RightArrowIcon } from '../../assets/SVG/arrow-right.svg';
+import { ReactComponent as ClockIcon } from '../../assets/SVG/clock.svg';
 import ClickOutside from '../../components/ClickOutside';
 
 const css = `
@@ -104,9 +105,12 @@ const DatePicker = () => {
             {/* Header */}
             <Styled.CalendarHeader>
               <Styled.CalendarHeading>
-                <Styled.CalendarHeadingBtn onClick={handleBackToToday}>
+                <Styled.TodayBtn onClick={handleBackToToday}>
                   Today
-                </Styled.CalendarHeadingBtn>
+                </Styled.TodayBtn>
+                <Styled.TimeBtn>
+                  Set Time <ClockIcon className="icon icon-smallest" />
+                </Styled.TimeBtn>
                 <Styled.HeadingDate>
                   <b>{format(date, 'MMMM')}</b>
                   {format(date, 'yyyy')}

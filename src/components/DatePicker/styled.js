@@ -67,23 +67,46 @@ export const CalendarHeading = styled.h4`
   align-items: center;
 `;
 
-export const CalendarHeadingBtn = styled.button`
+export const HeadingBtn = styled.button`
   border: none;
-  background-color: var(--color-light-grey);
-  color: var(--color-almost-white);
+  background-color: transparent;
+  color: var(--color-medium-grey);
   font-size: 1.8rem;
   padding: 1rem 2rem;
   cursor: pointer;
   outline: none;
   border-radius: 0.5rem;
+  position: relative;
 
   :hover {
-    background-color: var(--color-medium-grey);
+    background-color: var(--color-lightest-grey);
+  }
+`;
+
+export const TodayBtn = styled(HeadingBtn)`
+  ::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: var(--color-earth-red);
+  }
+`;
+
+export const TimeBtn = styled(HeadingBtn)`
+  svg {
+    vertical-align: sub;
   }
 `;
 
 export const HeadingDate = styled.span`
+  flex-basis: 50%;
   color: var(--color-medium-grey);
+  text-align: right;
 
   > b {
     font-weight: 7000;

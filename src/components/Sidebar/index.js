@@ -5,16 +5,16 @@ import Context from '../../context';
 import * as Styled from './styled';
 
 // SVG icons
-import MapIcon from '../../assets/SVG/map.svg';
-import PinIcon from '../../assets/SVG/map-pin.svg';
-import UsersPin from '../../assets/SVG/users.svg';
-import MessageIcon from '../../assets/SVG/message-square.svg';
-import BellIcon from '../../assets/SVG/bell.svg';
-import SettingsIcon from '../../assets/SVG/settings.svg';
-import MoreIcon from '../../assets/SVG/more-horizontal.svg';
-import LoginIcon from '../../assets/SVG/log-in.svg';
-import LogoutIcon from '../../assets/SVG/log-out.svg';
-import CalendarIcon from '../../assets/SVG/calendar.svg';
+import { ReactComponent as MapIcon } from '../../assets/SVG/map.svg';
+import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
+import { ReactComponent as UsersPin } from '../../assets/SVG/users.svg';
+import { ReactComponent as MessageIcon } from '../../assets/SVG/message-square.svg';
+import { ReactComponent as BellIcon } from '../../assets/SVG/bell.svg';
+import { ReactComponent as SettingsIcon } from '../../assets/SVG/settings.svg';
+import { ReactComponent as MoreIcon } from '../../assets/SVG/more-horizontal.svg';
+import { ReactComponent as LoginIcon } from '../../assets/SVG/log-in.svg';
+import { ReactComponent as LogoutIcon } from '../../assets/SVG/log-out.svg';
+import { ReactComponent as CalendarIcon } from '../../assets/SVG/calendar.svg';
 
 const ITEMS = [
   { text: 'map', icon: MapIcon },

@@ -6,8 +6,8 @@ import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 
 import * as Styled from './styled';
 import { PinWrapper } from '../../stylesShare';
-import XIcon from '../../assets/SVG/x.svg';
-import SendIcon from '../../assets/SVG/send.svg';
+import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
+import { ReactComponent as SendIcon } from '../../assets/SVG/send.svg';
 
 import Context from '../../context';
 import {

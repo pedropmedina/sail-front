@@ -12,8 +12,8 @@ import { CREATE_PIN_MUTATION } from '../../graphql/mutations';
 
 import * as Styled from './styled';
 import { CloseBtn, PinWrapper } from '../../stylesShare';
-import DownloadIcon from '../../assets/SVG/download.svg';
-import XIcon from '../../assets/SVG/x.svg';
+import { ReactComponent as DownloadIcon } from '../../assets/SVG/download.svg';
+import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 
 const PinMutation = ({ style }) => {
   const { state, dispatch } = useContext(Context);
