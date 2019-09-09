@@ -10,6 +10,7 @@ export default createGlobalStyle`
     --color-dark-grey: #324C56;
     --color-medium-grey: #6C8C96;
     --color-light-grey: #B6BBC0;
+    --color-lightest-grey: #dbdbdb;
   }
 
   html {

@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 import styled from 'styled-components/macro'; // eslint-disable-line
 
 import * as Styled from './styled';
+import ClickOutside from '../../components/ClickOutside';
 
 // Initialize mapbox geocoding service
 const geocondingService = mbxGeocoding({
@@ -20,7 +21,6 @@ const GeocodingSearch = ({
   onClickGeocodingResult,
   css = {}
 }) => {
-  const wrapperRef = useRef(null);
   const [text, setText] = useState('');
   const [geocodingResults, setGeocodingResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
@@ -44,22 +44,13 @@ const GeocodingSearch = ({
     };
   }, [text]);
 
-  // reset geocodingResults on click outside wrapper
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
   // toggle show results based on click in and out of element
-  const handleClickOutside = e => {
-    if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
-      setShowResults(false);
-    } else {
-      setShowResults(true);
-    }
+  const onClickOutside = () => {
+    setShowResults(false);
+  };
+
+  const onClickInside = () => {
+    setShowResults(true);
   };
 
   const handleChange = e => {
@@ -84,40 +75,42 @@ const GeocodingSearch = ({
   };
 
   return (
-    <Styled.GeocodingWrapper ref={wrapperRef} css={css}>
-      <Styled.Geocoding>
-        {/* Geocoding Search form */}
-        <Styled.GeocodingSearch onSubmit={hanldeSubmit}>
-          <Styled.GeocodingInput
-            type="text"
-            value={text}
-            placeholder="Search by location, category, city..."
-            onChange={handleChange}
-          />
-          <Styled.SearchIcon className="icon icon-small" />
-        </Styled.GeocodingSearch>
-        {/* Geocoding search results  */}
-        <Styled.GeocodingResults
-          showResults={showResults && geocodingResults.length > 0}
-        >
-          <Styled.ResultList>
-            {geocodingResults.map((result, index) => {
-              return (
-                <Styled.ResultItem
-                  key={index}
-                  onClick={() => {
-                    setShowResults(false);
-                    onClickGeocodingResult(result);
-                  }}
-                >
-                  {result.place_name}
-                </Styled.ResultItem>
-              );
-            })}
-          </Styled.ResultList>
-        </Styled.GeocodingResults>
-      </Styled.Geocoding>
-    </Styled.GeocodingWrapper>
+    <ClickOutside onClickOutside={onClickOutside} onClickInside={onClickInside}>
+      <Styled.GeocodingWrapper css={css}>
+        <Styled.Geocoding>
+          {/* Geocoding Search form */}
+          <Styled.GeocodingSearch onSubmit={hanldeSubmit}>
+            <Styled.GeocodingInput
+              type="text"
+              value={text}
+              placeholder="Search by location, category, city..."
+              onChange={handleChange}
+            />
+            <Styled.SearchIcon className="icon icon-small" />
+          </Styled.GeocodingSearch>
+          {/* Geocoding search results  */}
+          <Styled.GeocodingResults
+            showResults={showResults && geocodingResults.length > 0}
+          >
+            <Styled.ResultList>
+              {geocodingResults.map((result, index) => {
+                return (
+                  <Styled.ResultItem
+                    key={index}
+                    onClick={() => {
+                      setShowResults(false);
+                      onClickGeocodingResult(result);
+                    }}
+                  >
+                    {result.place_name}
+                  </Styled.ResultItem>
+                );
+              })}
+            </Styled.ResultList>
+          </Styled.GeocodingResults>
+        </Styled.Geocoding>
+      </Styled.GeocodingWrapper>
+    </ClickOutside>
   );
 };
 

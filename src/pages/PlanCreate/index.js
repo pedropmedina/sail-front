@@ -5,6 +5,7 @@ import * as Styled from './styled';
 
 import Context from '../../context';
 import GeocodingSearch from '../../components/GeocodingSearch';
+import DatePicker from '../../components/DatePicker';
 
 const css = `
   font-size: 1.6rem;
@@ -39,7 +40,7 @@ const PlanCreate = () => {
           />
         </Styled.Field>
         <Styled.Field>
-          <Styled.Input type="text" name="date" placeholder="Select a date" />
+          <DatePicker />
         </Styled.Field>
       </Styled.Fields>
     </Styled.PlanCreate>
