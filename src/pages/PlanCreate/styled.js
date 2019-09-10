@@ -6,7 +6,7 @@ export const PlanCreate = styled.section`
 `;
 
 export const Fields = styled.div`
-  width: 70vh;
+  width: 70vw;
   max-width: 70rem;
   margin: 0 auto;
 `;

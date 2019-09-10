@@ -100,57 +100,98 @@ const DatePicker = () => {
               onFocus={() => setShowCalendar(true)}
             />
           </Styled.DatePickerSearch>
-          {/* Calendar */}
-          <Styled.DatePickerCalendar showCalendar={showCalendar}>
-            {/* Header */}
-            <Styled.CalendarHeader>
-              <Styled.CalendarHeading>
-                <Styled.TodayBtn onClick={handleBackToToday}>
-                  Today
-                </Styled.TodayBtn>
-                <Styled.TimeBtn>
-                  Set Time <ClockIcon className="icon icon-smallest" />
-                </Styled.TimeBtn>
-                <Styled.HeadingDate>
-                  <b>{format(date, 'MMMM')}</b>
-                  {format(date, 'yyyy')}
-                </Styled.HeadingDate>
-              </Styled.CalendarHeading>
-              <Styled.LeftArrow onClick={handlePrevMonth}>
-                <LeftArrowIcon />
-              </Styled.LeftArrow>
-              <Styled.RightArrow onClick={handleNextMonth}>
-                <RightArrowIcon />
-              </Styled.RightArrow>
-            </Styled.CalendarHeader>
-            {/* Dates */}
-            <Styled.CalendarDates>
-              <Styled.CalendarWeekdays>
-                {DAYS_OF_WEEK.map((day, i) => (
-                  <Styled.CalendarWeekday key={`${day}-${i}`}>
-                    {day}
-                  </Styled.CalendarWeekday>
-                ))}
-              </Styled.CalendarWeekdays>
-              <Styled.CalendarDays>
-                {constructCalendarDates(date).map((d, i) => (
-                  <Styled.CalendarDay
-                    key={i}
-                    isToday={isToday(d)}
-                    isWeekend={isWeekend(d)}
-                    isInMonth={isWithinInterval(d, {
-                      start: startOfMonth(date),
-                      end: endOfMonth(date)
-                    })}
-                    isSelected={isEqual(d, selectedDate)}
-                    onClick={() => handleClickDay(d)}
-                  >
-                    {isFirstDayOfMonth(d) ? format(d, 'MMM d') : getDate(d)}
-                  </Styled.CalendarDay>
-                ))}
-              </Styled.CalendarDays>
-            </Styled.CalendarDates>
-          </Styled.DatePickerCalendar>
+          {/* DatePicker or TimePicker */}
+          {showCalendar ? (
+            <Styled.DatePickerCalendar showCalendar={showCalendar}>
+              {/* Header */}
+              <Styled.CalendarHeader>
+                <Styled.CalendarHeading>
+                  <Styled.TodayBtn onClick={handleBackToToday}>
+                    Today
+                  </Styled.TodayBtn>
+                  <Styled.TimeBtn>
+                    Set Time <ClockIcon className="icon icon-smallest" />
+                  </Styled.TimeBtn>
+                  <Styled.HeadingDate>
+                    <b>{format(date, 'MMMM')}</b>
+                    {format(date, 'yyyy')}
+                  </Styled.HeadingDate>
+                </Styled.CalendarHeading>
+                <Styled.LeftArrow onClick={handlePrevMonth}>
+                  <LeftArrowIcon />
+                </Styled.LeftArrow>
+                <Styled.RightArrow onClick={handleNextMonth}>
+                  <RightArrowIcon />
+                </Styled.RightArrow>
+              </Styled.CalendarHeader>
+              {/* Dates */}
+              <Styled.CalendarDates>
+                <Styled.CalendarWeekdays>
+                  {DAYS_OF_WEEK.map((day, i) => (
+                    <Styled.CalendarWeekday key={`${day}-${i}`}>
+                      {day}
+                    </Styled.CalendarWeekday>
+                  ))}
+                </Styled.CalendarWeekdays>
+                <Styled.CalendarDays>
+                  {constructCalendarDates(date).map((d, i) => (
+                    <Styled.CalendarDay
+                      key={i}
+                      isToday={isToday(d)}
+                      isWeekend={isWeekend(d)}
+                      isInMonth={isWithinInterval(d, {
+                        start: startOfMonth(date),
+                        end: endOfMonth(date)
+                      })}
+                      isSelected={isEqual(d, selectedDate)}
+                      onClick={() => handleClickDay(d)}
+                    >
+                      {isFirstDayOfMonth(d) ? format(d, 'MMM d') : getDate(d)}
+                    </Styled.CalendarDay>
+                  ))}
+                </Styled.CalendarDays>
+              </Styled.CalendarDates>
+            </Styled.DatePickerCalendar>
+          ) : (
+            <Styled.DatePickerTime>
+              <Styled.TimeHeader>
+                <Styled.TimeHeading>Current Time</Styled.TimeHeading>
+                <Styled.PinMinutes>
+                  <Styled.PinMinuteBtn color="orange">
+                    15-minute
+                  </Styled.PinMinuteBtn>
+                  <Styled.PinMinuteBtn color="orangeRed">
+                    30-minute
+                  </Styled.PinMinuteBtn>
+                  <Styled.PinMinuteBtn color="FireBrick">
+                    45-minute
+                  </Styled.PinMinuteBtn>
+                </Styled.PinMinutes>
+              </Styled.TimeHeader>
+              <Styled.TimeHours>
+                <Styled.SectionHeading>Hours</Styled.SectionHeading>
+                <Styled.TimeList>
+                  {[...Array(12)].map((_, i) => (
+                    <Styled.TimeItem key={i}>{i + 1}</Styled.TimeItem>
+                  ))}
+                </Styled.TimeList>
+              </Styled.TimeHours>
+              <Styled.TimeMinutes>
+                <Styled.SectionHeading>Minutes</Styled.SectionHeading>
+                <Styled.TimeList isMinutesList>
+                  {[...Array(60)].map((_, i) => (
+                    <Styled.TimeItem isMinuteItem key={i}>
+                      {i < 10 ? `0${i}` : i}
+                    </Styled.TimeItem>
+                  ))}
+                </Styled.TimeList>
+              </Styled.TimeMinutes>
+              <Styled.TimePeriods>
+                <Styled.PeriodBtn AM>AM</Styled.PeriodBtn>
+                <Styled.PeriodBtn PM>PM</Styled.PeriodBtn>
+              </Styled.TimePeriods>
+            </Styled.DatePickerTime>
+          )}
         </Styled.DatePicker>
       </Styled.DatePickerWrapper>
     </ClickOutside>

@@ -36,7 +36,7 @@ export const DatePickerInput = styled.input`
   }
 `;
 
-export const DatePickerCalendar = styled.article`
+export const Box = styled.article`
   padding: 2rem;
   background-color: var(--color-almost-white);
   box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.15);
@@ -46,12 +46,16 @@ export const DatePickerCalendar = styled.article`
   right: 0;
   bottom: 0;
   transform: translateY(calc(100% + 2rem));
+`;
+
+export const DatePickerCalendar = styled(Box)`
   display: ${({ showCalendar }) => (showCalendar ? 'grid' : 'none')};
-  grid-template-rows: min-content 1fr;
+  grid-template-rows: minmax(min-content, 7rem) minmax(min-content, 53rem);
   row-gap: 2rem;
 `;
 
 export const CalendarHeader = styled.header`
+  grid-row: 1 / 2;
   display: grid;
   grid-template-columns: 5rem 1fr 5rem;
   column-gap: 3rem;
@@ -109,7 +113,7 @@ export const HeadingDate = styled.span`
   text-align: right;
 
   > b {
-    font-weight: 7000;
+    font-weight: 700;
     margin-right: 1rem;
   }
 `;
@@ -138,6 +142,7 @@ export const RightArrow = styled(LeftArrow)`
 `;
 
 export const CalendarDates = styled.section`
+  grid-row: 2 / 3;
   display: grid;
   grid-template-rows: min-content 1fr;
 `;
@@ -203,4 +208,96 @@ export const CalendarDay = styled.span`
         background-color: var(--color-earth-red);
       }
     `}
+`;
+
+export const DatePickerTime = styled(Box)`
+  /* display: ${({ showTimePicker }) => (showTimePicker ? 'grid' : 'none')}; */
+  display: grid;
+  grid-template-rows: 4rem minmax(16rem, min-content) minmax(30rem, min-content) 4rem;
+  row-gap: 2rem;
+`;
+
+export const TimeHeader = styled.header`
+  grid-row: 1 / span 1;
+
+  display: grid;
+  grid-template-columns: 2rem 1fr max-content;
+  grid-template-rows: 1fr;
+  column-gap: 1rem;
+`;
+
+export const TimeHeading = styled.h4`
+  grid-column: 3 / span 1;
+  line-height: 4rem;
+`;
+
+export const PinMinutes = styled.span`
+  grid-column: 2 / span 1;
+  grid-row: 1 / span 1;
+`;
+
+export const PinMinuteBtn = styled(TodayBtn)`
+  ::after {
+    background-color: ${({ color }) => (color ? color : 'initial')};
+  }
+`;
+
+export const TimeSection = styled.section`
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  column-gap: 1rem;
+`;
+
+export const SectionHeading = styled.h4`
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  align-self: center;
+  font-weight: 500;
+`;
+
+export const TimeHours = styled(TimeSection)`
+  grid-row: 2 / span 1;
+`;
+
+export const TimeMinutes = styled(TimeSection)`
+  grid-row: 3 / span 1;
+`;
+
+export const TimePeriods = styled(TimeSection)`
+  grid-row: 4 / span 1;
+  grid-template-columns: 2rem repeat(2, 1fr);
+`;
+
+export const PeriodBtn = styled.button`
+  border: none;
+  border-radius: 0.5rem;
+  color: var(--color-light-grey);
+  background-color: var(--color-lightest-grey);
+  font-size: inherit;
+  grid-column: ${({ AM }) => (AM ? '2 / span 1' : '3 / span 1')};
+  cursor: pointer;
+`;
+
+export const TimeList = styled.ul`
+  list-style: none;
+  display: grid;
+  column-gap: 0.3rem;
+  row-gap: 0.3rem;
+  grid-template-rows: ${({ isMinutesList }) =>
+    isMinutesList ? 'repeat(6, 5rem)' : 'repeat(2, 8rem)'};
+  grid-template-columns: ${({ isMinutesList }) =>
+    isMinutesList ? 'repeat(10, 1fr)' : 'repeat(6, 1fr)'};
+`;
+
+export const TimeItem = styled.li`
+  line-height: ${({ isMinuteItem }) => (isMinuteItem ? '5rem' : '8rem')};
+  text-align: center;
+  cursor: pointer;
+  background-color: var(--color-lightest-grey);
+  border-radius: 0.5rem;
+
+  :hover {
+    background-color: var(--color-light-grey);
+    color: var(--color-almost-white);
+  }
 `;
