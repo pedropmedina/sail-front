@@ -229,6 +229,9 @@ export const TimeHeader = styled.header`
 export const TimeHeading = styled.h4`
   grid-column: 3 / span 1;
   line-height: 4rem;
+  color: var(--color-dark-grey);
+  font-size: 2.4rem;
+  font-weight: 500;
 `;
 
 export const PinMinutes = styled.span`
@@ -295,9 +298,26 @@ export const TimeItem = styled.li`
   cursor: pointer;
   background-color: var(--color-lightest-grey);
   border-radius: 0.5rem;
+  position: relative;
 
   :hover {
     background-color: var(--color-light-grey);
     color: var(--color-almost-white);
   }
+
+  ${({ contentColor }) =>
+    contentColor &&
+    css`
+      ::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0.7rem;
+        right: 0.7rem;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background-color: ${contentColor};
+      }
+    `}
 `;

@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro';
 
-export const App = styled.div`
+export const App = styled.section`
   height: 100vh;
   display: grid;
   grid-template-columns:

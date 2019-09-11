@@ -9,8 +9,9 @@ export const Container = styled.div`
     [row-2-end row-3-start] 1fr [row-3-end];
   background-color: var(--color-almost-white);
 
-  > div {
+  > section {
     grid-column: col-2-start / col-3-end;
     grid-row: 1 / -1;
+    overflow-y: auto;
   }
 `;

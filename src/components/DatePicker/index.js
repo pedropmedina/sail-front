@@ -1,11 +1,15 @@
 /* eslint-disable no-console  */
 import React, { useState } from 'react';
+import keyBy from 'lodash/keyBy';
 import styled from 'styled-components/macro'; // eslint-disable-line
 import {
   format,
   isEqual,
   isWithinInterval,
   eachDayOfInterval,
+  setMinutes,
+  setHours,
+  getHours,
   getDay,
   subDays,
   addDays,
@@ -35,10 +39,20 @@ const css = `
 
 const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
 
+const PIN_COLORS = [
+  { time: 15, color: 'orange' },
+  { time: 30, color: 'orangeRed' },
+  { time: 45, color: 'FireBrick' }
+];
+
+const KEYEDBY_TIME_PIN_COLORS = keyBy(PIN_COLORS, 'time');
+
 const DatePicker = () => {
   const [date, setDate] = useState(new Date());
+  const [period, setPeriod] = useState('');
   const [selectedDate, setSelectedDate] = useState(null);
   const [showCalendar, setShowCalendar] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
 
   const constructCalendarDates = date => {
     const firstDateOfMonth = startOfMonth(date);
@@ -87,6 +101,29 @@ const DatePicker = () => {
 
   const onClickOutside = () => {
     setShowCalendar(false);
+    setShowTimePicker(false);
+  };
+
+  const handleSetHours = hour => {
+    if (period) {
+      if (period === 'am') {
+        setDate(setHours(date, hour === 12 ? 0 : hour));
+      } else {
+        setDate(setHours(date, hour === 12 ? 12 : hour + 12));
+      }
+    } else {
+      setDate(setHours(date, hour));
+    }
+  };
+
+  const handlePeriods = period => {
+    setPeriod(period);
+    const hour = getHours(date);
+    if (hour <= 11 && period === 'pm') {
+      setDate(setHours(date, hour + 12));
+    } else if (hour >= 11 && period === 'am') {
+      setDate(setHours(date, hour - 12));
+    }
   };
 
   return (
@@ -98,6 +135,8 @@ const DatePicker = () => {
             <Styled.DatePickerInput
               placeholder="Select a day"
               onFocus={() => setShowCalendar(true)}
+              value={format(date, 'dd/LL/yyy h:mm aaa')}
+              onChange={() => console.log('to be done!')}
             />
           </Styled.DatePickerSearch>
           {/* DatePicker or TimePicker */}
@@ -109,7 +148,7 @@ const DatePicker = () => {
                   <Styled.TodayBtn onClick={handleBackToToday}>
                     Today
                   </Styled.TodayBtn>
-                  <Styled.TimeBtn>
+                  <Styled.TimeBtn onClick={() => setShowTimePicker(true)}>
                     Set Time <ClockIcon className="icon icon-smallest" />
                   </Styled.TimeBtn>
                   <Styled.HeadingDate>
@@ -155,40 +194,66 @@ const DatePicker = () => {
           ) : (
             <Styled.DatePickerTime>
               <Styled.TimeHeader>
-                <Styled.TimeHeading>Current Time</Styled.TimeHeading>
+                <Styled.TimeHeading>
+                  {format(date, 'h:mm a')}
+                </Styled.TimeHeading>
                 <Styled.PinMinutes>
-                  <Styled.PinMinuteBtn color="orange">
-                    15-minute
-                  </Styled.PinMinuteBtn>
-                  <Styled.PinMinuteBtn color="orangeRed">
-                    30-minute
-                  </Styled.PinMinuteBtn>
-                  <Styled.PinMinuteBtn color="FireBrick">
-                    45-minute
-                  </Styled.PinMinuteBtn>
+                  {PIN_COLORS.map(({ time, color }) => (
+                    <Styled.PinMinuteBtn
+                      key={`${time}-${color}`}
+                      color={color}
+                      onClick={() => setDate(setMinutes(date, time))}
+                    >
+                      {`${time}-minute`}
+                    </Styled.PinMinuteBtn>
+                  ))}
                 </Styled.PinMinutes>
               </Styled.TimeHeader>
               <Styled.TimeHours>
                 <Styled.SectionHeading>Hours</Styled.SectionHeading>
                 <Styled.TimeList>
                   {[...Array(12)].map((_, i) => (
-                    <Styled.TimeItem key={i}>{i + 1}</Styled.TimeItem>
+                    <Styled.TimeItem
+                      key={i}
+                      onClick={() => handleSetHours(i + 1)}
+                    >
+                      {i + 1}
+                    </Styled.TimeItem>
                   ))}
                 </Styled.TimeList>
               </Styled.TimeHours>
               <Styled.TimeMinutes>
                 <Styled.SectionHeading>Minutes</Styled.SectionHeading>
                 <Styled.TimeList isMinutesList>
-                  {[...Array(60)].map((_, i) => (
-                    <Styled.TimeItem isMinuteItem key={i}>
-                      {i < 10 ? `0${i}` : i}
-                    </Styled.TimeItem>
-                  ))}
+                  {[...Array(60)].map((_, i) => {
+                    return [15, 30, 45].includes(i) ? (
+                      <Styled.TimeItem
+                        isMinuteItem
+                        contentColor={KEYEDBY_TIME_PIN_COLORS[i]['color']}
+                        key={i}
+                        onClick={() => setDate(setMinutes(date, i))}
+                      >
+                        {i < 10 ? `0${i}` : i}
+                      </Styled.TimeItem>
+                    ) : (
+                      <Styled.TimeItem
+                        isMinuteItem
+                        key={i}
+                        onClick={() => setDate(setMinutes(date, i))}
+                      >
+                        {i < 10 ? `0${i}` : i}
+                      </Styled.TimeItem>
+                    );
+                  })}
                 </Styled.TimeList>
               </Styled.TimeMinutes>
               <Styled.TimePeriods>
-                <Styled.PeriodBtn AM>AM</Styled.PeriodBtn>
-                <Styled.PeriodBtn PM>PM</Styled.PeriodBtn>
+                <Styled.PeriodBtn AM onClick={() => handlePeriods('am')}>
+                  AM
+                </Styled.PeriodBtn>
+                <Styled.PeriodBtn PM onClick={() => handlePeriods('pm')}>
+                  PM
+                </Styled.PeriodBtn>
               </Styled.TimePeriods>
             </Styled.DatePickerTime>
           )}
