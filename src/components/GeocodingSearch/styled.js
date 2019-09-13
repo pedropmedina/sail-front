@@ -25,9 +25,9 @@ export const GeocodingSearch = styled.section`
 export const GeocodingInput = styled.input`
   width: 100%;
   height: 100%;
-  text-indent: 2rem;
+  text-indent: 5rem;
   border: none;
-  color: inherit;
+  color: var(--color-dark-grey);
   background-color: inherit;
   outline: none;
   border-radius: inherit;
@@ -40,11 +40,11 @@ export const GeocodingInput = styled.input`
 
 export const SearchIcon = styled(Icon)`
   position: absolute;
-  right: 3rem;
+  left: 1.5rem;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 3rem;
-  color: var(--color-light-grey);
+  font-size: 2rem;
+  fill: currentColor;
 `;
 
 export const GeocodingResults = styled.section`

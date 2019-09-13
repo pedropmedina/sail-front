@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components/macro';
 
+import { ReactComponent as Icon } from '../../assets/SVG/calendar.svg';
+
 export const DatePickerWrapper = styled.div``;
 
 export const DatePicker = styled.article`
@@ -23,9 +25,9 @@ export const DatePickerSearch = styled.article`
 export const DatePickerInput = styled.input`
   width: 100%;
   height: 100%;
-  text-indent: 2rem;
+  text-indent: 5rem;
   border: none;
-  color: inherit;
+  color: var(--color-dark-grey);
   background-color: inherit;
   outline: none;
   border-radius: inherit;
@@ -34,6 +36,15 @@ export const DatePickerInput = styled.input`
   &::placeholder {
     color: var(--color-light-grey);
   }
+`;
+
+export const CalendarIcon = styled(Icon)`
+  position: absolute;
+  left: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2rem;
+  fill: currentColor;
 `;
 
 export const Box = styled.article`

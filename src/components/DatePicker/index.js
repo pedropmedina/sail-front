@@ -204,7 +204,9 @@ const DatePicker = () => {
 
   const handleBlur = event => {
     const date = chrono.parseDate(event.target.value);
-    setFieldValue(format(date, 'MM/dd/yyyy h:mm a'));
+    if (isDate(date)) {
+      setFieldValue(format(date, 'MM/dd/yyyy h:mm a'));
+    }
   };
 
   return (
@@ -214,13 +216,13 @@ const DatePicker = () => {
           {/* Search input */}
           <Styled.DatePickerSearch>
             <Styled.DatePickerInput
-              placeholder="Select a day"
+              placeholder="Pick/Type a day and time (e.g., next Monday at 11:30 AM, Friday, 12/12/2019, ...)"
               onFocus={handleFocus}
               onBlur={handleBlur}
               value={fieldValue}
-              // value={format(date, 'dd/LL/yyy h:mm aaa')}
               onChange={handleChange}
             />
+            <Styled.CalendarIcon />
           </Styled.DatePickerSearch>
           {/* DatePicker or TimePicker */}
           {!!showCalendar && (

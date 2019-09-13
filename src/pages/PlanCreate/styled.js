@@ -48,7 +48,7 @@ export const Input = styled.input`
   border: none;
   border: 0.1rem solid var(--color-ligh-grey);
   border-radius: 0.5rem;
-  color: var(--color-light-grey);
+  color: var(--color-dark-grey);
   margin-top: 1rem;
   background-color: inherit;
   outline: none;
