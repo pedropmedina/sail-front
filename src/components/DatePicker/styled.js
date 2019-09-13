@@ -10,6 +10,7 @@ export const DatePicker = styled.article`
   background-color: inherit;
   border-radius: inherit;
   font-size: inherit;
+  z-index: 1;
 `;
 
 export const DatePickerSearch = styled.article`
