@@ -68,6 +68,7 @@ export const DatePickerCalendar = styled(Box)`
 
 export const CalendarHeader = styled.header`
   grid-row: 1 / 2;
+
   display: grid;
   grid-template-columns: 5rem 1fr 5rem;
   column-gap: 3rem;
@@ -155,13 +156,14 @@ export const RightArrow = styled(LeftArrow)`
 
 export const CalendarDates = styled.section`
   grid-row: 2 / 3;
+
   display: grid;
   grid-template-rows: min-content 1fr;
 `;
 
 export const CalendarWeekdays = styled.section`
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(min-content, 1fr));
   justify-items: center;
   padding: 1rem 0;
 `;
@@ -173,8 +175,8 @@ export const CalendarWeekday = styled.span`
 
 export const CalendarDays = styled.section`
   display: grid;
-  grid-template-rows: repeat(6, 8rem);
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(6, minmax(min-content, 8rem));
+  grid-template-columns: repeat(7, minmax(min-content, 1fr));
   border-left: 0.1rem solid var(--color-light-grey);
   border-top: 0.1rem solid var(--color-light-grey);
 `;

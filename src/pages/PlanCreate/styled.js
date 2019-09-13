@@ -1,12 +1,12 @@
 import styled from 'styled-components/macro';
 
 export const PlanCreate = styled.section`
-  grid-column: col-2-start / col-2-end;
+  grid-column: col-1-start / col-2-end !important;
   padding: 5rem;
 `;
 
 export const Fields = styled.div`
-  width: 70vw;
+  width: 70%;
   max-width: 70rem;
   margin: 0 auto;
 `;

@@ -25,12 +25,14 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     establishSession(client, dispatch, setIsLoggedIn);
   }, [isLoggedIn, setIsLoggedIn, dispatch]);
 
+  console.log(rest);
+
   return isLoggedIn ? (
     <Route
       {...rest}
       render={props => (
         <Styled.Container>
-          <Sidebar />
+          {!rest.path.includes('create') && <Sidebar />}
           <Component {...props} />
         </Styled.Container>
       )}
