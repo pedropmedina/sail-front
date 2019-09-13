@@ -1,18 +1,21 @@
 /* eslint-disable no-console  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import keyBy from 'lodash/keyBy';
+import chrono from 'chrono-node';
 import styled from 'styled-components/macro'; // eslint-disable-line
 import {
   format,
-  isEqual,
+  isDate,
   isWithinInterval,
   eachDayOfInterval,
   setMinutes,
+  getMinutes,
   setHours,
   getHours,
   getDay,
   subDays,
   addDays,
+  isSameDay,
   differenceInDays,
   getDaysInMonth,
   isToday,
@@ -48,11 +51,51 @@ const PIN_COLORS = [
 const KEYEDBY_TIME_PIN_COLORS = keyBy(PIN_COLORS, 'time');
 
 const DatePicker = () => {
+  const [fieldValue, setFieldValue] = useState('');
   const [date, setDate] = useState(new Date());
   const [period, setPeriod] = useState('');
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [hour, setHour] = useState('');
+  const [minute, setMinute] = useState('');
+  const [selectedDate, setSelectedDate] = useState();
   const [showCalendar, setShowCalendar] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+
+  // set selected date to current date upon mounting component
+  useEffect(() => {
+    setSelectedDate(date);
+    setFieldValue(format(date, 'MM/dd/yyyy h:mm a'));
+  }, []);
+
+  // update hour, minute and period on changing selectedDate's day
+  useEffect(() => {
+    if (selectedDate) {
+      const h = getHours(selectedDate);
+      setHour(h === 0 ? 12 : h > 12 ? h - 12 : h);
+      setMinute(getMinutes(selectedDate));
+      h < 12 ? setPeriod('am') : setPeriod('pm');
+    }
+  }, [selectedDate]);
+
+  // update selected date on change field value with timeout
+  useEffect(() => {
+    let timeout = undefined;
+
+    if (fieldValue) {
+      // clear existing timeout
+      clearTimeout(timeout);
+      // set new timeout
+      timeout = setTimeout(() => {
+        const c = chrono.parseDate(fieldValue);
+        if (isDate(c)) {
+          setSelectedDate(c);
+        }
+      }, 700);
+    }
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [fieldValue]);
 
   const constructCalendarDates = date => {
     const firstDateOfMonth = startOfMonth(date);
@@ -96,7 +139,7 @@ const DatePicker = () => {
   const handleClickDay = d => {
     if (!isSameMonth(d, date)) setDate(d);
     setSelectedDate(d);
-    setShowCalendar(false);
+    setFieldValue(format(d, 'MM/dd/yyyy h:mm a'));
   };
 
   const onClickOutside = () => {
@@ -107,23 +150,61 @@ const DatePicker = () => {
   const handleSetHours = hour => {
     if (period) {
       if (period === 'am') {
-        setDate(setHours(date, hour === 12 ? 0 : hour));
+        const h = hour === 12 ? 0 : hour;
+        const d = setHours(selectedDate, h);
+        setSelectedDate(d);
+        setFieldValue(format(d, 'MM/dd/yyyy h:mm a'));
       } else {
-        setDate(setHours(date, hour === 12 ? 12 : hour + 12));
+        const h = hour === 12 ? 12 : hour + 12;
+        const d = setHours(selectedDate, h);
+        setSelectedDate(d);
+        setFieldValue(format(d, 'MM/dd/yyyy h:mm a'));
       }
     } else {
-      setDate(setHours(date, hour));
+      const d = setHours(selectedDate, hour);
+      setSelectedDate(d);
+      setFieldValue(format(d, 'MM/dd/yyyy h:mm a'));
     }
+  };
+
+  const handleSetMinutes = minute => {
+    const d = setMinutes(selectedDate, minute);
+    setSelectedDate(d);
+    setFieldValue(format(d, 'MM/dd/yyyy h:mm a'));
   };
 
   const handlePeriods = period => {
     setPeriod(period);
-    const hour = getHours(date);
-    if (hour <= 11 && period === 'pm') {
-      setDate(setHours(date, hour + 12));
-    } else if (hour >= 11 && period === 'am') {
-      setDate(setHours(date, hour - 12));
+    const h = getHours(selectedDate);
+    if (h <= 11 && period === 'pm') {
+      const d = setHours(selectedDate, h + 12);
+      setSelectedDate(d);
+      setFieldValue(format(d, 'MM/dd/yyyy h:mm a'));
+    } else if (h >= 11 && period === 'am') {
+      const d = setHours(selectedDate, h - 12);
+      setSelectedDate(d);
+      setFieldValue(format(d, 'MM/dd/yyyy h:mm a'));
     }
+  };
+
+  const handleTimePicker = () => {
+    setShowTimePicker(true);
+    setShowCalendar(false);
+  };
+
+  const handleFocus = () => {
+    setShowCalendar(true);
+    setShowTimePicker(false);
+  };
+
+  const handleChange = event => {
+    const value = event.target.value;
+    setFieldValue(value);
+  };
+
+  const handleBlur = event => {
+    const date = chrono.parseDate(event.target.value);
+    setFieldValue(format(date, 'MM/dd/yyyy h:mm a'));
   };
 
   return (
@@ -134,13 +215,15 @@ const DatePicker = () => {
           <Styled.DatePickerSearch>
             <Styled.DatePickerInput
               placeholder="Select a day"
-              onFocus={() => setShowCalendar(true)}
-              value={format(date, 'dd/LL/yyy h:mm aaa')}
-              onChange={() => console.log('to be done!')}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              value={fieldValue}
+              // value={format(date, 'dd/LL/yyy h:mm aaa')}
+              onChange={handleChange}
             />
           </Styled.DatePickerSearch>
           {/* DatePicker or TimePicker */}
-          {showCalendar ? (
+          {!!showCalendar && (
             <Styled.DatePickerCalendar showCalendar={showCalendar}>
               {/* Header */}
               <Styled.CalendarHeader>
@@ -148,7 +231,7 @@ const DatePicker = () => {
                   <Styled.TodayBtn onClick={handleBackToToday}>
                     Today
                   </Styled.TodayBtn>
-                  <Styled.TimeBtn onClick={() => setShowTimePicker(true)}>
+                  <Styled.TimeBtn onClick={handleTimePicker}>
                     Set Time <ClockIcon className="icon icon-smallest" />
                   </Styled.TimeBtn>
                   <Styled.HeadingDate>
@@ -182,7 +265,7 @@ const DatePicker = () => {
                         start: startOfMonth(date),
                         end: endOfMonth(date)
                       })}
-                      isSelected={isEqual(d, selectedDate)}
+                      isSelected={isSameDay(d, selectedDate)}
                       onClick={() => handleClickDay(d)}
                     >
                       {isFirstDayOfMonth(d) ? format(d, 'MMM d') : getDate(d)}
@@ -191,18 +274,19 @@ const DatePicker = () => {
                 </Styled.CalendarDays>
               </Styled.CalendarDates>
             </Styled.DatePickerCalendar>
-          ) : (
-            <Styled.DatePickerTime>
+          )}
+          {!!showTimePicker && (
+            <Styled.DatePickerTime showTimePicker={showTimePicker}>
               <Styled.TimeHeader>
                 <Styled.TimeHeading>
-                  {format(date, 'h:mm a')}
+                  {format(selectedDate, 'h:mm a')}
                 </Styled.TimeHeading>
                 <Styled.PinMinutes>
                   {PIN_COLORS.map(({ time, color }) => (
                     <Styled.PinMinuteBtn
                       key={`${time}-${color}`}
                       color={color}
-                      onClick={() => setDate(setMinutes(date, time))}
+                      onClick={() => handleSetMinutes(time)}
                     >
                       {`${time}-minute`}
                     </Styled.PinMinuteBtn>
@@ -216,6 +300,7 @@ const DatePicker = () => {
                     <Styled.TimeItem
                       key={i}
                       onClick={() => handleSetHours(i + 1)}
+                      isSelected={hour === i + 1}
                     >
                       {i + 1}
                     </Styled.TimeItem>
@@ -231,7 +316,8 @@ const DatePicker = () => {
                         isMinuteItem
                         contentColor={KEYEDBY_TIME_PIN_COLORS[i]['color']}
                         key={i}
-                        onClick={() => setDate(setMinutes(date, i))}
+                        onClick={() => handleSetMinutes(i)}
+                        isSelected={minute === i}
                       >
                         {i < 10 ? `0${i}` : i}
                       </Styled.TimeItem>
@@ -239,7 +325,8 @@ const DatePicker = () => {
                       <Styled.TimeItem
                         isMinuteItem
                         key={i}
-                        onClick={() => setDate(setMinutes(date, i))}
+                        onClick={() => handleSetMinutes(i)}
+                        isSelected={minute === i}
                       >
                         {i < 10 ? `0${i}` : i}
                       </Styled.TimeItem>
@@ -248,10 +335,18 @@ const DatePicker = () => {
                 </Styled.TimeList>
               </Styled.TimeMinutes>
               <Styled.TimePeriods>
-                <Styled.PeriodBtn AM onClick={() => handlePeriods('am')}>
+                <Styled.PeriodBtn
+                  isSelected={period === 'am'}
+                  AM
+                  onClick={() => handlePeriods('am')}
+                >
                   AM
                 </Styled.PeriodBtn>
-                <Styled.PeriodBtn PM onClick={() => handlePeriods('pm')}>
+                <Styled.PeriodBtn
+                  isSelected={period === 'pm'}
+                  PM
+                  onClick={() => handlePeriods('pm')}
+                >
                   PM
                 </Styled.PeriodBtn>
               </Styled.TimePeriods>

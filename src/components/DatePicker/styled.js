@@ -211,7 +211,7 @@ export const CalendarDay = styled.span`
 `;
 
 export const DatePickerTime = styled(Box)`
-  /* display: ${({ showTimePicker }) => (showTimePicker ? 'grid' : 'none')}; */
+  display: ${({ showTimePicker }) => (showTimePicker ? 'grid' : 'none')};
   display: grid;
   grid-template-rows: 4rem minmax(16rem, min-content) minmax(30rem, min-content) 4rem;
   row-gap: 2rem;
@@ -274,11 +274,14 @@ export const TimePeriods = styled(TimeSection)`
 export const PeriodBtn = styled.button`
   border: none;
   border-radius: 0.5rem;
-  color: var(--color-light-grey);
-  background-color: var(--color-lightest-grey);
+  color: ${({ isSelected }) =>
+    isSelected ? 'var(--color-almost-white)' : 'var(--color-light-grey)'};
+  background-color: ${({ isSelected }) =>
+    isSelected ? 'var(--color-dark-grey)' : 'var(--color-lightest-grey)'};
   font-size: inherit;
   grid-column: ${({ AM }) => (AM ? '2 / span 1' : '3 / span 1')};
   cursor: pointer;
+  outline: none;
 `;
 
 export const TimeList = styled.ul`
@@ -296,7 +299,10 @@ export const TimeItem = styled.li`
   line-height: ${({ isMinuteItem }) => (isMinuteItem ? '5rem' : '8rem')};
   text-align: center;
   cursor: pointer;
-  background-color: var(--color-lightest-grey);
+  background-color: ${({ isSelected }) =>
+    isSelected ? 'var(--color-dark-grey)' : 'var(--color-lightest-grey)'};
+  color: ${({ isSelected }) =>
+    isSelected ? 'var(--color-almost-white)' : 'inherit'};
   border-radius: 0.5rem;
   position: relative;
 
