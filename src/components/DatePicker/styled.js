@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components/macro';
 
+import { Box } from '../../stylesShare'
 import { ReactComponent as Icon } from '../../assets/SVG/calendar.svg';
 
 export const DatePickerWrapper = styled.div``;
@@ -46,18 +47,6 @@ export const CalendarIcon = styled(Icon)`
   transform: translateY(-50%);
   font-size: 2rem;
   fill: currentColor;
-`;
-
-export const Box = styled.article`
-  padding: 2rem;
-  background-color: var(--color-almost-white);
-  box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.15);
-  border-radius: 0.5rem;
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  transform: translateY(calc(100% + 2rem));
 `;
 
 export const DatePickerCalendar = styled(Box)`

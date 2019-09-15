@@ -64,7 +64,7 @@ const PlanCreate = () => {
           <DatePicker />
         </Styled.Field>
         <Styled.Field>
-          <FriendsPicker />
+          <FriendsPicker css={css} />
         </Styled.Field>
       </Styled.Fields>
     </Styled.PlanCreate>
