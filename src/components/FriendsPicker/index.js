@@ -5,6 +5,7 @@ import styled from 'styled-components/macro'; // eslint-disable-line
 import * as Styled from './styled';
 
 import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
+import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
 import ClickOutside from '../ClickOutside';
 
 const FRIENDS = ['Bianca', 'Philippe', 'Ana', 'Sergio', 'Leo', 'John'];
@@ -52,12 +53,15 @@ const FriendsPicker = ({ css = {} }) => {
                 </Styled.PicksItem>
               ))}
             </Styled.PicksList>
-            <Styled.SearchInput
-              type="text"
-              value={searchText}
-              placeholder="Search and add friend to plan."
-              onChange={handleChange}
-            />
+            <Styled.SearchLabel>
+              <FilterIcon className="icon icon-small" />
+              <Styled.SearchInput
+                type="text"
+                value={searchText}
+                placeholder="Search and add friend to plan."
+                onChange={handleChange}
+              />
+            </Styled.SearchLabel>
           </Styled.FriendsPickerSearch>
           {/* Results */}
           <Styled.FriendsPickerResults showResults={showResults}>

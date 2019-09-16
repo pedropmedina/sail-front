@@ -1,5 +1,6 @@
 /* eslint-disable no-console, react/prop-types */
 import React, { useState, useContext } from 'react';
+import * as yup from 'yup';
 
 import * as Styled from './styled';
 
@@ -17,13 +18,17 @@ const css = `
   background-color: var(--color-less-white);
 `;
 
-const PlanCreate = () => {
+const PlanCreate = props => {
   const { state } = useContext(Context);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
   const handleClickGeocodingResult = result => {
     console.log(result);
+  };
+
+  const handleOnSelect = date => {
+    console.log(date);
   };
 
   const handleChange = event => {
@@ -65,7 +70,7 @@ const PlanCreate = () => {
           />
         </Styled.Field>
         <Styled.Field>
-          <DatePicker />
+          <DatePicker onSelectDate={handleOnSelect} />
         </Styled.Field>
         <Styled.Field>
           <FriendsPicker css={css} />
@@ -74,7 +79,7 @@ const PlanCreate = () => {
           <PlusIcon />
           Create Plan
         </Styled.CreateBtn>
-        <Styled.CancelBtn>
+        <Styled.CancelBtn onClick={() => props.history.push('/plans')}>
           <XIcon />
         </Styled.CancelBtn>
       </Styled.Fields>

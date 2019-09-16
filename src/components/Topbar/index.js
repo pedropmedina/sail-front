@@ -20,7 +20,7 @@ const Topbar = props => {
   return (
     <Styled.Topbar>
       <Styled.CreateNewBtn onClick={() => props.history.push('/create-plan')}>
-        Create New <PlusIcon className="icon icon-small" />
+        <PlusIcon className="icon icon-small" /> Create New
       </Styled.CreateNewBtn>
       <Styled.Search onSubmit={hanldeSubmit}>
         <Styled.Input

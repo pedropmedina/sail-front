@@ -1,4 +1,4 @@
-/* eslint-disable no-console  */
+/* eslint-disable no-console, react/prop-types */
 import React, { useState, useEffect } from 'react';
 import keyBy from 'lodash/keyBy';
 import chrono from 'chrono-node';
@@ -50,7 +50,7 @@ const PIN_COLORS = [
 
 const KEYEDBY_TIME_PIN_COLORS = keyBy(PIN_COLORS, 'time');
 
-const DatePicker = () => {
+const DatePicker = ({ onSelectDate = () => {} }) => {
   const [fieldValue, setFieldValue] = useState('');
   const [date, setDate] = useState(new Date());
   const [period, setPeriod] = useState('');
@@ -73,6 +73,8 @@ const DatePicker = () => {
       setHour(h === 0 ? 12 : h > 12 ? h - 12 : h);
       setMinute(getMinutes(selectedDate));
       h < 12 ? setPeriod('am') : setPeriod('pm');
+      // access date from other components from onSelectDate callback
+      onSelectDate(selectedDate);
     }
   }, [selectedDate]);
 

@@ -15,15 +15,27 @@ export const FriendsPickerSearch = styled.article`
   flex-wrap: wrap;
 `;
 
-export const SearchInput = styled.input`
+export const SearchLabel = styled.label`
+  flex: 1;
   height: 6rem;
+  position: relative;
+
+  svg {
+    position: absolute;
+    left: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+`;
+export const SearchInput = styled.input`
+  height: 100%;
+  width: 100%;
   font-size: inherit;
   background-color: inherit;
   color: var(--color-dark-grey);
   border: none;
   outline: none;
-  text-indent: 2rem;
-  flex: 1;
+  text-indent: 5rem;
 
   ::placeholder {
     color: var(--color-light-grey);

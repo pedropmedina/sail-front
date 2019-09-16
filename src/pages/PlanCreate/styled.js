@@ -73,7 +73,7 @@ export const Btn = styled.button`
   transition: all 0.2s;
 
   svg {
-    font-size: 2rem;
+    font-size: 2.4rem;
     fill: currentColor;
     transition: all 0.2s;
   }

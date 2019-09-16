@@ -65,6 +65,6 @@ export const CreateNewBtn = styled.button`
 
   > svg {
     vertical-align: sub;
-    margin-left: 0.5rem;
+    margin-right: 0.5rem;
   }
 `;

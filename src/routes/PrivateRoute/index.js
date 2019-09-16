@@ -25,8 +25,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     establishSession(client, dispatch, setIsLoggedIn);
   }, [isLoggedIn, setIsLoggedIn, dispatch]);
 
-  console.log(rest);
-
   return isLoggedIn ? (
     <Route
       {...rest}
