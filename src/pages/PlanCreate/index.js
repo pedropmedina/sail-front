@@ -3,7 +3,11 @@ import React, { useState, useContext } from 'react';
 
 import * as Styled from './styled';
 
+import { ReactComponent as PlusIcon } from '../../assets/SVG/plus.svg';
+import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
+
 import Context from '../../context';
+
 import GeocodingSearch from '../../components/GeocodingSearch';
 import DatePicker from '../../components/DatePicker';
 import FriendsPicker from '../../components/FriendsPicker';
@@ -66,6 +70,13 @@ const PlanCreate = () => {
         <Styled.Field>
           <FriendsPicker css={css} />
         </Styled.Field>
+        <Styled.CreateBtn>
+          <PlusIcon />
+          Create Plan
+        </Styled.CreateBtn>
+        <Styled.CancelBtn>
+          <XIcon />
+        </Styled.CancelBtn>
       </Styled.Fields>
     </Styled.PlanCreate>
   );

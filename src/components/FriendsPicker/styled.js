@@ -13,17 +13,21 @@ export const FriendsPicker = styled.article`
 export const FriendsPickerSearch = styled.article`
   display: flex;
   flex-wrap: wrap;
-  padding: 1rem;
 `;
 
 export const SearchInput = styled.input`
   height: 6rem;
   font-size: inherit;
   background-color: inherit;
+  color: var(--color-dark-grey);
   border: none;
   outline: none;
   text-indent: 2rem;
   flex: 1;
+
+  ::placeholder {
+    color: var(--color-light-grey);
+  }
 `;
 
 export const FriendsPickerResults = styled(Box)`
