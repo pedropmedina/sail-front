@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components/macro';
 
-import { Box } from '../../stylesShare'
+import { Box } from '../../stylesShare';
 import { ReactComponent as Icon } from '../../assets/SVG/calendar.svg';
 
 export const DatePickerWrapper = styled.div``;
@@ -11,7 +11,6 @@ export const DatePicker = styled.article`
   background-color: inherit;
   border-radius: inherit;
   font-size: inherit;
-  z-index: 1;
 `;
 
 export const DatePickerSearch = styled.article`

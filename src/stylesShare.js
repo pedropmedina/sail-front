@@ -55,4 +55,5 @@ export const Box = styled.article`
   right: 0;
   bottom: 0;
   transform: translateY(calc(100% + 2rem));
+  z-index: 1;
 `;

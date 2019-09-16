@@ -1,6 +1,6 @@
 /* eslint-disable no-console, react/prop-types */
 import React, { useState, useContext } from 'react';
-import * as yup from 'yup';
+// import * as yup from 'yup';
 
 import * as Styled from './styled';
 
@@ -70,10 +70,13 @@ const PlanCreate = props => {
           />
         </Styled.Field>
         <Styled.Field>
-          <DatePicker onSelectDate={handleOnSelect} />
+          <DatePicker onSelectDate={handleOnSelect} css={css} />
         </Styled.Field>
         <Styled.Field>
-          <FriendsPicker css={css} />
+          <FriendsPicker
+            css={css}
+            friends={state && state.currentUser && state.currentUser.friends}
+          />
         </Styled.Field>
         <Styled.CreateBtn>
           <PlusIcon />

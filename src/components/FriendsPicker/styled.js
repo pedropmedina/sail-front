@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 
 import { Box } from '../../stylesShare';
 
@@ -16,7 +16,7 @@ export const FriendsPickerSearch = styled.article`
 `;
 
 export const SearchLabel = styled.label`
-  flex: 1;
+  flex-basis: 100%;
   height: 6rem;
   position: relative;
 
@@ -88,12 +88,26 @@ export const FriendsList = styled(List)``;
 
 export const Friend = styled(Item)`
   padding: 1rem 2rem;
+  text-transform: capitalize;
 
-  :hover {
-    background-color: var(--color-light-grey);
-    color: var(--color-almost-white);
-    cursor: pointer;
+  img {
+    margin-right: 1.5rem;
   }
+
+  ${({ disabled }) =>
+    !disabled
+      ? css`
+          :hover {
+            background-color: var(--color-light-grey);
+            color: var(--color-almost-white);
+            cursor: pointer;
+          }
+        `
+      : css`
+          background-color: var(--color-light-white);
+          opacity: 0.5;
+          pointer-events: none;
+        `}
 `;
 
 export const RemoveFriendBtn = styled.button`

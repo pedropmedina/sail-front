@@ -8,9 +8,7 @@ import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
 import ClickOutside from '../ClickOutside';
 
-const FRIENDS = ['Bianca', 'Philippe', 'Ana', 'Sergio', 'Leo', 'John'];
-
-const FriendsPicker = ({ css = {} }) => {
+const FriendsPicker = ({ css = {}, friends = [] }) => {
   const [searchText, setSearchText] = useState('');
   const [invites, setInvites] = useState([]);
   const [showResults, setShowResults] = useState(false);
@@ -66,12 +64,30 @@ const FriendsPicker = ({ css = {} }) => {
           {/* Results */}
           <Styled.FriendsPickerResults showResults={showResults}>
             <Styled.FriendsList>
-              {FRIENDS.map((f, i) => (
-                <Styled.Friend key={i} onClick={() => handleAddInvite(f)}>
-                  <Styled.FriendImg src="https://via.placeholder.com/50" />
-                  {f}
-                </Styled.Friend>
-              ))}
+              {friends &&
+                friends
+                  .filter(f => {
+                    const s = f.name
+                      ? f.name + f.username + f.email
+                      : f.username + f.email;
+                    return searchText
+                      ? s
+                          .toLowerCase()
+                          .includes(searchText.trim().toLowerCase())
+                      : f;
+                  })
+                  .map(({ name, username, email, image }, i) => (
+                    <Styled.Friend
+                      key={`${i}-${email}`}
+                      onClick={() => handleAddInvite(email)}
+                      disabled={invites.includes(email)}
+                    >
+                      <Styled.FriendImg
+                        src={image ? image : 'https://via.placeholder.com/50'}
+                      />
+                      {name ? name : username}
+                    </Styled.Friend>
+                  ))}
             </Styled.FriendsList>
           </Styled.FriendsPickerResults>
         </Styled.FriendsPicker>
