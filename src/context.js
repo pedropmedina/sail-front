@@ -8,14 +8,15 @@ const INITIAL_VIEWPORT = {
 };
 
 const Context = createContext({
-  viewport: INITIAL_VIEWPORT,
   isLoggedIn: false,
+  currentUser: null,
+  viewport: INITIAL_VIEWPORT,
+  pins: [],
   draftPin: null,
   currentPin: null,
   popupPin: null,
   showDraftPinPopup: false,
-  currentUser: null,
-  pins: [],
+  draftPlan: null,
   geocodingResults: []
 });
 

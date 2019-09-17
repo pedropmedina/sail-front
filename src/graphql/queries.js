@@ -28,6 +28,34 @@ export const GET_PINS_QUERY = gql`
   }
 `;
 
+export const GET_PIN_BY_COORDS = gql`
+  query GetPinByCoords($input: GetPinByCoordsInput!) {
+    pin:getPinByCoords(input: $input) {
+      _id
+      title
+      content
+      image
+      latitude
+      longitude
+      author {
+        username
+        email
+      }
+      comments {
+        _id
+        text
+        author {
+          email
+          username
+          name
+        }
+        createdAt
+      }
+      createdAt
+    }
+  }
+`;
+
 export const ME_QUERY = gql`
   {
     user: me {

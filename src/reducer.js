@@ -15,6 +15,17 @@ export const DELETE_POPUP_PIN = 'DELETE_POPUP_PIN';
 export const GET_GEOCODING_RESULTS = 'GET_GEOCODING_RESULTS';
 export const SHOW_DRAFT_PIN_POPUP = 'SHOW_DRAFT_PIN_POPUP';
 export const UPDATE_VIEWPORT = 'UPDATE_VIEWPORT';
+export const CREATE_DRAFT_PLAN = 'CREATE_DRAFT_PLAN';
+export const UPDATE_DRAFT_PLAN = 'UPDATE_DRAFT_PLAN';
+export const DELETE_DRAFT_PLAN = 'DELETE_DRAFT_PLAN';
+
+const DEFAULT_DRAFT_PLAN = {
+  title: '',
+  description: '',
+  pin: '',
+  date: new Date(),
+  invites: []
+};
 
 export default function reducer(state, { type, payload }) {
   switch (type) {
@@ -53,6 +64,12 @@ export default function reducer(state, { type, payload }) {
       return { ...state, geocodingResults: payload };
     case SHOW_DRAFT_PIN_POPUP:
       return { ...state, showDraftPinPopup: payload };
+    case CREATE_DRAFT_PLAN:
+      return { ...state, draftPlan: DEFAULT_DRAFT_PLAN };
+    case UPDATE_DRAFT_PLAN:
+      return { ...state, draftPlan: { ...state.draftPlan, ...payload } };
+    case DELETE_DRAFT_PLAN:
+      return { ...state, draftPlan: null };
     default:
       return state;
   }

@@ -50,9 +50,9 @@ const PIN_COLORS = [
 
 const KEYEDBY_TIME_PIN_COLORS = keyBy(PIN_COLORS, 'time');
 
-const DatePicker = ({ onSelectDate = () => {} }) => {
+const DatePicker = ({ onSelectDate = () => {}, defaultDate = new Date() }) => {
   const [fieldValue, setFieldValue] = useState('');
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(defaultDate);
   const [period, setPeriod] = useState('');
   const [hour, setHour] = useState('');
   const [minute, setMinute] = useState('');

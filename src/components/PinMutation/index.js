@@ -62,7 +62,7 @@ const PinMutation = ({ style }) => {
   };
 
   const validateFileType = file => {
-    const fileTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/jpeg'];
+    const fileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     return fileTypes.some(type => type === file.type);
   };
 

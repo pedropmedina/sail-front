@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/macro'; // eslint-disable-line
 
 import * as Styled from './styled';
@@ -8,10 +8,19 @@ import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
 import ClickOutside from '../ClickOutside';
 
-const FriendsPicker = ({ css = {}, friends = [] }) => {
+const FriendsPicker = ({
+  css = {},
+  friends = [],
+  defaultInvites = [],
+  onHandleInvites = () => {}
+}) => {
   const [searchText, setSearchText] = useState('');
-  const [invites, setInvites] = useState([]);
+  const [invites, setInvites] = useState(defaultInvites);
   const [showResults, setShowResults] = useState(false);
+
+  useEffect(() => {
+    onHandleInvites(invites);
+  }, [invites]);
 
   const handleChange = event => {
     const value = event.target.value;
