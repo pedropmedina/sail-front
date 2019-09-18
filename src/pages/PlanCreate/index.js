@@ -12,18 +12,26 @@ import Context from '../../context';
 import GeocodingSearch from '../../components/GeocodingSearch';
 import DatePicker from '../../components/DatePicker';
 import FriendsPicker from '../../components/FriendsPicker';
+import MapPreview from '../../components/MapPreview';
 
 import {
   CREATE_DRAFT_PLAN,
   UPDATE_DRAFT_PLAN,
   CREATE_DRAFT_PIN,
   UPDATE_DRAFT_PIN,
-  DELETE_DRAFT_PLAN
+  DELETE_DRAFT_PLAN,
+  SHOW_DRAFT_PIN_POPUP,
+  UPDATE_VIEWPORT
 } from '../../reducer';
 
 const css = `
   font-size: 1.6rem;
   background-color: var(--color-less-white);
+`;
+
+const mapPreviewCss = `
+  height: 100%;
+  width: 100%;
 `;
 
 const PlanCreate = props => {
@@ -33,7 +41,7 @@ const PlanCreate = props => {
   const [description, setDescription] = useState('');
 
   useEffect(() => {
-    // create draftPlan is none exists
+    // create draftPlan is none exists upon mounting component
     if (!draftPlan) {
       dispatch({ type: CREATE_DRAFT_PLAN });
     } else {
@@ -48,18 +56,21 @@ const PlanCreate = props => {
     const pin =
       pins &&
       pins.find(p => p.longitude === longitude && p.latitude === latitude);
-    //
+
+    // if pin, simply update plan's location with pin's id
+    // else create draft pin, update draft plan and push over to / in order to create new pin
     if (pin) {
       dispatch({ type: UPDATE_DRAFT_PLAN, payload: { location: pin._id } });
     } else {
-      dispatch({ type: CREATE_DRAFT_PIN });
       dispatch({
-        type: UPDATE_DRAFT_PIN,
-        payload: { longitude, latitude, zoom: 13 }
+        type: UPDATE_VIEWPORT,
+        payload: { longitude, latitude, zoom: 15 }
       });
-      dispatch({ type: CREATE_DRAFT_PLAN });
+      dispatch({ type: CREATE_DRAFT_PIN });
+      dispatch({ type: UPDATE_DRAFT_PIN, payload: { longitude, latitude } });
+      dispatch({ type: SHOW_DRAFT_PIN_POPUP, payload: true });
       dispatch({ type: UPDATE_DRAFT_PLAN, payload: { title, description } });
-      console.log(result);
+      props.history.push('/');
     }
   };
 
@@ -109,11 +120,23 @@ const PlanCreate = props => {
           />
         </Styled.Field>
         <Styled.Field>
-          <GeocodingSearch
-            viewport={viewport}
-            onClickGeocodingResult={handleClickGeocodingResult}
-            css={css}
-          />
+          {draftPlan && draftPlan.location ? (
+            <div
+              style={{
+                height: '30rem',
+                padding: '2rem',
+                backgroundColor: 'var(--color-less-white)'
+              }}
+            >
+              <MapPreview css={mapPreviewCss} />
+            </div>
+          ) : (
+            <GeocodingSearch
+              viewport={viewport}
+              onClickGeocodingResult={handleClickGeocodingResult}
+              css={css}
+            />
+          )}
         </Styled.Field>
         <Styled.Field>
           <DatePicker

@@ -15,7 +15,8 @@ import {
   SET_POPUP_PIN,
   DELETE_POPUP_PIN,
   SHOW_DRAFT_PIN_POPUP,
-  UPDATE_VIEWPORT
+  UPDATE_VIEWPORT,
+  DELETE_DRAFT_PLAN
 } from '../../reducer';
 
 import Map from '../../components/Map';
@@ -122,6 +123,7 @@ const App = () => {
   const handleClickDraftPinPopup = (action = 'create') => {
     if (action === 'cancel') {
       dispatch({ type: DELETE_DRAFT_PIN });
+      dispatch({ type: DELETE_DRAFT_PLAN });
     }
     dispatch({ type: SHOW_DRAFT_PIN_POPUP, payload: false });
   };

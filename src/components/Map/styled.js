@@ -94,15 +94,13 @@ export const PopupCaption = styled.figcaption`
 export const CustomPopup = styled(Popup)`
   z-index: 1;
 
-  div.mapboxgl-popup-content {
+  .mapboxgl-popup-content {
     background-color: var(--color-medium-grey);
     color: var(--color-almost-white);
     font-size: 1.2rem;
     border: none;
-    padding: 1rem;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
 
     button {
       border: none;

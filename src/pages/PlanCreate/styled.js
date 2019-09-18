@@ -62,17 +62,24 @@ export const Input = styled.input`
 `;
 
 export const Btn = styled.button`
+  height: 5rem;
   border: none;
   border-radius: 0.5rem;
-  padding: 2rem;
-  background-color: var(--color-light-grey);
+  padding: 0 2rem;
+  background-color: var(--color-medium-grey);
   color: var(--color-almost-white);
   font-size: 1.6rem;
-  cursor: pointer;
+  line-height: 3.2rem;
   outline: none;
+  cursor: pointer;
   transition: all 0.2s;
 
+  &:hover {
+    background-color: var(--color-dark-grey);
+  }
+
   svg {
+    vertical-align: sub;
     font-size: 2.4rem;
     fill: currentColor;
     transition: all 0.2s;
@@ -99,12 +106,14 @@ export const CancelBtn = styled(Btn)`
   top: -8rem;
   right: 0;
   box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.2);
+  background-color: var(--color-light-grey);
 
   :hover {
     background-color: var(--color-earth-red);
 
     svg {
       transform: rotate(90deg);
+      margin-right: 0;
     }
   }
 `;
