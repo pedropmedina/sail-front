@@ -18,6 +18,7 @@ export const UPDATE_VIEWPORT = 'UPDATE_VIEWPORT';
 export const CREATE_DRAFT_PLAN = 'CREATE_DRAFT_PLAN';
 export const UPDATE_DRAFT_PLAN = 'UPDATE_DRAFT_PLAN';
 export const DELETE_DRAFT_PLAN = 'DELETE_DRAFT_PLAN';
+export const PLAN_CREATED = 'PLAN_CREATED';
 
 const DEFAULT_DRAFT_PLAN = {
   title: '',
@@ -70,6 +71,8 @@ export default function reducer(state, { type, payload }) {
       return { ...state, draftPlan: { ...state.draftPlan, ...payload } };
     case DELETE_DRAFT_PLAN:
       return { ...state, draftPlan: null };
+    case PLAN_CREATED:
+      return { ...state, plans: [...state.plans, payload] };
     default:
       return state;
   }

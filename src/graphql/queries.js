@@ -1,113 +1,39 @@
 import gql from 'graphql-tag';
 
+import { planFragment, pinFragment, userFragment } from './fragments';
+
 export const GET_PINS_QUERY = gql`
   {
     pins: getPins {
-      _id
-      title
-      content
-      image
-      latitude
-      longitude
-      author {
-        username
-        email
-      }
-      comments {
-        _id
-        text
-        author {
-          email
-          username
-          name
-        }
-        createdAt
-      }
-      createdAt
+      ...pinFields
     }
   }
+  ${pinFragment}
 `;
 
 export const GET_PIN_BY_COORDS = gql`
   query GetPinByCoords($input: GetPinByCoordsInput!) {
-    pin:getPinByCoords(input: $input) {
-      _id
-      title
-      content
-      image
-      latitude
-      longitude
-      author {
-        username
-        email
-      }
-      comments {
-        _id
-        text
-        author {
-          email
-          username
-          name
-        }
-        createdAt
-      }
-      createdAt
+    pin: getPinByCoords(input: $input) {
+      ...pinFields
     }
   }
+  ${pinFragment}
 `;
 
 export const ME_QUERY = gql`
   {
     user: me {
-      email
-      username
-      name
-      image
-      friends {
-        email
-        username
-        name
-        image
-      }
-      myPlans {
-        _id
-        title
-        description
-        date
-      }
-      inPlans {
-        _id
-        title
-        description
-        date
-      }
-      likedPins {
-        _id
-        title
-        content
-        image
-        latitude
-        longitude
-      }
-      sentRequests {
-        _id
-        to {
-          email
-          username
-        }
-        status
-        reqType
-      }
-      receivedRequests {
-        _id
-        to {
-          email
-          username
-        }
-        status
-        reqType
-      }
-      admin
+      ...userFields
     }
   }
+  ${userFragment}
+`;
+
+export const GET_PLANS_QUERY = gql`
+  {
+    plans: getPlans {
+      ...planFields
+    }
+  }
+  ${planFragment}
 `;

@@ -42,3 +42,83 @@ export const planFragment = gql`
     }
   }
 `;
+
+export const pinFragment = gql`
+  fragment pinFields on Pin {
+    _id
+    title
+    content
+    image
+    latitude
+    longitude
+    author {
+      username
+      email
+    }
+    comments {
+      _id
+      text
+      author {
+        email
+        username
+        name
+      }
+      createdAt
+    }
+    createdAt
+  }
+`;
+
+export const userFragment = gql`
+  fragment userFields on User {
+    email
+    username
+    name
+    image
+    friends {
+      email
+      username
+      name
+      image
+    }
+    myPlans {
+      _id
+      title
+      description
+      date
+    }
+    inPlans {
+      _id
+      title
+      description
+      date
+    }
+    likedPins {
+      _id
+      title
+      content
+      image
+      latitude
+      longitude
+    }
+    sentRequests {
+      _id
+      to {
+        email
+        username
+      }
+      status
+      reqType
+    }
+    receivedRequests {
+      _id
+      to {
+        email
+        username
+      }
+      status
+      reqType
+    }
+    admin
+  }
+`;

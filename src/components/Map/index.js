@@ -2,6 +2,7 @@
 import React from 'react';
 import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 import { useTransition } from 'react-spring';
+import { useQuery } from '@apollo/react-hooks'
 
 import * as Styled from './styled';
 
@@ -14,6 +15,8 @@ import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 import PinQuery from '../PinQuery';
 import PinMutation from '../PinMutation';
 import GeocodingSearch from '../GeocodingSearch';
+
+import { GET_PINS_QUERY } from '../../graphql/queries'
 
 // styles for geocoding search component
 const css = `

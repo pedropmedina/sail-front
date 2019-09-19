@@ -31,6 +31,7 @@ import {
 } from '../../reducer';
 
 import { CREATE_PLAN_MUTATION } from '../../graphql/mutations';
+import { GET_PLANS_QUERY } from '../../graphql/queries';
 
 const css = `
   font-size: 1.6rem;
@@ -139,10 +140,16 @@ const PlanCreate = props => {
     if (!validated) return;
 
     try {
-      const { data } = await createPlan({
-        variables: { input: { ...draftPlan } }
+      await createPlan({
+        variables: { input: { ...draftPlan } },
+        update: (cache, { data: { plan } }) => {
+          const { plans } = cache.readQuery({ query: GET_PLANS_QUERY });
+          cache.writeQuery({
+            query: GET_PLANS_QUERY,
+            data: { plans: plans.concat([plan]) }
+          });
+        }
       });
-      console.log(data);
       props.history.push('/plans');
     } catch (error) {
       console.log(error);
