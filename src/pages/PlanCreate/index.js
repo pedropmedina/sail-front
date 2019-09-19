@@ -2,6 +2,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Marker } from 'react-map-gl';
 import * as yup from 'yup';
+import { useMutation } from '@apollo/react-hooks';
 
 import * as Styled from './styled';
 
@@ -29,6 +30,8 @@ import {
   DELETE_CURRENT_PIN
 } from '../../reducer';
 
+import { CREATE_PLAN_MUTATION } from '../../graphql/mutations';
+
 const css = `
   font-size: 1.6rem;
   background-color: var(--color-less-white);
@@ -45,6 +48,14 @@ const PlanCreate = props => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
+  const [titleError, setTitleError] = useState('');
+  const [descriptionError, setDescriptionError] = useState('');
+  const [locationError, setLocationError] = useState('');
+  const [dateError, setDateError] = useState('');
+  const [invitesError, setInvitesError] = useState('');
+  const [createPlan] = useMutation(CREATE_PLAN_MUTATION, {
+    ignoreResults: true
+  });
 
   useEffect(() => {
     // create draftPlan is none exists upon mounting component
@@ -57,6 +68,9 @@ const PlanCreate = props => {
   }, []);
 
   const handleClickGeocodingResult = result => {
+    // resest error field if any
+    if (locationError) handleErrors('location');
+
     const [longitude, latitude] = result.center;
     // set data for map preview
     setAddress(result.place_name);
@@ -87,10 +101,12 @@ const PlanCreate = props => {
 
   const handleOnSelect = date => {
     dispatch({ type: UPDATE_DRAFT_PLAN, payload: { date } });
+    if (dateError) handleErrors('date');
   };
 
   const handleInvites = invites => {
     dispatch({ type: UPDATE_DRAFT_PLAN, payload: { invites } });
+    if (invitesError) handleErrors('invites');
   };
 
   const handleChange = event => {
@@ -102,6 +118,9 @@ const PlanCreate = props => {
     };
     keyedSetters[name](value);
     dispatch({ type: UPDATE_DRAFT_PLAN, payload: { [name]: value } });
+
+    if (name === 'title' && titleError) handleErrors(name);
+    if (name === 'description' && descriptionError) handleErrors(name);
   };
 
   const handleCancel = () => {
@@ -111,14 +130,25 @@ const PlanCreate = props => {
 
   const handleCancelLocation = () => {
     dispatch({ type: DELETE_CURRENT_PIN });
+    dispatch({ type: UPDATE_DRAFT_PLAN, payload: { location: '' } });
     setAddress('');
   };
 
-  const handleCreatePlan = () => {
-    validateFields(draftPlan);
+  const handleCreatePlan = async () => {
+    const validated = await validateFields(draftPlan);
+    if (!validated) return;
+
+    try {
+      const { data } = await createPlan({
+        variables: { input: { ...draftPlan } }
+      });
+      console.log(data);
+      props.history.push('/plans');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  // TODO: implement error validation messages
   const validateFields = async (fields = {}) => {
     try {
       const schema = yup.object().shape({
@@ -133,14 +163,28 @@ const PlanCreate = props => {
       });
       return await schema.validate(fields, { abortEarly: false });
     } catch (error) {
-      console.log(error);
+      for (let e of error.inner) {
+        const { message, path } = e;
+        handleErrors(path, message);
+      }
     }
+  };
+
+  const handleErrors = (errorName, errorValue = '') => {
+    const keyedErrorSetters = {
+      title: setTitleError,
+      description: setDescriptionError,
+      location: setLocationError,
+      date: setDateError,
+      invites: setInvitesError
+    };
+    keyedErrorSetters[errorName](errorValue);
   };
 
   return (
     <Styled.PlanCreate>
       <Styled.Fields>
-        <Styled.Field>
+        <Styled.Field error={titleError}>
           <Styled.Input
             type="text"
             name="title"
@@ -148,8 +192,9 @@ const PlanCreate = props => {
             placeholder="Title the plan"
             onChange={handleChange}
           />
+          {titleError && <Styled.FieldError>{titleError}</Styled.FieldError>}
         </Styled.Field>
-        <Styled.Field>
+        <Styled.Field error={descriptionError}>
           <Styled.Input
             type="text"
             name="description"
@@ -157,8 +202,11 @@ const PlanCreate = props => {
             placeholder="Describe your plan to friends."
             onChange={handleChange}
           />
+          {descriptionError && (
+            <Styled.FieldError>{descriptionError}</Styled.FieldError>
+          )}
         </Styled.Field>
-        <Styled.Field>
+        <Styled.Field error={locationError}>
           {draftPlan && draftPlan.location && currentPin ? (
             <Styled.MapPreviewWrapper>
               <MapPreview css={mapPreviewCss} {...viewport}>
@@ -190,21 +238,28 @@ const PlanCreate = props => {
               css={css}
             />
           )}
+          {locationError && (
+            <Styled.FieldError>{locationError}</Styled.FieldError>
+          )}
         </Styled.Field>
-        <Styled.Field>
+        <Styled.Field error={dateError}>
           <DatePicker
             css={css}
             defaultDate={draftPlan ? draftPlan.date : new Date()}
             onSelectDate={handleOnSelect}
           />
+          {dateError && <Styled.FieldError>{dateError}</Styled.FieldError>}
         </Styled.Field>
-        <Styled.Field>
+        <Styled.Field error={invitesError}>
           <FriendsPicker
             css={css}
             friends={currentUser && currentUser.friends}
             defaultInvites={draftPlan ? draftPlan.invites : []}
             onHandleInvites={handleInvites}
           />
+          {invitesError && (
+            <Styled.FieldError>{invitesError}</Styled.FieldError>
+          )}
         </Styled.Field>
         <Styled.CreateBtn onClick={handleCreatePlan}>
           <PlusIcon />

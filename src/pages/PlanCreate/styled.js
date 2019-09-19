@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 
 import { Popup } from '../../stylesShare';
 
@@ -41,6 +41,23 @@ export const Field = styled.div`
     opacity: 1;
     width: 100%;
   }
+
+  ${({ error }) =>
+    error &&
+    css`
+      outline: solid 0.1rem var(--color-earth-red);
+      outline-offset: 0.5rem;
+    `}
+`;
+
+export const FieldError = styled.p`
+  position: absolute;
+  top: calc(100% + 1rem);
+  left: 0;
+  right: 0;
+  padding-left: 2rem;
+  font-size: 1.6rem;
+  color: var(--color-earth-red);
 `;
 
 export const Input = styled.input`

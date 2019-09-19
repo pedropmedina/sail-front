@@ -1,5 +1,7 @@
 import gql from 'graphql-tag';
 
+import { planFragment } from './fragments';
+
 export const SIGNUP_USER_MUTATION = gql`
   mutation SignupUser($input: SignupUserInput!) {
     user: signupUser(input: $input) {
@@ -109,4 +111,13 @@ export const CREATE_COMMENT_MUTATION = gql`
       createdAt
     }
   }
+`;
+
+export const CREATE_PLAN_MUTATION = gql`
+  mutation CreatePlan($input: CreatePlanInput!) {
+    plan: createPlan(input: $input) {
+      ...planFields
+    }
+  }
+  ${planFragment}
 `;
