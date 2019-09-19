@@ -32,6 +32,7 @@ const PinMutation = ({ style }) => {
   const [imageError, setImageError] = useState('');
   const [createPin] = useMutation(CREATE_PIN_MUTATION, { ignoreResults: true });
 
+
   const handleDrag = e => {
     e.preventDefault();
     e.stopPropagation();
@@ -128,7 +129,7 @@ const PinMutation = ({ style }) => {
     dispatch({ type: SHOW_DRAFT_PIN_POPUP, payload: false });
 
     // if creation of pin was initiated when creating new plan,
-    // update draftPlan and continue with the creating of plan
+    // update draftPlan and continue with the creation of plan
     if (state.draftPlan) {
       dispatch({
         type: UPDATE_DRAFT_PLAN,

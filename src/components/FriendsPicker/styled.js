@@ -78,7 +78,7 @@ export const PicksItem = styled(Item)`
   margin-bottom: 0.5rem;
   padding: 0 1rem;
   border-radius: 0.5rem;
-  background-color: var(--color-light-grey);
+  background-color: var(--color-medium-grey);
   color: var(--color-almost-white);
   font-size: 1.2rem;
   position: relative;

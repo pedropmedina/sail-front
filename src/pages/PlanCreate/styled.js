@@ -1,5 +1,7 @@
 import styled from 'styled-components/macro';
 
+import { Popup } from '../../stylesShare';
+
 export const PlanCreate = styled.section`
   grid-column: col-1-start / col-2-end !important;
   padding-top: 15rem;
@@ -87,8 +89,10 @@ export const Btn = styled.button`
 `;
 
 export const CreateBtn = styled(Btn)`
+  background-color: var(--color-light-grey);
+
   :hover {
-    background-color: var(--color-medium-grey);
+    background-color: var(--color-dark-grey);
   }
 
   svg {
@@ -107,6 +111,7 @@ export const CancelBtn = styled(Btn)`
   right: 0;
   box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.2);
   background-color: var(--color-light-grey);
+  transition: transform 0.2s, background-color 0.2s;
 
   :hover {
     background-color: var(--color-earth-red);
@@ -117,3 +122,32 @@ export const CancelBtn = styled(Btn)`
     }
   }
 `;
+
+export const CancelLocationBtn = styled(Btn)`
+  position: absolute;
+  top: 3rem;
+  left: 3rem;
+  width: 5rem;
+  height: 5rem;
+  padding: 0;
+  background-color: var(--color-less-white);
+  color: var(--color-light-grey);
+
+  svg {
+    transition: none;
+  }
+`;
+
+export const MapPreviewWrapper = styled.div`
+  height: 30rem;
+  padding: 2rem;
+  background-color: var(--color-less-white);
+  position: relative;
+
+  :hover button {
+    background-color: var(--color-earth-red);
+    color: var(--color-almost-white);
+  }
+`;
+
+export const MapPreviewPopup = styled(Popup)``;

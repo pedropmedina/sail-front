@@ -5,7 +5,13 @@ import { StaticMap } from 'react-map-gl';
 
 import * as Styled from './styled';
 
-const MapPreview = ({ children, css = '' }) => {
+const MapPreview = ({
+  children,
+  css = '',
+  longitude = -122.4376,
+  latitude = 37.7577,
+  zoom = 13
+}) => {
   return (
     <Styled.MapPreview css={css}>
       <StaticMap
@@ -13,9 +19,9 @@ const MapPreview = ({ children, css = '' }) => {
         mapStyle="mapbox://styles/mapbox/light-v9"
         width="100%"
         height="100%"
-        latitude={37.7577}
-        longitude={-122.4376}
-        zoom={13}
+        longitude={longitude}
+        latitude={latitude}
+        zoom={zoom}
       >
         {children}
       </StaticMap>

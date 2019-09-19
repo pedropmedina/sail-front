@@ -22,7 +22,7 @@ export const DELETE_DRAFT_PLAN = 'DELETE_DRAFT_PLAN';
 const DEFAULT_DRAFT_PLAN = {
   title: '',
   description: '',
-  pin: '',
+  location: '',
   date: new Date(),
   invites: []
 };

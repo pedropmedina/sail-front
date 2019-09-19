@@ -15,14 +15,13 @@ import {
   SET_POPUP_PIN,
   DELETE_POPUP_PIN,
   SHOW_DRAFT_PIN_POPUP,
-  UPDATE_VIEWPORT,
-  DELETE_DRAFT_PLAN
+  UPDATE_VIEWPORT
 } from '../../reducer';
 
 import Map from '../../components/Map';
 import Sidebar from '../../components/Sidebar';
 
-const App = () => {
+const App = props => {
   const { state, dispatch } = useContext(Context);
   const {
     draftPin,
@@ -31,7 +30,8 @@ const App = () => {
     isLoggedIn,
     popupPin,
     showDraftPinPopup,
-    viewport
+    viewport,
+    draftPlan
   } = state;
   const [showBtns, setShowBtns] = useState(false);
 
@@ -123,7 +123,10 @@ const App = () => {
   const handleClickDraftPinPopup = (action = 'create') => {
     if (action === 'cancel') {
       dispatch({ type: DELETE_DRAFT_PIN });
-      dispatch({ type: DELETE_DRAFT_PLAN });
+      // send back to /create-plan if popup was initiated while creating new plan
+      if (draftPlan) {
+        props.history.push('/create-plan');
+      }
     }
     dispatch({ type: SHOW_DRAFT_PIN_POPUP, payload: false });
   };
