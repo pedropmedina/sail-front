@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro';
 import { animated } from 'react-spring';
-import { Popup as P } from 'react-map-gl'
+import { Popup as P } from 'react-map-gl';
 
 export const Btn = styled.button`
   padding: 2rem;
@@ -69,35 +69,10 @@ export const Popup = styled(P)`
     border: none;
     display: flex;
     align-items: center;
-
-    /* button {
-      border: none;
-      border-radius: 50%;
-      width: 3rem;
-      height: 3rem;
-      color: var(--color-dark-grey);
-      background-color: inherit;
-      outline: none;
-      cursor: pointer;
-      background-color: rgba(255, 255, 255, 0.2);
-      margin-left: 0.5rem;
-
-      &:first-of-type {
-        margin-left: 1rem;
-      }
-
-      &:last-of-type {
-        color: var(--color-earth-red);
-      }
-
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.3);
-      }
-    } */
   }
 
   div.mapboxgl-popup-tip {
     border-right-color: var(--color-medium-grey);
     border-left-color: var(--color-medium-grey);
   }
-`
+`;

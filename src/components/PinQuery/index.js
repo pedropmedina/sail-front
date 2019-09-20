@@ -2,7 +2,6 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useMutation, useSubscription } from '@apollo/react-hooks';
 import { formatDistance } from 'date-fns';
-import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 
 import * as Styled from './styled';
 import { PinWrapper } from '../../stylesShare';
@@ -10,18 +9,10 @@ import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 import { ReactComponent as SendIcon } from '../../assets/SVG/send.svg';
 
 import Context from '../../context';
-import {
-  DELETE_CURRENT_PIN,
-  UPDATE_PIN,
-  UPDATE_CURRENT_PIN
-} from '../../reducer';
+import { reverseGeocode } from '../../utils';
+import { DELETE_CURRENT_PIN, UPDATE_CURRENT_PIN } from '../../reducer';
 import { CREATE_COMMENT_MUTATION } from '../../graphql/mutations';
 import { COMMENT_CREATED_SUBSCRIPTION } from '../../graphql/subscriptions';
-
-// authenticate geocoding service
-const geocodingService = mbxGeocoding({
-  accessToken: process.env.MAPBOX_TOKEN
-});
 
 const TEXTAREA_DEFAULTS = {
   rows: 2,
@@ -47,12 +38,9 @@ const PinQuery = ({ style }) => {
 
   useEffect(() => {
     if (data) {
-      dispatch({ type: UPDATE_PIN, payload: data.pin });
       dispatch({ type: UPDATE_CURRENT_PIN, payload: data.pin });
-      comments.length > 0 && scrollToBottom(commentListEndEl);
-    } else {
-      comments.length > 0 && scrollToBottom(commentListEndEl);
     }
+    comments.length > 0 && scrollToBottom(commentListEndEl);
   }, [data, dispatch]);
 
   useEffect(() => {
@@ -91,13 +79,7 @@ const PinQuery = ({ style }) => {
   };
 
   const handleReverseGeocode = async (longitude, latitude) => {
-    const { body } = await geocodingService
-      .reverseGeocode({
-        query: [longitude, latitude],
-        types: ['address']
-      })
-      .send();
-    setAddress(body.features[0].place_name);
+    setAddress(await reverseGeocode(longitude, latitude));
   };
 
   const scrollToBottom = ref => {

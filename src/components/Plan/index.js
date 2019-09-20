@@ -1,36 +1,72 @@
-import React from 'react';
-import { StaticMap } from 'react-map-gl';
+/* eslint-disable react/prop-types */
+import React, { useState, useEffect } from 'react';
+import { Marker } from 'react-map-gl';
+import { format } from 'date-fns';
 
 import * as Styled from './styled';
-import { ReactComponent as CalendarIcon } from '../../assets/SVG/calendar.svg';
+import { Popup } from '../../stylesShare';
 
-const Plan = () => (
-  <Styled.Plan>
-    <Styled.Location>
-      <StaticMap
-        mapboxApiAccessToken={process.env.MAPBOX_TOKEN}
-        mapStyle="mapbox://styles/mapbox/light-v9"
-        width="100%"
-        height="25rem"
-        latitude={37.7577}
-        longitude={-122.4376}
-        zoom={13}
-      />
-    </Styled.Location>
-    <Styled.Title>Picnic at the park</Styled.Title>
-    <Styled.Description>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua.
-    </Styled.Description>
-    <Styled.Date>
-      <CalendarIcon className="icon icon-smallest" /> 09/13/2019
-    </Styled.Date>
-    <Styled.Participants>
-      {[...Array(3)].map((e, i) => (
-        <Styled.ParticipantImg key={i} src="https://via.placeholder.com/60" />
-      ))}
-    </Styled.Participants>
-  </Styled.Plan>
-);
+import { ReactComponent as CalendarIcon } from '../../assets/SVG/calendar.svg';
+import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
+
+import MapPreview from '../MapPreview';
+
+import { reverseGeocode } from '../../utils';
+
+const mapCss = `
+  height: 25rem;
+`;
+
+const Plan = ({ title, description, date, participants, location }) => {
+  const [address, setAddress] = useState('');
+  useEffect(() => {
+    if (location) {
+      const { longitude, latitude } = location;
+      (async () => {
+        setAddress(await reverseGeocode(longitude, latitude));
+      })();
+    }
+  });
+
+  return (
+    <Styled.Plan>
+      <Styled.Location>
+        <MapPreview
+          longitude={location.longitude}
+          latitude={location.latitude}
+          css={mapCss}
+        >
+          <Marker longitude={location.longitude} latitude={location.latitude}>
+            <PinIcon className="icon icon-small pin-icon" />
+          </Marker>
+          <Popup
+            longitude={location.longitude}
+            latitude={location.latitude}
+            offsetLeft={24}
+            offsetTop={12}
+            anchor="left"
+            closeButton={false}
+          >
+            <p style={{ width: '15rem' }}>{address}</p>
+          </Popup>
+        </MapPreview>
+      </Styled.Location>
+      <Styled.Title>{title}</Styled.Title>
+      <Styled.Description>{description}</Styled.Description>
+      <Styled.Date>
+        <CalendarIcon className="icon icon-smallest" />{' '}
+        {format(new Date(parseInt(date)), 'MMM do, yyyy')}
+      </Styled.Date>
+      <Styled.Participants>
+        {participants.map((participant, i) => (
+          <Styled.ParticipantImg
+            key={`${participant.email}-${i}`}
+            src="https://via.placeholder.com/60"
+          />
+        ))}
+      </Styled.Participants>
+    </Styled.Plan>
+  );
+};
 
 export default Plan;

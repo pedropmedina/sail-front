@@ -1,7 +1,13 @@
 import * as Cookies from 'js-cookie';
+import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 
 import { ADD_CURRENT_USER, IS_LOGGED_IN, REMOVE_CURRENT_USER } from './reducer';
 import { ME_QUERY } from './graphql/queries';
+
+// authenticate geocoding service
+const geocodingService = mbxGeocoding({
+  accessToken: process.env.MAPBOX_TOKEN
+});
 
 export const getCurrentUser = async (client, dispatch) => {
   try {
@@ -27,3 +33,14 @@ export const establishSession = async (client, dispatch, setState) => {
     dispatch({ type: REMOVE_CURRENT_USER }); // remove current user from state reducer when not logged in
   }
 };
+
+
+export const reverseGeocode = async (longitude, latitude ) => {
+    const { body } = await geocodingService
+      .reverseGeocode({
+        query: [longitude, latitude],
+        types: ['address']
+      })
+      .send();
+    return body.features[0].place_name;
+}
