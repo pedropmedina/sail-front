@@ -11,13 +11,11 @@ const Context = createContext({
   isLoggedIn: false,
   currentUser: null,
   viewport: INITIAL_VIEWPORT,
-  pins: [],
   draftPin: null,
   currentPin: null,
   popupPin: null,
   showDraftPinPopup: false,
   draftPlan: null,
-  plans: [],
   geocodingResults: []
 });
 

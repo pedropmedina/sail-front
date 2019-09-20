@@ -2,7 +2,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Marker } from 'react-map-gl';
 import * as yup from 'yup';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useApolloClient } from '@apollo/react-hooks';
 
 import * as Styled from './styled';
 
@@ -21,8 +21,6 @@ import MapPreview from '../../components/MapPreview';
 import {
   CREATE_DRAFT_PLAN,
   UPDATE_DRAFT_PLAN,
-  CREATE_DRAFT_PIN,
-  UPDATE_DRAFT_PIN,
   DELETE_DRAFT_PLAN,
   SHOW_DRAFT_PIN_POPUP,
   UPDATE_VIEWPORT,
@@ -31,7 +29,7 @@ import {
 } from '../../reducer';
 
 import { CREATE_PLAN_MUTATION } from '../../graphql/mutations';
-import { GET_PLANS_QUERY } from '../../graphql/queries';
+import { GET_PLANS_QUERY, GET_PIN_BY_COORDS } from '../../graphql/queries';
 
 const css = `
   font-size: 1.6rem;
@@ -45,7 +43,7 @@ const mapPreviewCss = `
 
 const PlanCreate = props => {
   const { state, dispatch } = useContext(Context);
-  const { draftPlan, currentUser, pins, viewport, currentPin } = state;
+  const { draftPlan, currentUser, viewport, currentPin } = state;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
@@ -57,6 +55,7 @@ const PlanCreate = props => {
   const [createPlan] = useMutation(CREATE_PLAN_MUTATION, {
     ignoreResults: true
   });
+  const client = useApolloClient();
 
   useEffect(() => {
     // create draftPlan is none exists upon mounting component
@@ -68,7 +67,7 @@ const PlanCreate = props => {
     }
   }, []);
 
-  const handleClickGeocodingResult = result => {
+  const handleClickGeocodingResult = async result => {
     // resest error field if any
     if (locationError) handleErrors('location');
 
@@ -81,19 +80,21 @@ const PlanCreate = props => {
       payload: { longitude, latitude, zoom: 15 }
     });
 
-    // check context for pin with given coordinates
-    const pin =
-      pins &&
-      pins.find(p => p.longitude === longitude && p.latitude === latitude);
+    // check for existing pin with given coordinates
+    const { data } = await client.query({
+      query: GET_PIN_BY_COORDS,
+      variables: { input: { longitude, latitude } }
+    });
 
     // if pin, simply update plan's location with pin's id
     // else create draft pin, update draft plan and push over to / in order to create new pin
-    if (pin) {
-      dispatch({ type: UPDATE_DRAFT_PLAN, payload: { location: pin._id } });
-      dispatch({ type: UPDATE_CURRENT_PIN, payload: pin });
+    if (data && data.pin) {
+      dispatch({
+        type: UPDATE_DRAFT_PLAN,
+        payload: { location: data.pin._id }
+      });
+      dispatch({ type: UPDATE_CURRENT_PIN, payload: data.pin });
     } else {
-      dispatch({ type: CREATE_DRAFT_PIN });
-      dispatch({ type: UPDATE_DRAFT_PIN, payload: { longitude, latitude } });
       dispatch({ type: SHOW_DRAFT_PIN_POPUP, payload: true });
       dispatch({ type: UPDATE_DRAFT_PLAN, payload: { title, description } });
       props.history.push('/');
@@ -139,21 +140,17 @@ const PlanCreate = props => {
     const validated = await validateFields(draftPlan);
     if (!validated) return;
 
-    try {
-      await createPlan({
-        variables: { input: { ...draftPlan } },
-        update: (cache, { data: { plan } }) => {
-          const { plans } = cache.readQuery({ query: GET_PLANS_QUERY });
-          cache.writeQuery({
-            query: GET_PLANS_QUERY,
-            data: { plans: plans.concat([plan]) }
-          });
-        }
-      });
-      props.history.push('/plans');
-    } catch (error) {
-      console.log(error);
-    }
+    await createPlan({
+      variables: { input: { ...draftPlan } },
+      update: (cache, { data: { plan } }) => {
+        const { plans } = cache.readQuery({ query: GET_PLANS_QUERY });
+        cache.writeQuery({
+          query: GET_PLANS_QUERY,
+          data: { plans: plans.concat([plan]) }
+        });
+      }
+    });
+    props.history.push('/plans');
   };
 
   const validateFields = async (fields = {}) => {

@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 import { useTransition } from 'react-spring';
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks';
 
 import * as Styled from './styled';
 
@@ -16,7 +16,7 @@ import PinQuery from '../PinQuery';
 import PinMutation from '../PinMutation';
 import GeocodingSearch from '../GeocodingSearch';
 
-import { GET_PINS_QUERY } from '../../graphql/queries'
+import { GET_PINS_QUERY } from '../../graphql/queries';
 
 // styles for geocoding search component
 const css = `
@@ -36,7 +36,6 @@ const css = `
 
 const Map = ({
   viewport,
-  pins,
   draftPin,
   currentPin,
   showBtns,
@@ -54,18 +53,21 @@ const Map = ({
   showDraftPinPopup,
   onClickDraftPinPopup
 }) => {
-  const transitions = useTransition([draftPin, currentPin], null, {
+  const { error, loading, data } = useQuery(GET_PINS_QUERY);
+  const transitions = useTransition([draftPin || currentPin], null, {
     from: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
     enter: { opacity: 1, zIndex: 1, transform: 'translate3d(0%,0,0)' },
     leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' }
   });
 
   let Pin =
-    !!draftPin && !showDraftPinPopup && !currentPin
+    !!draftPin && !currentPin
       ? PinMutation
       : !draftPin && !!currentPin
       ? PinQuery
       : null;
+
+  if (!error && loading) return <div>Loading...</div>;
 
   return (
     <Styled.Map isLoggedIn={isLoggedIn}>
@@ -85,8 +87,8 @@ const Map = ({
         onViewportChange={onViewportChange}
       >
         {/* Add markers for all existing pins */}
-        {pins &&
-          pins.map(pin => {
+        {data &&
+          data.pins.map(pin => {
             const { _id, longitude, latitude } = pin;
             return (
               <Marker key={_id} longitude={longitude} latitude={latitude}>
@@ -123,24 +125,31 @@ const Map = ({
             <MapPin className="icon icon-small draft-pin-icon" />
           </Marker>
         )}
-        {/* show popup for draft pin when selecting geocoding result */}
-        {draftPin && showDraftPinPopup && (
-          <Styled.CustomPopup
-            longitude={draftPin.longitude}
-            latitude={draftPin.latitude}
-            offsetLeft={24}
-            offsetTop={12}
-            anchor="left"
-            closeButton={false}
-          >
-            <p>Create new pin</p>
-            <button onClick={onClickDraftPinPopup}>
-              <PlusIcon className="icon icon-smallest" />
-            </button>
-            <button onClick={() => onClickDraftPinPopup('cancel')}>
-              <XIcon className="icon icon-smallest" />
-            </button>
-          </Styled.CustomPopup>
+
+        {/* show popup and marker for selecting geocoding result */}
+        {showDraftPinPopup && (
+          <>
+            <Marker {...viewport}>
+              <MapPin className="icon icon-small draft-pin-icon" />
+            </Marker>
+
+            <Styled.CustomPopup
+              longitude={viewport.longitude}
+              latitude={viewport.latitude}
+              offsetLeft={24}
+              offsetTop={12}
+              anchor="left"
+              closeButton={false}
+            >
+              <p>Create new pin</p>
+              <button onClick={onClickDraftPinPopup}>
+                <PlusIcon className="icon icon-smallest" />
+              </button>
+              <button onClick={() => onClickDraftPinPopup('cancel')}>
+                <XIcon className="icon icon-smallest" />
+              </button>
+            </Styled.CustomPopup>
+          </>
         )}
       </ReactMapGL>
 

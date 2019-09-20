@@ -10,7 +10,8 @@ import Context from '../../context';
 import {
   DELETE_DRAFT_PIN,
   SHOW_DRAFT_PIN_POPUP,
-  UPDATE_DRAFT_PLAN
+  UPDATE_DRAFT_PLAN,
+  DELETE_DRAFT_PLAN
 } from '../../reducer';
 import { GET_PINS_QUERY } from '../../graphql/queries';
 import { CREATE_PIN_MUTATION } from '../../graphql/mutations';
@@ -31,7 +32,6 @@ const PinMutation = ({ style }) => {
   const [contentError, setContentError] = useState('');
   const [imageError, setImageError] = useState('');
   const [createPin] = useMutation(CREATE_PIN_MUTATION, { ignoreResults: true });
-
 
   const handleDrag = e => {
     e.preventDefault();
@@ -167,6 +167,11 @@ const PinMutation = ({ style }) => {
     }
   };
 
+  const handleCancel = () => {
+    dispatch({ type: DELETE_DRAFT_PIN });
+    dispatch({ type: DELETE_DRAFT_PLAN });
+  };
+
   return (
     <PinWrapper style={style}>
       <Styled.PinMutation>
@@ -234,10 +239,7 @@ const PinMutation = ({ style }) => {
           <Styled.SaveBtn type="submit">Save</Styled.SaveBtn>
         </Styled.Form>
       </Styled.PinMutation>
-      <Styled.CancelBtn
-        type="button"
-        onClick={() => dispatch({ type: DELETE_DRAFT_PIN })}
-      >
+      <Styled.CancelBtn type="button" onClick={handleCancel}>
         <XIcon className="icon icon-small" />
       </Styled.CancelBtn>
     </PinWrapper>

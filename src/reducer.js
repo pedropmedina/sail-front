@@ -6,10 +6,7 @@ export const DELETE_DRAFT_PIN = 'DELETE_DRAFT_PIN';
 export const ADD_CURRENT_USER = 'ADD_CURRENT_USER';
 export const REMOVE_CURRENT_USER = 'REMOVE_CURRENT_USER';
 export const UPDATE_CURRENT_PIN = 'UPDATE_CURRENT_PIN';
-export const GET_PINS = 'GET_PINS';
-export const PIN_CREATED = 'PIN_CREATED';
 export const DELETE_CURRENT_PIN = 'DELETE_CURRENT_PIN';
-export const UPDATE_PIN = 'UPDATE_PIN';
 export const SET_POPUP_PIN = 'SET_POPUP_PIN';
 export const DELETE_POPUP_PIN = 'DELETE_POPUP_PIN';
 export const GET_GEOCODING_RESULTS = 'GET_GEOCODING_RESULTS';
@@ -18,7 +15,6 @@ export const UPDATE_VIEWPORT = 'UPDATE_VIEWPORT';
 export const CREATE_DRAFT_PLAN = 'CREATE_DRAFT_PLAN';
 export const UPDATE_DRAFT_PLAN = 'UPDATE_DRAFT_PLAN';
 export const DELETE_DRAFT_PLAN = 'DELETE_DRAFT_PLAN';
-export const PLAN_CREATED = 'PLAN_CREATED';
 
 const DEFAULT_DRAFT_PLAN = {
   title: '',
@@ -48,15 +44,6 @@ export default function reducer(state, { type, payload }) {
       return { ...state, currentPin: payload };
     case DELETE_CURRENT_PIN:
       return { ...state, currentPin: null };
-    case GET_PINS:
-      return { ...state, pins: payload };
-    case PIN_CREATED:
-      return { ...state, pins: [...state.pins, payload] };
-    case UPDATE_PIN:
-      const pins = state.pins.map(pin =>
-        pin._id === payload._id ? payload : pin
-      );
-      return { ...state, pins };
     case SET_POPUP_PIN:
       return { ...state, popupPin: payload };
     case DELETE_POPUP_PIN:
@@ -71,8 +58,6 @@ export default function reducer(state, { type, payload }) {
       return { ...state, draftPlan: { ...state.draftPlan, ...payload } };
     case DELETE_DRAFT_PLAN:
       return { ...state, draftPlan: null };
-    case PLAN_CREATED:
-      return { ...state, plans: [...state.plans, payload] };
     default:
       return state;
   }
