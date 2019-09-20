@@ -7,8 +7,14 @@ export const Topbar = styled.div`
   margin-bottom: 2rem;
 `;
 
-export const Search = styled.form`
+export const LeftSide = styled.div``;
+
+export const RightSide = styled.div`
   flex-basis: 50vw;
+`;
+
+export const Search = styled.form`
+  height: 100%;
   border: none;
   position: relative;
   border-radius: 0.5rem;
@@ -45,26 +51,4 @@ export const SearchBtn = styled.button`
   background-color: inherit;
   color: var(--color-light-grey);
   outline: none;
-`;
-
-export const CreateNewBtn = styled.button`
-  height: 5rem;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0 2rem;
-  background-color: var(--color-medium-grey);
-  color: var(--color-almost-white);
-  font-size: 1.6rem;
-  line-height: 3.2rem;
-  outline: none;
-  cursor: pointer;
-
-  &:hover {
-    background-color: var(--color-dark-grey);
-  }
-
-  > svg {
-    vertical-align: sub;
-    margin-right: 0.5rem;
-  }
 `;

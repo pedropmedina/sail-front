@@ -1,39 +1,33 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React from 'react';
 
 import * as Styled from './styled';
-import { ReactComponent as PlusIcon } from '../../assets/SVG/plus.svg';
 import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
 
-const Topbar = props => {
-  const [searchText, setSearchText] = useState('');
-
-  const handleSearch = e => {
-    const value = e.target.value;
-    setSearchText(value);
-  };
-
-  const hanldeSubmit = e => {
-    e.preventDefault();
-  };
-
+const Topbar = ({
+  children,
+  searchValue = '',
+  searchPlaceholder = '',
+  onSearch = () => {},
+  onSubmit = () => {}
+}) => {
   return (
     <Styled.Topbar>
-      <Styled.CreateNewBtn onClick={() => props.history.push('/create-plan')}>
-        <PlusIcon className="icon icon-small" /> Create New
-      </Styled.CreateNewBtn>
-      <Styled.Search onSubmit={hanldeSubmit}>
-        <Styled.Input
-          type="text"
-          name="search"
-          placeholder="Filter results"
-          value={searchText}
-          onChange={handleSearch}
-        />
-        <Styled.SearchBtn>
-          <FilterIcon className="icon icon-small" />
-        </Styled.SearchBtn>
-      </Styled.Search>
+      <Styled.LeftSide>{children}</Styled.LeftSide>
+      <Styled.RightSide>
+        <Styled.Search onSubmit={onSubmit}>
+          <Styled.Input
+            type="text"
+            name="search"
+            placeholder={searchPlaceholder}
+            value={searchValue}
+            onChange={onSearch}
+          />
+          <Styled.SearchBtn>
+            <FilterIcon className="icon icon-small" />
+          </Styled.SearchBtn>
+        </Styled.Search>
+      </Styled.RightSide>
     </Styled.Topbar>
   );
 };

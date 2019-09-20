@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components/macro';
 
-import { Popup } from '../../stylesShare';
+import { Popup, CreateBtn as Btn } from '../../stylesShare';
 
 export const PlanCreate = styled.section`
   grid-column: col-1-start / col-2-end !important;
@@ -80,31 +80,6 @@ export const Input = styled.input`
   }
 `;
 
-export const Btn = styled.button`
-  height: 5rem;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0 2rem;
-  background-color: var(--color-medium-grey);
-  color: var(--color-almost-white);
-  font-size: 1.6rem;
-  line-height: 3.2rem;
-  outline: none;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background-color: var(--color-dark-grey);
-  }
-
-  svg {
-    vertical-align: sub;
-    font-size: 2.4rem;
-    fill: currentColor;
-    transition: all 0.2s;
-  }
-`;
-
 export const CreateBtn = styled(Btn)`
   background-color: var(--color-light-grey);
 
@@ -126,17 +101,18 @@ export const CancelBtn = styled(Btn)`
   position: absolute;
   top: -8rem;
   right: 0;
-  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.2); */
   background-color: var(--color-light-grey);
   transition: transform 0.2s, background-color 0.2s;
+  line-height: unset;
 
   :hover {
     background-color: var(--color-earth-red);
+    transform: rotate(90deg);
+  }
 
-    svg {
-      transform: rotate(90deg);
-      margin-right: 0;
-    }
+  svg {
+    margin: 0;
   }
 `;
 

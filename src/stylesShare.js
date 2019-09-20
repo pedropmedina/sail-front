@@ -76,3 +76,27 @@ export const Popup = styled(P)`
     border-left-color: var(--color-medium-grey);
   }
 `;
+
+export const CreateBtn = styled.button`
+  height: ${({ size }) => (size ? size : '5rem')};
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0 2rem;
+  background-color: var(--color-medium-grey);
+  color: var(--color-almost-white);
+  font-size: 1.6rem;
+  line-height: ${({ size }) => (size ? 'calc((size + 1.6rem) / 2)' : '3.2rem')};
+  outline: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-dark-grey);
+  }
+
+  > svg {
+    vertical-align: sub;
+    margin-right: 1rem;
+    font-size: 2rem;
+    fill: currentColor;
+  }
+`;
