@@ -1,0 +1,33 @@
+{
+  "__schema": {
+    "types": [
+      {
+        "kind": "INTERFACE",
+        "name": "Request",
+        "possibleTypes": [
+          {
+            "name": "FriendRequest"
+          },
+          {
+            "name": "InviteRequest"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "Result",
+        "possibleTypes": [
+          {
+            "name": "Plan"
+          },
+          {
+            "name": "Pin"
+          },
+          {
+            "name": "User"
+          }
+        ]
+      }
+    ]
+  }
+}

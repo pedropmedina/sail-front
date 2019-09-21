@@ -128,6 +128,7 @@ export const CancelLocationBtn = styled(Btn)`
 
   svg {
     transition: none;
+    margin: 0;
   }
 `;
 

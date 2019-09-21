@@ -11,6 +11,7 @@ export const LeftSide = styled.div``;
 
 export const RightSide = styled.div`
   flex-basis: 50vw;
+  position: relative;
 `;
 
 export const Search = styled.form`
@@ -51,4 +52,32 @@ export const SearchBtn = styled.button`
   background-color: inherit;
   color: var(--color-light-grey);
   outline: none;
+`;
+
+export const SearchResults = styled.div`
+  position: absolute;
+  top: calc(100% + 2rem);
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  padding: 2rem 0;
+  box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.1);
+  z-index: 2;
+`;
+
+export const Results = styled.ul`
+  list-style: none;
+`;
+
+export const Result = styled.li`
+  font-size: 1.6rem;
+  color: var(--color-light-grey);
+  cursor: pointer;
+  padding: 1rem 2rem;
+
+  :hover {
+    background-color: var(--color-almost-white);
+    color: #fff;
+  }
 `;

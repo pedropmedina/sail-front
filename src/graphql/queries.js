@@ -37,3 +37,22 @@ export const GET_PLANS_QUERY = gql`
   }
   ${planFragment}
 `;
+
+export const SEARCH_QUERY = gql`
+  query Search($searchText: String!) {
+    search(searchText: $searchText) {
+      ... on Plan {
+        _id
+        title
+      }
+      ... on Pin {
+        _id
+        title
+      }
+      ... on User {
+        username
+        email
+      }
+    }
+  }
+`;
