@@ -15,6 +15,7 @@ const Context = createContext({
   currentPin: null,
   popupPin: null,
   showDraftPinPopup: false,
+  draftPinPopup: null,
   draftPlan: null,
   geocodingResults: []
 });

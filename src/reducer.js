@@ -11,6 +11,9 @@ export const SET_POPUP_PIN = 'SET_POPUP_PIN';
 export const DELETE_POPUP_PIN = 'DELETE_POPUP_PIN';
 export const GET_GEOCODING_RESULTS = 'GET_GEOCODING_RESULTS';
 export const SHOW_DRAFT_PIN_POPUP = 'SHOW_DRAFT_PIN_POPUP';
+export const CREATE_DRAFT_PIN_POPUP = 'CREATE_DRAFT_PIN_POPUP';
+export const UPDATE_DRAFT_PIN_POPUP = 'UPDATE_DRAFT_PIN_POPUP';
+export const DELETE_DRAFT_PIN_POPUP = 'DELETE_DRAFT_PIN_POPUP';
 export const UPDATE_VIEWPORT = 'UPDATE_VIEWPORT';
 export const CREATE_DRAFT_PLAN = 'CREATE_DRAFT_PLAN';
 export const UPDATE_DRAFT_PLAN = 'UPDATE_DRAFT_PLAN';
@@ -21,7 +24,8 @@ const DEFAULT_DRAFT_PLAN = {
   description: '',
   location: '',
   date: new Date(),
-  invites: []
+  invites: [],
+  placeName: ''
 };
 
 export default function reducer(state, { type, payload }) {
@@ -52,6 +56,12 @@ export default function reducer(state, { type, payload }) {
       return { ...state, geocodingResults: payload };
     case SHOW_DRAFT_PIN_POPUP:
       return { ...state, showDraftPinPopup: payload };
+    case CREATE_DRAFT_PIN_POPUP:
+      return { ...state, draftPinPopup: { longitude: 0, latitude: 0 } };
+    case UPDATE_DRAFT_PIN_POPUP:
+      return { ...state, draftPinPopup: payload };
+    case DELETE_DRAFT_PIN_POPUP:
+      return { ...state, draftPinPopup: null };
     case CREATE_DRAFT_PLAN:
       return { ...state, draftPlan: DEFAULT_DRAFT_PLAN };
     case UPDATE_DRAFT_PLAN:

@@ -39,12 +39,16 @@
   fill: var(--color-medium-grey);
 }
 
-.draft-pin-icon {
+.draf-pin-icon {
+  fill: var(--color-earth-red);
+}
+
+.draft-pin-icon-draggable {
   cursor: pointer;
   fill: var(--color-earth-red);
 }
 
-.draft-pin-icon:hover {
+.draft-pin-icon-draggable:hover {
   fill: var(--color-light-grey);
   transform: translateY(-0.2rem);
   cursor: grab;

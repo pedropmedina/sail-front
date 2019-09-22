@@ -11,7 +11,8 @@ import {
   DELETE_DRAFT_PIN,
   SHOW_DRAFT_PIN_POPUP,
   UPDATE_DRAFT_PLAN,
-  DELETE_DRAFT_PLAN
+  DELETE_DRAFT_PLAN,
+  UPDATE_CURRENT_PIN
 } from '../../reducer';
 import { GET_PINS_QUERY } from '../../graphql/queries';
 import { CREATE_PIN_MUTATION } from '../../graphql/mutations';
@@ -135,6 +136,7 @@ const PinMutation = ({ style }) => {
         type: UPDATE_DRAFT_PLAN,
         payload: { location: data.pin._id }
       });
+      dispatch({type: UPDATE_CURRENT_PIN, payload: data.pin})
       history.push('/create-plan');
     }
   };

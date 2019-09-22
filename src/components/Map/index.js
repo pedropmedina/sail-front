@@ -7,7 +7,6 @@ import { useQuery } from '@apollo/react-hooks';
 import * as Styled from './styled';
 
 import { ReactComponent as PlusIcon } from '../../assets/SVG/plus.svg';
-import { ReactComponent as MapPin } from '../../assets/SVG/map-pin.svg';
 import { ReactComponent as CompassIcon } from '../../assets/SVG/compass.svg';
 import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
 import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
@@ -51,7 +50,9 @@ const Map = ({
   isLoggedIn,
   popupPin,
   showDraftPinPopup,
-  onClickDraftPinPopup
+  onClickDraftPinPopup,
+  draftPinPopup,
+  draftPlan
 }) => {
   const { error, loading, data } = useQuery(GET_PINS_QUERY);
   const transitions = useTransition([draftPin || currentPin], null, {
@@ -63,7 +64,7 @@ const Map = ({
   let Pin =
     !!draftPin && !currentPin
       ? PinMutation
-      : !draftPin && !!currentPin
+      : !draftPin && !draftPlan && !!currentPin
       ? PinQuery
       : null;
 
@@ -91,8 +92,14 @@ const Map = ({
           data.pins.map(pin => {
             const { _id, longitude, latitude } = pin;
             return (
-              <Marker key={_id} longitude={longitude} latitude={latitude}>
-                <MapPin
+              <Marker
+                key={_id}
+                longitude={longitude}
+                latitude={latitude}
+                offsetLeft={-24 / 2}
+                offsetTop={-24}
+              >
+                <PinIcon
                   className="icon icon-small pin-icon"
                   onClick={() => onClickMarker(pin)}
                   onMouseEnter={() => onMouseEnterMarker(pin)}
@@ -109,8 +116,8 @@ const Map = ({
             longitude={popupPin.longitude}
             closeButton={false}
             closeOnClick={false}
-            offsetLeft={12}
-            offsetTop={-7}
+            offsetTop={-28}
+            sortByDepth={true}
           >
             <Styled.PopupFigure>
               <Styled.PopupImg src={popupPin.image} alt={popupPin.title} />
@@ -121,23 +128,29 @@ const Map = ({
 
         {/* Show marker for draft pin */}
         {draftPin && (
-          <Marker {...draftPin} draggable={true} onDragEnd={onDragEnd}>
-            <MapPin className="icon icon-small draft-pin-icon" />
+          <Marker
+            {...draftPin}
+            draggable={true}
+            onDragEnd={onDragEnd}
+            offsetLeft={-24 / 2}
+            offsetTop={-24}
+          >
+            <PinIcon className="icon icon-small draft-pin-icon-draggable" />
           </Marker>
         )}
 
         {/* show popup and marker for selecting geocoding result */}
         {showDraftPinPopup && (
           <>
-            <Marker {...viewport}>
-              <MapPin className="icon icon-small draft-pin-icon" />
+            <Marker {...draftPinPopup} offsetLeft={-24 / 2} offsetTop={-24}>
+              <PinIcon className="icon icon-small draf-pin-icon" />
             </Marker>
 
             <Styled.CustomPopup
-              longitude={viewport.longitude}
-              latitude={viewport.latitude}
-              offsetLeft={24}
-              offsetTop={12}
+              longitude={draftPinPopup.longitude}
+              latitude={draftPinPopup.latitude}
+              offsetLeft={12}
+              offsetTop={-12}
               anchor="left"
               closeButton={false}
             >

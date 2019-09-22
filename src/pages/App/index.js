@@ -14,7 +14,10 @@ import {
   SET_POPUP_PIN,
   DELETE_POPUP_PIN,
   SHOW_DRAFT_PIN_POPUP,
-  UPDATE_VIEWPORT
+  UPDATE_VIEWPORT,
+  CREATE_DRAFT_PIN_POPUP,
+  UPDATE_DRAFT_PIN_POPUP,
+  DELETE_DRAFT_PIN_POPUP
 } from '../../reducer';
 
 import Map from '../../components/Map';
@@ -29,6 +32,7 @@ const App = props => {
     isLoggedIn,
     popupPin,
     showDraftPinPopup,
+    draftPinPopup,
     viewport,
     draftPlan
   } = state;
@@ -104,24 +108,28 @@ const App = props => {
       dispatch({ type: UPDATE_CURRENT_PIN, payload: data.pin });
     } else {
       dispatch({ type: DELETE_CURRENT_PIN });
+      dispatch({ type: CREATE_DRAFT_PIN_POPUP });
+      dispatch({
+        type: UPDATE_DRAFT_PIN_POPUP,
+        payload: { longitude, latitude }
+      });
       dispatch({ type: SHOW_DRAFT_PIN_POPUP, payload: true });
     }
   };
 
   const handleClickDraftPinPopup = (action = 'create') => {
-    dispatch({ type: SHOW_DRAFT_PIN_POPUP, payload: false });
-
     if (action === 'cancel') {
-      dispatch({ type: DELETE_DRAFT_PIN });
       // send back to /create-plan if popup was initiated while creating new plan
       if (draftPlan) {
         props.history.push('/create-plan');
       }
     } else {
-      const { longitude, latitude } = viewport;
       dispatch({ type: CREATE_DRAFT_PIN });
-      dispatch({ type: UPDATE_DRAFT_PIN, payload: { longitude, latitude } });
+      dispatch({ type: UPDATE_DRAFT_PIN, payload: draftPinPopup });
     }
+
+    dispatch({ type: SHOW_DRAFT_PIN_POPUP, payload: false });
+    dispatch({ type: DELETE_DRAFT_PIN_POPUP });
   };
 
   return (
@@ -144,7 +152,9 @@ const App = props => {
         isLoggedIn={isLoggedIn}
         popupPin={popupPin}
         showDraftPinPopup={showDraftPinPopup}
+        draftPinPopup={draftPinPopup}
         onClickDraftPinPopup={handleClickDraftPinPopup}
+        draftPlan={draftPlan}
       />
     </Styled.App>
   );

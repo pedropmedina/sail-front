@@ -25,7 +25,9 @@ import {
   SHOW_DRAFT_PIN_POPUP,
   UPDATE_VIEWPORT,
   UPDATE_CURRENT_PIN,
-  DELETE_CURRENT_PIN
+  DELETE_CURRENT_PIN,
+  CREATE_DRAFT_PIN_POPUP,
+  UPDATE_DRAFT_PIN_POPUP
 } from '../../reducer';
 
 import { CREATE_PLAN_MUTATION } from '../../graphql/mutations';
@@ -46,7 +48,6 @@ const PlanCreate = props => {
   const { draftPlan, currentUser, viewport, currentPin } = state;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [address, setAddress] = useState('');
   const [titleError, setTitleError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
   const [locationError, setLocationError] = useState('');
@@ -72,8 +73,7 @@ const PlanCreate = props => {
     if (locationError) handleErrors('location');
 
     const [longitude, latitude] = result.center;
-    // set data for map preview
-    setAddress(result.place_name);
+
     // update current viewport
     dispatch({
       type: UPDATE_VIEWPORT,
@@ -87,16 +87,24 @@ const PlanCreate = props => {
     });
 
     // if pin, simply update plan's location with pin's id
-    // else create draft pin, update draft plan and push over to / in order to create new pin
+    // else create draftPinPopup, update draft plan and push over to / in order to create new pin
     if (data && data.pin) {
       dispatch({
         type: UPDATE_DRAFT_PLAN,
-        payload: { location: data.pin._id }
+        payload: { location: data.pin._id, placeName: result.place_name }
       });
       dispatch({ type: UPDATE_CURRENT_PIN, payload: data.pin });
     } else {
+      dispatch({
+        type: UPDATE_DRAFT_PLAN,
+        payload: { title, description, placeName: result.place_name }
+      });
+      dispatch({ type: CREATE_DRAFT_PIN_POPUP });
+      dispatch({
+        type: UPDATE_DRAFT_PIN_POPUP,
+        payload: { longitude, latitude }
+      });
       dispatch({ type: SHOW_DRAFT_PIN_POPUP, payload: true });
-      dispatch({ type: UPDATE_DRAFT_PLAN, payload: { title, description } });
       props.history.push('/');
     }
   };
@@ -127,21 +135,27 @@ const PlanCreate = props => {
 
   const handleCancel = () => {
     dispatch({ type: DELETE_DRAFT_PLAN });
+    dispatch({ type: DELETE_CURRENT_PIN });
     props.history.push('/plans');
   };
 
   const handleCancelLocation = () => {
     dispatch({ type: DELETE_CURRENT_PIN });
-    dispatch({ type: UPDATE_DRAFT_PLAN, payload: { location: '' } });
-    setAddress('');
+    dispatch({
+      type: UPDATE_DRAFT_PLAN,
+      payload: { location: '', placeName: '' }
+    });
   };
 
   const handleCreatePlan = async () => {
     const validated = await validateFields(draftPlan);
     if (!validated) return;
 
+    // destructure draft plan to get data needed for creating of plan
+    const { title, description, location, date, invites } = draftPlan;
+
     await createPlan({
-      variables: { input: { ...draftPlan } },
+      variables: { input: { title, description, location, date, invites } },
       update: (cache, { data: { plan } }) => {
         const { plans } = cache.readQuery({ query: GET_PLANS_QUERY });
         cache.writeQuery({
@@ -150,6 +164,9 @@ const PlanCreate = props => {
         });
       }
     });
+    // cleanup store and redirect to /plans
+    dispatch({ type: DELETE_CURRENT_PIN });
+    dispatch({ type: DELETE_DRAFT_PLAN });
     props.history.push('/plans');
   };
 
@@ -228,7 +245,7 @@ const PlanCreate = props => {
                   anchor="left"
                   closeButton={false}
                 >
-                  <p style={{ width: '20rem' }}>{address && address}</p>
+                  <p style={{ width: '20rem' }}>{draftPlan.placeName}</p>
                 </Styled.MapPreviewPopup>
               </MapPreview>
               <Styled.CancelLocationBtn onClick={handleCancelLocation}>
