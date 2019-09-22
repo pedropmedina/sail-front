@@ -34,13 +34,23 @@ export const establishSession = async (client, dispatch, setState) => {
   }
 };
 
+export const reverseGeocode = async (longitude, latitude) => {
+  const { body } = await geocodingService
+    .reverseGeocode({
+      query: [longitude, latitude],
+      types: ['address']
+    })
+    .send();
+  return body.features[0].place_name;
+};
 
-export const reverseGeocode = async (longitude, latitude ) => {
-    const { body } = await geocodingService
-      .reverseGeocode({
-        query: [longitude, latitude],
-        types: ['address']
-      })
-      .send();
-    return body.features[0].place_name;
-}
+export const searchOnTimeout = (fn, ms) => {
+  // assign undefined to timeout
+  let timeout = undefined;
+  // clear exising timeout when typing
+  clearTimeout(timeout);
+  // set new timeout
+  timeout = setTimeout(fn, ms);
+
+  return timeout;
+};

@@ -71,6 +71,8 @@ export const Results = styled.ul`
 `;
 
 export const Result = styled.li`
+  display: flex;
+  align-items: center;
   font-size: 1.6rem;
   color: var(--color-light-grey);
   cursor: pointer;
@@ -80,4 +82,13 @@ export const Result = styled.li`
     background-color: var(--color-almost-white);
     color: #fff;
   }
+`;
+
+export const ProfileImg = styled.img`
+  height: 4rem;
+  width: 4rem;
+  display: inline-block;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 1.5rem;
 `;

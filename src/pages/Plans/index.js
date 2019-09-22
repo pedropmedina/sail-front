@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useApolloClient } from '@apollo/react-hooks';
 
+import { searchOnTimeout } from '../../utils';
+
 import { GET_PLANS_QUERY, SEARCH_QUERY } from '../../graphql/queries';
 
 import * as Styled from './styled';
@@ -19,12 +21,7 @@ const Plans = ({ history }) => {
   const client = useApolloClient();
 
   useEffect(() => {
-    let timeout = undefined;
-
-    // clear existing timeout
-    clearTimeout(timeout);
-    // set new timeout
-    timeout = setTimeout(async () => {
+    const timeout = searchOnTimeout(async () => {
       const { data } = await client.query({
         query: SEARCH_QUERY,
         variables: { searchText: searchText }
@@ -36,7 +33,6 @@ const Plans = ({ history }) => {
       }
     }, 400);
 
-    // get rid of timeout on unmounting
     return () => {
       clearTimeout(timeout);
     };
@@ -72,7 +68,9 @@ const Plans = ({ history }) => {
         </CreateBtn>
       </Topbar>
       <Styled.Plans>
-        {data && data.plans.map(plan => <Plan key={plan._id} {...plan} />)}
+        {data &&
+          data.plans &&
+          data.plans.map(plan => <Plan key={plan._id} {...plan} />)}
       </Styled.Plans>
     </Styled.PlansWrapper>
   );

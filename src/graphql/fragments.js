@@ -23,16 +23,6 @@ export const planFragment = gql`
       image
       longitude
       latitude
-      comments {
-        _id
-        text
-        author {
-          email
-          username
-          name
-        }
-        createdAt
-      }
       createdAt
     }
     author {
@@ -68,6 +58,94 @@ export const pinFragment = gql`
     createdAt
   }
 `;
+
+export const userFragments = {
+  default: gql`
+    fragment defaultUserFields on User {
+      email
+      username
+      name
+      image
+      about
+      address {
+        longitude
+        latitude
+      }
+      friends {
+        email
+        username
+        name
+        image
+      }
+      myPlans {
+        _id
+        title
+        description
+        date
+      }
+      inPlans {
+        _id
+        title
+        description
+        date
+      }
+      likedPins {
+        _id
+        title
+        content
+        image
+        latitude
+        longitude
+      }
+      sentRequests {
+        _id
+        to {
+          email
+          username
+        }
+        status
+        reqType
+      }
+      receivedRequests {
+        _id
+        to {
+          email
+          username
+        }
+        status
+        reqType
+      }
+      admin
+    }
+  `,
+  people: gql`
+    fragment peopleFields on User {
+      email
+      username
+      name
+      image
+      address {
+        longitude
+        latitude
+      }
+      about
+      inPlans {
+        _id
+      }
+      friends {
+        email
+        username
+        name
+        image
+        address {
+          longitude
+          latitude
+        }
+        about
+      }
+    }
+  `
+};
 
 export const userFragment = gql`
   fragment userFields on User {

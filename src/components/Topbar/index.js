@@ -6,7 +6,7 @@ import ClickOutside from '../ClickOutside';
 import * as Styled from './styled';
 import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
 
-const css = `
+const onClickOutsideCss = `
   height: 100%;
 `;
 
@@ -35,7 +35,7 @@ const Topbar = ({
         <ClickOutside
           onClickOutside={() => setShowResults(false)}
           onClickInside={() => setShowResults(true)}
-          css={css}
+          css={onClickOutsideCss}
         >
           <Styled.Search onSubmit={onSubmit}>
             <Styled.Input
@@ -69,6 +69,14 @@ const Topbar = ({
                     case 'User':
                       return (
                         <Styled.Result key={result.username}>
+                          <Styled.ProfileImg
+                            src={
+                              result.image
+                                ? result.image
+                                : 'https://via.placeholder.com/40'
+                            }
+                            alt="Profile image"
+                          />
                           {result.username}
                         </Styled.Result>
                       );
