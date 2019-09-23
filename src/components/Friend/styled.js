@@ -1,11 +1,13 @@
 import styled from 'styled-components/macro';
+import { Link as L } from 'react-router-dom';
 
 export const Friend = styled.li`
   font-size: 1.6rem;
   color: var(--color-light-grey);
+  padding: 1rem;
+  margin: 1.5rem;
   box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.1);
   border-radius: 0.3rem;
-  padding: 2rem;
 
   display: grid;
   grid-template-columns: 8rem minmax(min-content, 25rem);
@@ -57,9 +59,12 @@ export const FriendStats = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
+  flex-wrap: wrap;
 `;
 
 export const FriendStat = styled.div`
+  flex-basis: 50%;
+
   > * {
     text-align: center;
   }
@@ -75,6 +80,28 @@ export const StatData = styled.p`
   font-size: 1.6rem;
   font-weight: 500;
   color: var(--color-dark-grey);
+`;
+
+export const Link = styled(L)`
+  :link,
+  :visited,
+  :active {
+    flex-basis: 70%;
+    padding: 0.5rem 2rem;
+    margin-top: 1rem;
+    text-decoration: none;
+    font-size: 1.2rem;
+    background-color: var(--color-less-white);
+    color: var(--color-light-grey);
+    text-align: center;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+  }
+
+  :hover {
+    background-color: var(--color-medium-grey);
+    color: var(--color-almost-white);
+  }
 `;
 
 export const Name = styled.h4`

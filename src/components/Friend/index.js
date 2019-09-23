@@ -45,6 +45,7 @@ const Friend = ({
           <Styled.StatHeading>Friends</Styled.StatHeading>
           <Styled.StatData>{friendsQty}</Styled.StatData>
         </Styled.FriendStat>
+        <Styled.Link to={`/profile/${username}`}>View Profile</Styled.Link>
       </Styled.FriendStats>
     </Styled.StatsRow>
     {/* Friends Row containing user's friends */}

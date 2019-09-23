@@ -2,6 +2,24 @@ import gql from 'graphql-tag';
 
 import { planFragment, pinFragment, userFragments } from './fragments';
 
+export const ME_QUERY = gql`
+  {
+    user: me {
+      ...defaultUserFields
+    }
+  }
+  ${userFragments.default}
+`;
+
+export const GET_PROFILE_QUERY = gql`
+  query GetUser($userId: ID, $username: String) {
+    profile: getUser(userId: $userId, username: $username) {
+      ...profileFields
+    }
+  }
+  ${userFragments.profile}
+`;
+
 export const GET_PINS_QUERY = gql`
   {
     pins: getPins {
@@ -18,15 +36,6 @@ export const GET_PIN_BY_COORDS = gql`
     }
   }
   ${pinFragment}
-`;
-
-export const ME_QUERY = gql`
-  {
-    user: me {
-      ...defaultUserFields
-    }
-  }
-  ${userFragments.default}
 `;
 
 export const GET_PLANS_QUERY = gql`

@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro';
 
-export const Plan = styled.div`
+export const Plan = styled.li`
   width: 50rem;
   padding: 1rem;
   margin: 1.5rem;

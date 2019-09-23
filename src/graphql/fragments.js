@@ -144,6 +144,57 @@ export const userFragments = {
         about
       }
     }
+  `,
+  profile: gql`
+    fragment profileFields on User {
+      email
+      username
+      name
+      image
+      about
+      address {
+        longitude
+        latitude
+      }
+      friends {
+        email
+        username
+        name
+        image
+        address {
+          longitude
+          latitude
+        }
+      }
+      inPlans {
+        _id
+        title
+        description
+        date
+        participants {
+          name
+          username
+          email
+        }
+        location {
+          _id
+          title
+          content
+          image
+          longitude
+          latitude
+          createdAt
+        }
+      }
+      likedPins {
+        _id
+        title
+        content
+        image
+        latitude
+        longitude
+      }
+    }
   `
 };
 

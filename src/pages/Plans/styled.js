@@ -5,7 +5,8 @@ export const PlansWrapper = styled.div`
   overflow-y: auto;
 `;
 
-export const Plans = styled.div`
+export const Plans = styled.ul`
+  list-style: none;
   padding: 2rem 5rem;
   display: flex;
   flex-wrap: wrap;
