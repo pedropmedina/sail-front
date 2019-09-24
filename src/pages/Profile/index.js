@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useContext } from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import * as Styled from './styled';
 
@@ -11,6 +11,7 @@ import Plan from '../../components/Plan';
 import Friend from '../../components/Friend';
 
 import { GET_PROFILE_QUERY } from '../../graphql/queries';
+import { CREATE_REQUEST_MUTATION } from '../../graphql/mutations';
 
 import { reverseGeocode } from '../../utils';
 
@@ -21,6 +22,9 @@ const Profile = props => {
   const [address, setAddress] = useState('');
   const { error, loading, data: profileData } = useQuery(GET_PROFILE_QUERY, {
     variables: { username: props.match.params.username }
+  });
+  const [createRequest] = useMutation(CREATE_REQUEST_MUTATION, {
+    ignoreResults: true
   });
 
   useEffect(() => {
@@ -35,6 +39,11 @@ const Profile = props => {
       }
     })();
   }, [profileData]);
+
+  const handleFriendRequest = async (email, reqType) => {
+    const input = { to: email, reqType };
+    await createRequest({ variables: { input } });
+  };
 
   if (!error && loading) return <div>Loading...</div>;
 
@@ -53,11 +62,14 @@ const Profile = props => {
       <Topbar>
         <Styled.FriendRequestBtn
           isVisible={
+            state &&
+            state.currentUser &&
             state.currentUser.username !== username &&
             !state.currentUser.friends.some(
               friend => friend.username === username
             )
           }
+          onClick={() => handleFriendRequest(email, 'FRIEND')}
         >
           <UserPlusIcon className="icon icon-small" />
           Send Friend Request

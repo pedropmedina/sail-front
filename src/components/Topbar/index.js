@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
 
 import { searchOnTimeout } from '../../utils';
+import history from '../../history';
 
 import { SEARCH_QUERY } from '../../graphql/queries';
 
@@ -10,6 +11,8 @@ import ClickOutside from '../ClickOutside';
 
 import * as Styled from './styled';
 import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
+import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
+import { ReactComponent as CalendarIcon } from '../../assets/SVG/calendar.svg';
 
 const onClickOutsideCss = `
   height: 100%;
@@ -32,7 +35,7 @@ const Topbar = ({ children }) => {
   }, [searchText]);
 
   useEffect(() => {
-    if (data && data.search.length > 0) {
+    if (data && data.search && data.search.length > 0) {
       setResults(data.search);
       setShowResults(true);
     } else {
@@ -42,6 +45,20 @@ const Topbar = ({ children }) => {
 
   const handleChange = event => {
     setSearchText(event.target.value);
+  };
+
+  const handleClick = result => {
+    switch (result.__typename) {
+      case 'User':
+        history.push(`/profile/${result.username}`);
+        break;
+      case 'Plan':
+        break;
+      case 'Pin':
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -72,19 +89,30 @@ const Topbar = ({ children }) => {
                   switch (result.__typename) {
                     case 'Plan':
                       return (
-                        <Styled.Result key={result._id}>
+                        <Styled.Result
+                          key={result._id}
+                          onClick={() => handleClick(result)}
+                        >
+                          <CalendarIcon className="icon icon-small" />
                           {result.title}
                         </Styled.Result>
                       );
                     case 'Pin':
                       return (
-                        <Styled.Result key={result._id}>
+                        <Styled.Result
+                          key={result._id}
+                          onClick={() => handleClick(result)}
+                        >
+                          <PinIcon className="icon icon-small" />
                           {result.title}
                         </Styled.Result>
                       );
                     case 'User':
                       return (
-                        <Styled.Result key={result.username}>
+                        <Styled.Result
+                          key={result.username}
+                          onClick={() => handleClick(result)}
+                        >
                           <Styled.ProfileImg
                             src={
                               result.image

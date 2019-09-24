@@ -81,6 +81,16 @@ export const Result = styled.li`
   :hover {
     background-color: var(--color-almost-white);
     color: #fff;
+
+    svg {
+      fill: currentColor;
+    }
+  }
+
+  svg {
+    fill: var(--color-less-white);
+    margin-right: 1rem;
+    font-size: 2rem;
   }
 `;
 

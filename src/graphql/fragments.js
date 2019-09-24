@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 
+// plan fragments
 export const planFragment = gql`
   fragment planFields on Plan {
     _id
@@ -33,6 +34,7 @@ export const planFragment = gql`
   }
 `;
 
+// pin fragments
 export const pinFragment = gql`
   fragment pinFields on Pin {
     _id
@@ -59,6 +61,7 @@ export const pinFragment = gql`
   }
 `;
 
+// user fragments
 export const userFragments = {
   default: gql`
     fragment defaultUserFields on User {
@@ -198,56 +201,23 @@ export const userFragments = {
   `
 };
 
-export const userFragment = gql`
-  fragment userFields on User {
-    email
-    username
-    name
-    image
-    friends {
-      email
-      username
-      name
-      image
-    }
-    myPlans {
-      _id
-      title
-      description
-      date
-    }
-    inPlans {
-      _id
-      title
-      description
-      date
-    }
-    likedPins {
-      _id
-      title
-      content
-      image
-      latitude
-      longitude
-    }
-    sentRequests {
+// request fragments
+export const requestFragments = {
+  default: gql`
+    fragment defaultRequestFields on Request {
       _id
       to {
-        email
+        name
         username
+        email
       }
       status
       reqType
-    }
-    receivedRequests {
-      _id
-      to {
-        email
+      author {
+        name
         username
+        email
       }
-      status
-      reqType
     }
-    admin
-  }
-`;
+  `
+};

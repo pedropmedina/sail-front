@@ -1,6 +1,11 @@
 import gql from 'graphql-tag';
 
-import { planFragment, pinFragment, userFragments } from './fragments';
+import {
+  planFragment,
+  pinFragment,
+  userFragments,
+  requestFragments
+} from './fragments';
 
 export const ME_QUERY = gql`
   {
@@ -82,4 +87,18 @@ export const SEARCH_FRIENDS_QUERY = gql`
     }
   }
   ${userFragments.people}
+`;
+
+export const GET_REQUESTS_QUERY = gql`
+  {
+    requests: getRequests {
+      ... on FriendRequest {
+        ...defaultRequestFields
+      }
+      ... on InviteRequest {
+        ...defaultRequestFields
+      }
+    }
+  }
+  ${requestFragments.default}
 `;

@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-import { planFragment } from './fragments';
+import { planFragment, userFragments, requestFragments } from './fragments';
 
 export const SIGNUP_USER_MUTATION = gql`
   mutation SignupUser($input: SignupUserInput!) {
@@ -15,57 +15,10 @@ export const SIGNUP_USER_MUTATION = gql`
 export const LOGIN_USER_MUTATION = gql`
   mutation LoginUser($input: LoginUserInput!) {
     user: loginUser(input: $input) {
-      email
-      username
-      name
-      image
-      friends {
-        email
-        username
-        name
-        image
-      }
-      myPlans {
-        _id
-        title
-        description
-        date
-      }
-      inPlans {
-        _id
-        title
-        description
-        date
-      }
-      likedPins {
-        _id
-        title
-        content
-        image
-        latitude
-        longitude
-      }
-      sentRequests {
-        _id
-        to {
-          email
-          username
-        }
-        status
-        reqType
-      }
-      receivedRequests {
-        _id
-        to {
-          email
-          username
-        }
-        status
-        reqType
-      }
-      admin
+      ...userDefaultFields
     }
   }
+  ${userFragments.default}
 `;
 
 export const CREATE_PIN_MUTATION = gql`
@@ -120,4 +73,18 @@ export const CREATE_PLAN_MUTATION = gql`
     }
   }
   ${planFragment}
+`;
+
+export const CREATE_REQUEST_MUTATION = gql`
+  mutation CreateRequest($input: CreateRequestInput!) {
+    request: createRequest(input: $input) {
+      ... on FriendRequest {
+        ...defaultRequestFields
+      }
+      ... on InviteRequest {
+        ...defaultRequestFields
+      }
+    }
+  }
+  ${requestFragments.default}
 `;
