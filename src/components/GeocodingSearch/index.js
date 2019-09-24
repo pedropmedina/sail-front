@@ -6,6 +6,8 @@ import styled from 'styled-components/macro'; // eslint-disable-line
 import * as Styled from './styled';
 import ClickOutside from '../../components/ClickOutside';
 
+import { searchOnTimeout } from '../../utils';
+
 // Initialize mapbox geocoding service
 const geocondingService = mbxGeocoding({
   accessToken: process.env.MAPBOX_TOKEN
@@ -29,10 +31,9 @@ const GeocodingSearch = ({
   useEffect(() => {
     let timeout = undefined;
     if (text) {
-      // clear previous timeout
-      clearTimeout(timeout);
-      // set new timeout
-      timeout = setTimeout(() => handleForwardGeocode(text), 400);
+      timeout = searchOnTimeout(() => {
+        handleForwardGeocode(text);
+      }, 400);
     } else {
       setGeocodingResults([]);
       setShowResults(false);

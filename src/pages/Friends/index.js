@@ -1,12 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useLazyQuery, useQuery } from '@apollo/react-hooks';
+import React from 'react';
+import { useQuery } from '@apollo/react-hooks';
 
-import { searchOnTimeout } from '../../utils';
-
-import {
-  SEARCH_FRIENDS_QUERY,
-  SEARCH_PEOPLE_QUERY
-} from '../../graphql/queries';
+import { SEARCH_FRIENDS_QUERY } from '../../graphql/queries';
 
 import * as Styled from './styled';
 import { ReactComponent as BellIcon } from '../../assets/SVG/bell.svg';
@@ -16,41 +11,13 @@ import Topbar from '../../components/Topbar';
 import Friend from '../../components/Friend';
 
 const Friends = () => {
-  const [searchText, setSearchText] = useState('');
-  const [searchPeople, { data: searchData }] = useLazyQuery(
-    SEARCH_PEOPLE_QUERY
-  );
   const { error, loading, data: friendsData } = useQuery(SEARCH_FRIENDS_QUERY);
-
-  useEffect(() => {
-    const timeout = searchOnTimeout(() => {
-      searchPeople({ variables: { searchText } });
-    }, 400);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [searchText]);
-
-  const handleSearch = event => {
-    setSearchText(event.target.value);
-  };
-
-  const handleSubmit = event => {
-    event.preventDefault();
-  };
 
   if (!error && loading) return <div>Loading...</div>;
 
   return (
     <Styled.FriendsWrapper>
-      <Topbar
-        value={searchText}
-        placeholder="Search for friends..."
-        onSearch={handleSearch}
-        onSubmit={handleSubmit}
-        results={searchData && searchData.people ? searchData.people : []}
-      >
+      <Topbar>
         <Styled.TopbarBtn>
           <BellIcon className="icon icon-small" />
         </Styled.TopbarBtn>

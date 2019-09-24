@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useContext } from 'react';
-import { useQuery, useLazyQuery } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/react-hooks';
 
 import * as Styled from './styled';
 
@@ -10,22 +10,18 @@ import Topbar from '../../components/Topbar';
 import Plan from '../../components/Plan';
 import Friend from '../../components/Friend';
 
-import { SEARCH_PEOPLE_QUERY, GET_PROFILE_QUERY } from '../../graphql/queries';
+import { GET_PROFILE_QUERY } from '../../graphql/queries';
 
-import { searchOnTimeout, reverseGeocode } from '../../utils';
+import { reverseGeocode } from '../../utils';
 
 import Context from '../../context';
 
 const Profile = props => {
   const { state } = useContext(Context);
-  const [searchText, setSearchText] = useState('');
   const [address, setAddress] = useState('');
   const { error, loading, data: profileData } = useQuery(GET_PROFILE_QUERY, {
     variables: { username: props.match.params.username }
   });
-  const [searchPeople, { data: searchData }] = useLazyQuery(
-    SEARCH_PEOPLE_QUERY
-  );
 
   useEffect(() => {
     (async () => {
@@ -39,24 +35,6 @@ const Profile = props => {
       }
     })();
   }, [profileData]);
-
-  useEffect(() => {
-    const timeout = searchOnTimeout(() => {
-      searchPeople({ variables: { searchText } });
-    }, 400);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [searchText]);
-
-  const handleSearch = event => {
-    setSearchText(event.target.value);
-  };
-
-  const handleSubmit = event => {
-    event.preventDefault();
-  };
 
   if (!error && loading) return <div>Loading...</div>;
 
@@ -72,15 +50,14 @@ const Profile = props => {
 
   return (
     <Styled.ProfileWrapper>
-      <Topbar
-        value={searchText}
-        placeholder="Search for people you might know"
-        onSearch={handleSearch}
-        onSubmit={handleSubmit}
-        results={searchData && searchData.people ? searchData.people : []}
-      >
+      <Topbar>
         <Styled.FriendRequestBtn
-          isVisible={state.currentUser.username !== username}
+          isVisible={
+            state.currentUser.username !== username &&
+            !state.currentUser.friends.some(
+              friend => friend.username === username
+            )
+          }
         >
           <UserPlusIcon className="icon icon-small" />
           Send Friend Request

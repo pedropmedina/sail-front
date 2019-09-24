@@ -1,10 +1,8 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react';
-import { useQuery, useApolloClient } from '@apollo/react-hooks';
+import React from 'react';
+import { useQuery } from '@apollo/react-hooks';
 
-import { searchOnTimeout } from '../../utils';
-
-import { GET_PLANS_QUERY, SEARCH_QUERY } from '../../graphql/queries';
+import { GET_PLANS_QUERY } from '../../graphql/queries';
 
 import * as Styled from './styled';
 import { CreateBtn } from '../../stylesShare';
@@ -15,37 +13,7 @@ import Plan from '../../components/Plan';
 import Topbar from '../../components/Topbar';
 
 const Plans = ({ history }) => {
-  const [searchText, setSearchText] = useState('');
-  const [results, setResults] = useState([]);
   const { error, loading, data } = useQuery(GET_PLANS_QUERY);
-  const client = useApolloClient();
-
-  useEffect(() => {
-    const timeout = searchOnTimeout(async () => {
-      const { data } = await client.query({
-        query: SEARCH_QUERY,
-        variables: { searchText: searchText }
-      });
-      if (data) {
-        setResults(data.search);
-      } else {
-        setResults([]);
-      }
-    }, 400);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [searchText]);
-
-  const handleSearch = event => {
-    const value = event.target.value;
-    setSearchText(value);
-  };
-
-  const handleSubmit = event => {
-    event.preventDefault();
-  };
 
   const handleCreate = () => {
     history.push('/create-plan');
@@ -55,13 +23,7 @@ const Plans = ({ history }) => {
 
   return (
     <Styled.PlansWrapper>
-      <Topbar
-        value={searchText}
-        placeholder="Search plans, pins, and friends (e.g., weekend at the park, Whole Foods, Joe)"
-        results={results}
-        onSearch={handleSearch}
-        onSubmit={handleSubmit}
-      >
+      <Topbar>
         <CreateBtn onClick={handleCreate}>
           <PlusIcon className="icon icon-small" />
           Add Plan

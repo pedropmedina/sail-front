@@ -15,7 +15,7 @@ export const RightSide = styled.div`
 `;
 
 export const Search = styled.form`
-  height: 100%;
+  height: 6.4rem; /* default height of button 2rem padding on both sides + 2.4rem icon size */
   border: none;
   position: relative;
   border-radius: 0.5rem;

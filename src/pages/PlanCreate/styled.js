@@ -82,53 +82,57 @@ export const Input = styled.input`
 
 export const CreateBtn = styled(Btn)`
   background-color: var(--color-light-grey);
+  color: var(--color-almost-white);
 
   :hover {
     background-color: var(--color-dark-grey);
   }
-
-  svg {
-    vertical-align: sub;
-    margin-right: 1rem;
-  }
 `;
 
-export const CancelBtn = styled(Btn)`
+export const CancelBtn = styled.button`
   height: 5rem;
   width: 5rem;
-  padding: 1rem;
+  border: none;
   border-radius: 50%;
   position: absolute;
   top: -8rem;
   right: 0;
-  /* box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.2); */
   background-color: var(--color-light-grey);
-  transition: transform 0.2s, background-color 0.2s;
-  line-height: unset;
+  color: var(--color-almost-white);
+  outline: none;
+  cursor: pointer;
+
+  svg {
+    font-size: 2.4rem;
+    fill: currentColor;
+    transition: all 0.2s;
+  }
 
   :hover {
     background-color: var(--color-earth-red);
-    transform: rotate(90deg);
-  }
 
-  svg {
-    margin: 0;
+    svg {
+      transform: rotate(90deg);
+    }
   }
 `;
 
-export const CancelLocationBtn = styled(Btn)`
-  position: absolute;
+export const CancelLocationBtn = styled(CancelBtn)`
   top: 3rem;
   left: 3rem;
-  width: 5rem;
-  height: 5rem;
-  padding: 0;
+  border-radius: 0.5rem;
   background-color: var(--color-less-white);
   color: var(--color-light-grey);
 
   svg {
     transition: none;
-    margin: 0;
+    margin-right: 0;
+  }
+
+  :hover {
+    svg {
+      transform: none;
+    }
   }
 `;
 

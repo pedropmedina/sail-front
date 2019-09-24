@@ -1,5 +1,10 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLazyQuery } from '@apollo/react-hooks';
+
+import { searchOnTimeout } from '../../utils';
+
+import { SEARCH_QUERY } from '../../graphql/queries';
 
 import ClickOutside from '../ClickOutside';
 
@@ -10,22 +15,33 @@ const onClickOutsideCss = `
   height: 100%;
 `;
 
-const Topbar = ({
-  children,
-  value = '',
-  placeholder = '',
-  results = [],
-  onSearch = () => {},
-  onSubmit = () => {}
-}) => {
+const Topbar = ({ children }) => {
   const [showResults, setShowResults] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  const [results, setResults] = useState([]);
+  const [conductSearch, { data }] = useLazyQuery(SEARCH_QUERY);
+
+  useEffect(() => {
+    const timeout = searchOnTimeout(() => {
+      conductSearch({ variables: { searchText } });
+    }, 400);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [searchText]);
+
+  useEffect(() => {
+    if (data && data.search.length > 0) {
+      setResults(data.search);
+      setShowResults(true);
+    } else {
+      setResults([]);
+    }
+  }, [data]);
 
   const handleChange = event => {
-    onSearch(event);
-
-    if (results.length > 0 && !showResults) {
-      setShowResults(true);
-    }
+    setSearchText(event.target.value);
   };
 
   return (
@@ -37,12 +53,12 @@ const Topbar = ({
           onClickInside={() => setShowResults(true)}
           css={onClickOutsideCss}
         >
-          <Styled.Search onSubmit={onSubmit}>
+          <Styled.Search onSubmit={event => event.preventDefault()}>
             <Styled.Input
               type="text"
               name="search"
-              placeholder={placeholder}
-              value={value}
+              placeholder="Search plans, pins, and friends (e.g., weekend at the park, Whole Foods, Joe)"
+              value={searchText}
               onChange={handleChange}
             />
             <Styled.SearchBtn>
