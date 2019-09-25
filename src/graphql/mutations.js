@@ -15,7 +15,7 @@ export const SIGNUP_USER_MUTATION = gql`
 export const LOGIN_USER_MUTATION = gql`
   mutation LoginUser($input: LoginUserInput!) {
     user: loginUser(input: $input) {
-      ...userDefaultFields
+      ...defaultUserFields
     }
   }
   ${userFragments.default}

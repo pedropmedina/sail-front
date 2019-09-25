@@ -21,7 +21,7 @@ import PlanCreate from './pages/PlanCreate';
 import Pins from './pages/Pins';
 import Chats from './pages/Chats';
 import Friends from './pages/Friends';
-import Notifications from './pages/Notifications';
+import Requests from './pages/Requests';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 
@@ -31,7 +31,7 @@ const PRIVATE_ROUTES = [
   { path: '/pins', component: Pins },
   { path: '/chats', component: Chats },
   { path: '/friends', component: Friends },
-  { path: '/notifications', component: Notifications },
+  { path: '/requests', component: Requests },
   { path: '/settings', component: Settings },
   { path: '/profile/:username', component: Profile }
 ];

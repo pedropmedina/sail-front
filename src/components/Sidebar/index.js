@@ -22,7 +22,7 @@ const ITEMS = [
   { text: 'pins', icon: PinIcon },
   { text: 'friends', icon: UsersPin },
   { text: 'chats', icon: MessageIcon },
-  { text: 'notifications', icon: BellIcon },
+  { text: 'requests', icon: BellIcon },
   { text: 'settings', icon: SettingsIcon }
 ];
 
