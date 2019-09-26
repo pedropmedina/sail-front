@@ -90,15 +90,16 @@ export const SEARCH_FRIENDS_QUERY = gql`
 `;
 
 export const GET_REQUESTS_QUERY = gql`
-  {
-    requests: getRequests {
+  query GetRequests($reqType: REQUEST_TYPE) {
+    requests: getRequests(reqType: $reqType) {
       ... on FriendRequest {
         ...defaultRequestFields
       }
       ... on InviteRequest {
-        ...defaultRequestFields
+        ...inviteRequestFields
       }
     }
   }
   ${requestFragments.default}
+  ${requestFragments.invite}
 `;

@@ -11,6 +11,9 @@ export default createGlobalStyle`
     --color-medium-grey: #6C8C96;
     --color-light-grey: #B6BBC0;
     --color-lightest-grey: #dbdbdb;
+    --color-warning: #f2c446;
+    --color-danger: #e64e4e;
+    --color-success: #54b078;
   }
 
   html {

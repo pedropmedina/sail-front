@@ -210,6 +210,7 @@ export const requestFragments = {
         name
         username
         email
+        image
       }
       status
       reqType
@@ -217,7 +218,36 @@ export const requestFragments = {
         name
         username
         email
+        image
       }
+      createdAt
+      updatedAt
+    }
+  `,
+  invite: gql`
+    fragment inviteRequestFields on InviteRequest {
+      _id
+      to {
+        name
+        username
+        email
+        image
+      }
+      status
+      reqType
+      plan {
+        _id
+        title
+        description
+      }
+      author {
+        name
+        username
+        email
+        image
+      }
+      createdAt
+      updatedAt
     }
   `
 };
