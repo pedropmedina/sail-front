@@ -1,19 +1,16 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useContext } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { formatDistance } from 'date-fns';
 
 import Context from '../../context';
+
+import Request from '../../components/Request';
 
 import * as Styled from './styled';
 
 import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
 import { ReactComponent as DownIcon } from '../../assets/SVG/chevron-down.svg';
 import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
-import { ReactComponent as MoreIcon } from '../../assets/SVG/more-vertical.svg';
-import { ReactComponent as ThumbsUpIcon } from '../../assets/SVG/thumbs-up.svg';
-import { ReactComponent as ThumbsDownIcon } from '../../assets/SVG/thumbs-down.svg';
-import { ReactComponent as LinkIcon } from '../../assets/SVG/external-link.svg';
 
 import { GET_REQUESTS_QUERY } from '../../graphql/queries';
 
@@ -23,109 +20,6 @@ const FILTER_SECTIONS = [
   { filter: 'relevance', list: ['oldests', 'newests'] },
   { filter: 'search' }
 ];
-
-const isAuthor = (author, currentUser) => author.email === currentUser.email;
-
-const formatRequestDate = (request, currentUser) => {
-  return request.status !== 'PENDING' && isAuthor(request.author, currentUser)
-    ? `${
-        request.to.name ? request.to.name : request.to.username
-      } ${request.status.toLowerCase()} your request ${formatDistance(
-        parseInt(request.updatedAt),
-        Date.now(),
-        { addSuffix: true }
-      )}`
-    : formatDistance(parseInt(request.updatedAt), Date.now(), {
-        addSuffix: true
-      });
-};
-
-const RequestPopup = () => {
-  return (
-    <Styled.RequestPopup>
-      <Styled.PopupBtn action="accept">
-        Accept
-        <ThumbsUpIcon className="icon icon-small" />
-      </Styled.PopupBtn>
-      <Styled.PopupBtn action="deny">
-        Deny
-        <ThumbsDownIcon className="icon icon-small" />
-      </Styled.PopupBtn>
-      <Styled.PopupBtn>
-        Visit
-        <LinkIcon className="icon icon-small" />
-      </Styled.PopupBtn>
-    </Styled.RequestPopup>
-  );
-};
-
-const InviteRequest = ({ request, currentUser }) => {
-  return (
-    <Styled.Request status={request.status}>
-      <Styled.RequestAuthor>
-        {isAuthor ? 'Invite sent to ' : 'Invite from '}
-        <b>
-          {isAuthor(request.author, currentUser)
-            ? request.to.name
-              ? request.to.name
-              : request.to.username
-            : request.author.name
-            ? request.author.name
-            : request.author.username}
-        </b>
-      </Styled.RequestAuthor>
-      <Styled.RequestTitle>{request.plan.title}</Styled.RequestTitle>
-      <Styled.RequestDesc>{request.plan.description}</Styled.RequestDesc>
-      <Styled.RequestDate>
-        {formatRequestDate(request, currentUser)}
-      </Styled.RequestDate>
-      <Styled.RequestStatus>{request.status}</Styled.RequestStatus>
-      <Styled.RequestBtn>
-        <MoreIcon className="icon icon-small" />
-      </Styled.RequestBtn>
-      <RequestPopup />
-    </Styled.Request>
-  );
-};
-
-const FriendRequest = ({ request, currentUser }) => {
-  return (
-    <Styled.Request status={request.status}>
-      <Styled.RequestImg
-        src={
-          isAuthor(request.author, currentUser) && request.to.image
-            ? request.to.image
-            : request.author.image
-            ? request.author.iamge
-            : 'https://via.placeholder.com/30'
-        }
-        alt="Profile image"
-      />
-      <Styled.RequestAuthor>
-        <b>
-          {isAuthor
-            ? request.to.name
-              ? request.to.name
-              : request.to.username
-            : request.author.name
-            ? request.author.name
-            : request.author.username}
-        </b>
-        {isAuthor
-          ? ' received your friend request'
-          : ' sent you a friend request'}
-      </Styled.RequestAuthor>
-      <Styled.RequestDate>
-        {formatRequestDate(request, currentUser)}
-      </Styled.RequestDate>
-      <Styled.RequestStatus>{request.status}</Styled.RequestStatus>
-      <Styled.RequestBtn>
-        <MoreIcon className="icon icon-small" />
-      </Styled.RequestBtn>
-      <RequestPopup />
-    </Styled.Request>
-  );
-};
 
 const Requests = () => {
   const { state } = useContext(Context);
@@ -232,7 +126,7 @@ const Requests = () => {
                   invitesData.requests,
                   state.currentUser
                 ).sent.map(request => (
-                  <InviteRequest
+                  <Request
                     key={request._id}
                     request={request}
                     currentUser={state.currentUser}
@@ -247,7 +141,7 @@ const Requests = () => {
                   invitesData.requests,
                   state.currentUser
                 ).received.map(request => (
-                  <InviteRequest
+                  <Request
                     key={request._id}
                     request={request}
                     currentUser={state.currentUser}
@@ -268,7 +162,7 @@ const Requests = () => {
                   friendsData.requests,
                   state.currentUser
                 ).sent.map(request => (
-                  <FriendRequest
+                  <Request
                     key={request._id}
                     request={request}
                     currentUser={state.currentUser}
@@ -283,7 +177,7 @@ const Requests = () => {
                   friendsData.requests,
                   state.currentUser
                 ).received.map(request => (
-                  <FriendRequest
+                  <Request
                     key={request._id}
                     request={request}
                     currentUser={state.currentUser}
