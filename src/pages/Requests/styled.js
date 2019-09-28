@@ -9,26 +9,32 @@ export const RequestsWrapper = styled.div`
 export const RequestTypes = styled.article``;
 
 export const RequestType = styled.section`
-  display: grid;
-  grid-template-columns: repeat(2, minmax(min-content, 1fr));
-  column-gap: 3rem;
-  margin-bottom: 2rem;
-  padding: 2rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 `;
 
 export const RequestTypeHeading = styled.h2`
+  flex-basis: 100%;
+
+  padding: 2rem;
   color: var(--color-almost-black);
   font-weight: 300;
   font-size: 2.4rem;
-  margin-bottom: 2rem;
-  grid-column: 1 / -1;
 `;
 
 export const Requests = styled.ul`
   list-style: none;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+  gap: 1.5rem;
 `;
 
-export const Side = styled.div``;
+export const Side = styled.div`
+  flex: 1 1 48%;
+  padding: 2rem;
+`;
 
 export const LeftSide = styled(Side)``;
 
@@ -42,16 +48,16 @@ export const SideHeading = styled.h3`
 `;
 
 export const Filterbar = styled.div`
+  padding: 2rem;
+
   display: grid;
-  grid-template-columns: repeat(3, minmax(max-content, 26rem)) minmax(
-      max-content,
-      100rem
-    );
+  grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
   column-gap: 3rem;
-  margin-bottom: 3rem;
+  row-gap: 1rem;
 `;
 
 export const FilterContainer = styled.div`
+  height: 6rem;
   position: relative;
 `;
 
@@ -84,7 +90,6 @@ export const FilterItem = styled.li`
 `;
 
 export const FilterSearch = styled.form`
-  width: 100%;
   height: 100%;
   color: var(--color-light-grey);
   position: relative;
@@ -119,8 +124,8 @@ export const SearchInput = styled.input`
 
 export const FilterBtn = styled.button`
   border: none;
-  padding: 2rem 2.5rem;
-  display: inline-block;
+  padding: 0 2.5rem;
+  text-align: center;
   height: 100%;
   font-size: 1.6rem;
   background-color: var(--color-less-white);
@@ -140,7 +145,14 @@ export const FilterBtn = styled.button`
 
     :first-child {
       margin-left: auto;
-      font-size: 1.7rem;
+      height: 3rem;
+      width: 3rem;
+      padding: 0.6rem;
+      border-radius: 50%;
+
+      :hover {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
     }
 
     :last-child {

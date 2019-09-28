@@ -2,7 +2,6 @@ import styled from 'styled-components/macro';
 
 export const Request = styled.li`
   padding: 1rem;
-  margin-bottom: 1rem;
   box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
   color: ${({ status }) =>

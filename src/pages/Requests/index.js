@@ -44,8 +44,6 @@ const Requests = () => {
     variables: { reqType: 'INVITE' }
   });
 
-  // console.log({ friendsData, invitesData });
-
   const showRequestBySide = (data, currentUser) => {
     return data.reduce((acc, request) => {
       !acc['sent'] && (acc['sent'] = []);
@@ -65,6 +63,16 @@ const Requests = () => {
     setSearchText(event.target.value);
   };
 
+  const handleClearFilter = filter => {
+    setFilters(prevFilters => ({ ...prevFilters, [filter]: '' }));
+  };
+
+  const handleClickFilterBtn = event => {
+    // work-around for focusing button in browsers that don't
+    // support button:focus state such as Firefox
+    event.target.focus();
+  };
+
   if ((!friendsError || !invitesError) && (friendsLoading || invitesLoading)) {
     return <div>Loading...</div>;
   }
@@ -76,11 +84,15 @@ const Requests = () => {
         {FILTER_SECTIONS.map((section, i) => {
           return section.filter !== 'search' ? (
             <Styled.FilterContainer key={`${section.filter}-${i}`}>
-              <Styled.FilterBtn>
+              <Styled.FilterBtn onClick={handleClickFilterBtn}>
                 {filters[section.filter]
                   ? filters[section.filter]
                   : `-- ${section.filter} --`}
-                <XIcon className="icon icon-smallest" /> |
+                <XIcon
+                  className="icon icon-smallest"
+                  onClick={() => handleClearFilter(section.filter)}
+                />{' '}
+                |
                 <DownIcon className="icon icon-small" />
               </Styled.FilterBtn>
               <Styled.FilterList>
@@ -115,77 +127,83 @@ const Requests = () => {
       {state && state.currentUser && friendsData && invitesData && (
         <Styled.RequestTypes>
           {/* Invite Request */}
-          <Styled.RequestType>
-            <Styled.RequestTypeHeading>
-              Invite requests
-            </Styled.RequestTypeHeading>
-            <Styled.LeftSide>
-              <Styled.SideHeading>Sent Invites</Styled.SideHeading>
-              <Styled.Requests>
-                {showRequestBySide(
-                  invitesData.requests,
-                  state.currentUser
-                ).sent.map(request => (
-                  <Request
-                    key={request._id}
-                    request={request}
-                    currentUser={state.currentUser}
-                  />
-                ))}
-              </Styled.Requests>
-            </Styled.LeftSide>
-            <Styled.RightSide>
-              <Styled.SideHeading>Received Invites</Styled.SideHeading>
-              <Styled.Requests>
-                {showRequestBySide(
-                  invitesData.requests,
-                  state.currentUser
-                ).received.map(request => (
-                  <Request
-                    key={request._id}
-                    request={request}
-                    currentUser={state.currentUser}
-                  />
-                ))}
-              </Styled.Requests>
-            </Styled.RightSide>
-          </Styled.RequestType>
+          {(!filters['request type'] ||
+            filters['request type'] === 'invite') && (
+            <Styled.RequestType>
+              <Styled.RequestTypeHeading>
+                Invite requests
+              </Styled.RequestTypeHeading>
+              <Styled.LeftSide>
+                <Styled.SideHeading>Sent Invites</Styled.SideHeading>
+                <Styled.Requests>
+                  {showRequestBySide(
+                    invitesData.requests,
+                    state.currentUser
+                  ).sent.map(request => (
+                    <Request
+                      key={request._id}
+                      request={request}
+                      currentUser={state.currentUser}
+                    />
+                  ))}
+                </Styled.Requests>
+              </Styled.LeftSide>
+              <Styled.RightSide>
+                <Styled.SideHeading>Received Invites</Styled.SideHeading>
+                <Styled.Requests>
+                  {showRequestBySide(
+                    invitesData.requests,
+                    state.currentUser
+                  ).received.map(request => (
+                    <Request
+                      key={request._id}
+                      request={request}
+                      currentUser={state.currentUser}
+                    />
+                  ))}
+                </Styled.Requests>
+              </Styled.RightSide>
+            </Styled.RequestType>
+          )}
           {/* Friend Request */}
-          <Styled.RequestType>
-            <Styled.RequestTypeHeading>
-              Friend requests
-            </Styled.RequestTypeHeading>
-            <Styled.LeftSide>
-              <Styled.SideHeading>Sent Friend Request</Styled.SideHeading>
-              <Styled.Requests>
-                {showRequestBySide(
-                  friendsData.requests,
-                  state.currentUser
-                ).sent.map(request => (
-                  <Request
-                    key={request._id}
-                    request={request}
-                    currentUser={state.currentUser}
-                  />
-                ))}
-              </Styled.Requests>
-            </Styled.LeftSide>
-            <Styled.RightSide>
-              <Styled.SideHeading>Received Friend Request</Styled.SideHeading>
-              <Styled.Requests>
-                {showRequestBySide(
-                  friendsData.requests,
-                  state.currentUser
-                ).received.map(request => (
-                  <Request
-                    key={request._id}
-                    request={request}
-                    currentUser={state.currentUser}
-                  />
-                ))}
-              </Styled.Requests>
-            </Styled.RightSide>
-          </Styled.RequestType>
+          {(!filters['request type'] ||
+            filters['request type'] === 'friend') && (
+            <Styled.RequestType>
+              <Styled.RequestTypeHeading>
+                Friend requests
+              </Styled.RequestTypeHeading>
+              <Styled.LeftSide>
+                <Styled.SideHeading>Sent Friend Request</Styled.SideHeading>
+                <Styled.Requests>
+                  {showRequestBySide(
+                    friendsData.requests,
+                    state.currentUser
+                  ).sent.map(request => (
+                    <Request
+                      key={request._id}
+                      request={request}
+                      currentUser={state.currentUser}
+                    />
+                  ))}
+                </Styled.Requests>
+              </Styled.LeftSide>
+              <Styled.RightSide>
+                <Styled.SideHeading>Received Friend Request</Styled.SideHeading>
+                <Styled.Requests>
+                  {showRequestBySide(
+                    friendsData.requests,
+                    state.currentUser
+                  ).received.map(request => (
+                    <Request
+                      key={request._id}
+                      request={request}
+                      currentUser={state.currentUser}
+                    />
+                  ))}
+                </Styled.Requests>
+              </Styled.RightSide>
+            </Styled.RequestType>
+          )}
         </Styled.RequestTypes>
       )}
     </Styled.RequestsWrapper>
