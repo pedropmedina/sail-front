@@ -93,7 +93,7 @@ const InviteRequest = ({ request, currentUser }) => {
         {formatRequestDate(request, currentUser)}
       </Styled.RequestDate>
       <Styled.RequestStatus>{request.status}</Styled.RequestStatus>
-      <Styled.RequestBtn>
+      <Styled.RequestBtn onClick={event => event.target.focus()}>
         <MoreIcon className="icon icon-small" />
       </Styled.RequestBtn>
       <RequestPopup request={request} currentUser={currentUser} />

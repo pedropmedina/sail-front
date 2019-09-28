@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useContext } from 'react';
 import { useQuery } from '@apollo/react-hooks';
+import { compareAsc, compareDesc } from 'date-fns';
 
 import Context from '../../context';
 
@@ -15,7 +16,7 @@ import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 import { GET_REQUESTS_QUERY } from '../../graphql/queries';
 
 const FILTER_SECTIONS = [
-  { filter: 'request type', list: ['friend', 'invite'] },
+  { filter: 'reqType', list: ['friend', 'invite'] },
   { filter: 'status', list: ['pending', 'accepted', 'denied'] },
   { filter: 'relevance', list: ['oldests', 'newests'] },
   { filter: 'search' }
@@ -24,7 +25,7 @@ const FILTER_SECTIONS = [
 const Requests = () => {
   const { state } = useContext(Context);
   const [filters, setFilters] = useState({
-    'request type': '',
+    reqType: '',
     status: '',
     relevance: ''
   });
@@ -44,7 +45,8 @@ const Requests = () => {
     variables: { reqType: 'INVITE' }
   });
 
-  const showRequestBySide = (data, currentUser) => {
+  // Prepare request data by sent and received requests
+  const prepRequestsBySide = (data, currentUser) => {
     return data.reduce((acc, request) => {
       !acc['sent'] && (acc['sent'] = []);
       !acc['received'] && (acc['received'] = []);
@@ -53,6 +55,59 @@ const Requests = () => {
         : acc['received'].push(request);
       return acc;
     }, {});
+  };
+
+  // helpers callback functions for filtering of data
+  const sortReqsByDate = (relevance = 'newests') => (req1, req2) =>
+    !relevance || relevance === 'newests'
+      ? compareDesc(parseInt(req1.updatedAt), parseInt(req2.updatedAt))
+      : compareAsc(parseInt(req1.updatedAt), parseInt(req2.updatedAt));
+
+  const filterByStatus = status => req =>
+    status ? req.status.toLowerCase() === status : true;
+
+  const filterBySearch = searchText => req => {
+    const text = searchText && searchText.toLowerCase();
+
+    switch (req.reqType) {
+      case 'INVITE':
+        return text
+          ? req.plan.title.toLowerCase().includes(text) ||
+              req.plan.description.toLowerCase().includes(text)
+          : true;
+      case 'FRIEND':
+        return text
+          ? req.to.username.toLowerCase().includes(text) ||
+              req.author.username.toLowerCase().includes(text)
+          : true;
+    }
+  };
+
+  const filterRequest = (reqs, { status, searchText, relevance }) =>
+    reqs
+      .filter(filterByStatus(status))
+      .filter(filterBySearch(searchText))
+      .sort(sortReqsByDate(relevance));
+
+  // prepare data by friends and invites. Filter out based on current filters.
+  const filterData = (reqs = [], currentUser = {}, filters = {}) => {
+    // default response for requests split in sent/received
+    const defaultRes = { sent: [], received: [] };
+    // short circuit response with defaultRes if !reqs || reqs !== reqType && reqType !== ''
+    if (
+      reqs.length <= 0 ||
+      (filters.reqType !== '' &&
+        filters.reqType !== reqs[0].reqType.toLowerCase())
+    ) {
+      return defaultRes;
+    }
+    // prepare data by sent and received requests for both invites and friends
+    let reqsBySide = prepRequestsBySide(reqs, currentUser);
+
+    const sent = filterRequest(reqsBySide.sent, filters);
+    const received = filterRequest(reqsBySide.received, filters);
+
+    return { sent, received };
   };
 
   const handleFilter = (name, value) => {
@@ -67,9 +122,9 @@ const Requests = () => {
     setFilters(prevFilters => ({ ...prevFilters, [filter]: '' }));
   };
 
-  const handleClickFilterBtn = event => {
-    // work-around for focusing button in browsers that don't
-    // support button:focus state such as Firefox
+  // work-around for focusing button in browsers that don't
+  // support button:focus state such as Firefox
+  const handleClickToFocus = event => {
     event.target.focus();
   };
 
@@ -84,10 +139,14 @@ const Requests = () => {
         {FILTER_SECTIONS.map((section, i) => {
           return section.filter !== 'search' ? (
             <Styled.FilterContainer key={`${section.filter}-${i}`}>
-              <Styled.FilterBtn onClick={handleClickFilterBtn}>
+              <Styled.FilterBtn onClick={handleClickToFocus}>
                 {filters[section.filter]
                   ? filters[section.filter]
-                  : `-- ${section.filter} --`}
+                  : `-- ${
+                      section.filter === 'reqType'
+                        ? 'request type'
+                        : section.filter
+                    } --`}
                 <XIcon
                   className="icon icon-smallest"
                   onClick={() => handleClearFilter(section.filter)}
@@ -127,83 +186,77 @@ const Requests = () => {
       {state && state.currentUser && friendsData && invitesData && (
         <Styled.RequestTypes>
           {/* Invite Request */}
-          {(!filters['request type'] ||
-            filters['request type'] === 'invite') && (
-            <Styled.RequestType>
-              <Styled.RequestTypeHeading>
-                Invite requests
-              </Styled.RequestTypeHeading>
-              <Styled.LeftSide>
-                <Styled.SideHeading>Sent Invites</Styled.SideHeading>
-                <Styled.Requests>
-                  {showRequestBySide(
-                    invitesData.requests,
-                    state.currentUser
-                  ).sent.map(request => (
-                    <Request
-                      key={request._id}
-                      request={request}
-                      currentUser={state.currentUser}
-                    />
-                  ))}
-                </Styled.Requests>
-              </Styled.LeftSide>
-              <Styled.RightSide>
-                <Styled.SideHeading>Received Invites</Styled.SideHeading>
-                <Styled.Requests>
-                  {showRequestBySide(
-                    invitesData.requests,
-                    state.currentUser
-                  ).received.map(request => (
-                    <Request
-                      key={request._id}
-                      request={request}
-                      currentUser={state.currentUser}
-                    />
-                  ))}
-                </Styled.Requests>
-              </Styled.RightSide>
-            </Styled.RequestType>
-          )}
+          <Styled.RequestType>
+            <Styled.RequestTypeHeading>
+              Invite requests
+            </Styled.RequestTypeHeading>
+            <Styled.LeftSide>
+              <Styled.SideHeading>Sent Invites</Styled.SideHeading>
+              <Styled.Requests>
+                {filterData(invitesData.requests, state.currentUser, {
+                  ...filters,
+                  searchText
+                }).sent.map(request => (
+                  <Request
+                    key={request._id}
+                    request={request}
+                    currentUser={state.currentUser}
+                  />
+                ))}
+              </Styled.Requests>
+            </Styled.LeftSide>
+            <Styled.RightSide>
+              <Styled.SideHeading>Received Invites</Styled.SideHeading>
+              <Styled.Requests>
+                {filterData(invitesData.requests, state.currentUser, {
+                  ...filters,
+                  searchText
+                }).received.map(request => (
+                  <Request
+                    key={request._id}
+                    request={request}
+                    currentUser={state.currentUser}
+                  />
+                ))}
+              </Styled.Requests>
+            </Styled.RightSide>
+          </Styled.RequestType>
           {/* Friend Request */}
-          {(!filters['request type'] ||
-            filters['request type'] === 'friend') && (
-            <Styled.RequestType>
-              <Styled.RequestTypeHeading>
-                Friend requests
-              </Styled.RequestTypeHeading>
-              <Styled.LeftSide>
-                <Styled.SideHeading>Sent Friend Request</Styled.SideHeading>
-                <Styled.Requests>
-                  {showRequestBySide(
-                    friendsData.requests,
-                    state.currentUser
-                  ).sent.map(request => (
-                    <Request
-                      key={request._id}
-                      request={request}
-                      currentUser={state.currentUser}
-                    />
-                  ))}
-                </Styled.Requests>
-              </Styled.LeftSide>
-              <Styled.RightSide>
-                <Styled.SideHeading>Received Friend Request</Styled.SideHeading>
-                <Styled.Requests>
-                  {showRequestBySide(
-                    friendsData.requests,
-                    state.currentUser
-                  ).received.map(request => (
-                    <Request
-                      key={request._id}
-                      request={request}
-                      currentUser={state.currentUser}
-                    />
-                  ))}
-                </Styled.Requests>
-              </Styled.RightSide>
-            </Styled.RequestType>
-          )}
+          <Styled.RequestType>
+            <Styled.RequestTypeHeading>
+              Friend requests
+            </Styled.RequestTypeHeading>
+            <Styled.LeftSide>
+              <Styled.SideHeading>Sent Friend Request</Styled.SideHeading>
+              <Styled.Requests>
+                {filterData(friendsData.requests, state.currentUser, {
+                  ...filters,
+                  searchText
+                }).sent.map(request => (
+                  <Request
+                    key={request._id}
+                    request={request}
+                    currentUser={state.currentUser}
+                  />
+                ))}
+              </Styled.Requests>
+            </Styled.LeftSide>
+            <Styled.RightSide>
+              <Styled.SideHeading>Received Friend Request</Styled.SideHeading>
+              <Styled.Requests>
+                {filterData(friendsData.requests, state.currentUser, {
+                  ...filters,
+                  searchText
+                }).received.map(request => (
+                  <Request
+                    key={request._id}
+                    request={request}
+                    currentUser={state.currentUser}
+                  />
+                ))}
+              </Styled.Requests>
+            </Styled.RightSide>
+          </Styled.RequestType>
         </Styled.RequestTypes>
       )}
     </Styled.RequestsWrapper>
