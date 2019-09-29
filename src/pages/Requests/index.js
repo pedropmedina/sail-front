@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useContext } from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import React, { useState, useContext, useEffect } from 'react';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import { compareAsc, compareDesc } from 'date-fns';
 
 import Context from '../../context';
@@ -14,6 +14,10 @@ import { ReactComponent as DownIcon } from '../../assets/SVG/chevron-down.svg';
 import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 
 import { GET_REQUESTS_QUERY } from '../../graphql/queries';
+import {
+  UPDATE_REQUEST_MUTATION,
+  DELETE_REQUEST_MUTATION
+} from '../../graphql/mutations';
 
 const FILTER_SECTIONS = [
   { filter: 'reqType', list: ['friend', 'invite'] },
@@ -33,17 +37,32 @@ const Requests = () => {
   const {
     error: friendsError,
     loading: friendsLoading,
-    data: friendsData
+    data: friendsData,
+    refetch: friendsRefetch
   } = useQuery(GET_REQUESTS_QUERY, {
     variables: { reqType: 'FRIEND' }
   });
   const {
     error: invitesError,
     loading: invitesLoading,
-    data: invitesData
+    data: invitesData,
+    refetch: invitesRefetch
   } = useQuery(GET_REQUESTS_QUERY, {
     variables: { reqType: 'INVITE' }
   });
+  const [updateRequest] = useMutation(UPDATE_REQUEST_MUTATION, {
+    ignoreResults: true
+  });
+  const [deleteRequest] = useMutation(DELETE_REQUEST_MUTATION, {
+    ignoreResults: true
+  });
+
+  // refetch data guaranteeing synchronicity of the cache with the server
+  // during the creation of new requests
+  useEffect(() => {
+    friendsRefetch();
+    invitesRefetch();
+  }, []);
 
   // Prepare request data by sent and received requests
   const prepRequestsBySide = (data, currentUser) => {
@@ -128,6 +147,30 @@ const Requests = () => {
     event.target.focus();
   };
 
+  const handleUpdateRequest = input => {
+    updateRequest({
+      variables: { input }
+    });
+  };
+
+  const handleDeleteRequest = reqId => {
+    deleteRequest({
+      variables: { reqId },
+      update: (cache, { data: { request } }) => {
+        const { reqType } = request;
+        const { requests } = cache.readQuery({
+          query: GET_REQUESTS_QUERY,
+          variables: { reqType }
+        });
+        cache.writeQuery({
+          query: GET_REQUESTS_QUERY,
+          variables: { reqType },
+          data: { requests: requests.filter(req => req._id !== request._id) }
+        });
+      }
+    });
+  };
+
   if ((!friendsError || !invitesError) && (friendsLoading || invitesLoading)) {
     return <div>Loading...</div>;
   }
@@ -201,6 +244,8 @@ const Requests = () => {
                     key={request._id}
                     request={request}
                     currentUser={state.currentUser}
+                    onUpdateRequest={handleUpdateRequest}
+                    onDeleteRequest={handleDeleteRequest}
                   />
                 ))}
               </Styled.Requests>
@@ -216,6 +261,8 @@ const Requests = () => {
                     key={request._id}
                     request={request}
                     currentUser={state.currentUser}
+                    onUpdateRequest={handleUpdateRequest}
+                    onDeleteRequest={handleDeleteRequest}
                   />
                 ))}
               </Styled.Requests>
@@ -237,6 +284,8 @@ const Requests = () => {
                     key={request._id}
                     request={request}
                     currentUser={state.currentUser}
+                    onUpdateRequest={handleUpdateRequest}
+                    onDeleteRequest={handleDeleteRequest}
                   />
                 ))}
               </Styled.Requests>
@@ -252,6 +301,8 @@ const Requests = () => {
                     key={request._id}
                     request={request}
                     currentUser={state.currentUser}
+                    onUpdateRequest={handleUpdateRequest}
+                    onDeleteRequest={handleDeleteRequest}
                   />
                 ))}
               </Styled.Requests>

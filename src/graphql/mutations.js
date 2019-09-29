@@ -82,9 +82,46 @@ export const CREATE_REQUEST_MUTATION = gql`
         ...defaultRequestFields
       }
       ... on InviteRequest {
-        ...defaultRequestFields
+        ...inviteRequestFields
       }
     }
   }
   ${requestFragments.default}
+  ${requestFragments.invite}
+`;
+
+export const UPDATE_REQUEST_MUTATION = gql`
+  mutation UpdateRequest($input: UpdateRequestInput!) {
+    request: updateRequest(input: $input) {
+      ... on FriendRequest {
+        ...defaultRequestFields
+      }
+      ... on InviteRequest {
+        ...inviteRequestFields
+      }
+    }
+  }
+  ${requestFragments.default}
+  ${requestFragments.invite}
+`;
+
+export const DELETE_REQUEST_MUTATION = gql`
+  mutation DeleteRequest($reqId: ID!) {
+    request: deleteRequest(reqId: $reqId) {
+      ... on FriendRequest {
+        ...defaultRequestFields
+      }
+      ... on InviteRequest {
+        ...inviteRequestFields
+      }
+    }
+  }
+  ${requestFragments.default}
+  ${requestFragments.invite}
+`;
+
+export const BLACKLIST_TOKENS = gql`
+  mutation {
+    blacklistTokens
+  }
 `;

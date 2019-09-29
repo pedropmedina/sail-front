@@ -1,7 +1,13 @@
 /* eslint-disable react/prop-types */
 import React, { useContext } from 'react';
+import { useMutation } from '@apollo/react-hooks';
+import * as Cookies from 'js-cookie';
 
 import Context from '../../context';
+import history from '../../history';
+
+import { BLACKLIST_TOKENS } from '../../graphql/mutations';
+
 import * as Styled from './styled';
 
 // SVG icons
@@ -43,6 +49,15 @@ const Profile = () => {
 
 const Sidebar = () => {
   const { state } = useContext(Context);
+  const [logout] = useMutation(BLACKLIST_TOKENS, { ignoreResults: true });
+
+  const handleLogout = () => {
+    logout();
+    Cookies.remove('access-token');
+    Cookies.remove('refresh-token');
+    history.push('/auth');
+  };
+
   return (
     <Styled.Sidebar
       showingCurrentPin={state.currentPin}
@@ -65,7 +80,7 @@ const Sidebar = () => {
       <Styled.AuthWrapper>
         <Styled.AuthBtn>
           {state.isLoggedIn ? (
-            <LogoutIcon className="icon icon-small" />
+            <LogoutIcon className="icon icon-small" onClick={handleLogout} />
           ) : (
             <LoginIcon className="icon icon-small" />
           )}

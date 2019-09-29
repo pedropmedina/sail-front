@@ -37,22 +37,29 @@ const displayHeadingName = (request, currentUser) => {
     : request.author.username;
 };
 
-const RequestPopup = ({ request, currentUser }) => {
+const RequestPopup = ({
+  request,
+  currentUser,
+  onUpdateRequest,
+  onDeleteRequest
+}) => {
   return (
     <Styled.RequestPopup>
       {isAuthor(request.author, currentUser) ? (
         <>
-          {request.status === 'ACCEPTED' ? (
-            <Styled.PopupBtn action="cancel">
-              Remove
+          <Styled.PopupBtn
+            action="cancel"
+            onClick={() => onDeleteRequest(request._id)}
+          >
+            {request.status === 'ACCEPTED' || request.status === 'DENIED'
+              ? 'Remove'
+              : 'Cancel'}
+            {request.status === 'ACCEPTED' || request.status === 'DENIED' ? (
               <TrashIcon className="icon icon-small" />
-            </Styled.PopupBtn>
-          ) : (
-            <Styled.PopupBtn action="cancel">
-              Cancel
+            ) : (
               <XIcon className="icon icon-small" />
-            </Styled.PopupBtn>
-          )}
+            )}
+          </Styled.PopupBtn>
           <Styled.PopupBtn>
             Visit
             <LinkIcon className="icon icon-small" />
@@ -60,14 +67,28 @@ const RequestPopup = ({ request, currentUser }) => {
         </>
       ) : (
         <>
-          <Styled.PopupBtn action="accept">
-            Accept
-            <ThumbsUpIcon className="icon icon-small" />
-          </Styled.PopupBtn>
-          <Styled.PopupBtn action="deny">
-            Deny
-            <ThumbsDownIcon className="icon icon-small" />
-          </Styled.PopupBtn>
+          {request.status === 'PENDING' && (
+            <>
+              <Styled.PopupBtn
+                action="accept"
+                onClick={() =>
+                  onUpdateRequest({ reqId: request._id, status: 'ACCEPTED' })
+                }
+              >
+                Accept
+                <ThumbsUpIcon className="icon icon-small" />
+              </Styled.PopupBtn>
+              <Styled.PopupBtn
+                action="deny"
+                onClick={() =>
+                  onUpdateRequest({ reqId: request._id, status: 'DENIED' })
+                }
+              >
+                Deny
+                <ThumbsDownIcon className="icon icon-small" />
+              </Styled.PopupBtn>
+            </>
+          )}
           <Styled.PopupBtn>
             Visit
             <LinkIcon className="icon icon-small" />
@@ -78,7 +99,12 @@ const RequestPopup = ({ request, currentUser }) => {
   );
 };
 
-const InviteRequest = ({ request, currentUser }) => {
+const InviteRequest = ({
+  request,
+  currentUser,
+  onUpdateRequest,
+  onDeleteRequest
+}) => {
   return (
     <Styled.Request status={request.status}>
       <Styled.RequestHeading>
@@ -96,12 +122,22 @@ const InviteRequest = ({ request, currentUser }) => {
       <Styled.RequestBtn onClick={event => event.target.focus()}>
         <MoreIcon className="icon icon-small" />
       </Styled.RequestBtn>
-      <RequestPopup request={request} currentUser={currentUser} />
+      <RequestPopup
+        request={request}
+        currentUser={currentUser}
+        onUpdateRequest={onUpdateRequest}
+        onDeleteRequest={onDeleteRequest}
+      />
     </Styled.Request>
   );
 };
 
-const FriendRequest = ({ request, currentUser }) => {
+const FriendRequest = ({
+  request,
+  currentUser,
+  onUpdateRequest,
+  onDeleteRequest
+}) => {
   return (
     <Styled.Request status={request.status}>
       <Styled.RequestImg
@@ -127,16 +163,36 @@ const FriendRequest = ({ request, currentUser }) => {
       <Styled.RequestBtn>
         <MoreIcon className="icon icon-small" />
       </Styled.RequestBtn>
-      <RequestPopup request={request} currentUser={currentUser} />
+      <RequestPopup
+        request={request}
+        currentUser={currentUser}
+        onUpdateRequest={onUpdateRequest}
+        onDeleteRequest={onDeleteRequest}
+      />
     </Styled.Request>
   );
 };
 
-const Request = ({ request, currentUser }) => {
+const Request = ({
+  request,
+  currentUser,
+  onUpdateRequest,
+  onDeleteRequest
+}) => {
   return request.reqType === 'INVITE' ? (
-    <InviteRequest request={request} currentUser={currentUser} />
+    <InviteRequest
+      request={request}
+      currentUser={currentUser}
+      onUpdateRequest={onUpdateRequest}
+      onDeleteRequest={onDeleteRequest}
+    />
   ) : (
-    <FriendRequest request={request} currentUser={currentUser} />
+    <FriendRequest
+      request={request}
+      currentUser={currentUser}
+      onUpdateRequest={onUpdateRequest}
+      onDeleteRequest={onDeleteRequest}
+    />
   );
 };
 
