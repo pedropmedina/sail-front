@@ -103,7 +103,8 @@ const InviteRequest = ({
   request,
   currentUser,
   onUpdateRequest,
-  onDeleteRequest
+  onDeleteRequest,
+  onFocus
 }) => {
   return (
     <Styled.Request status={request.status}>
@@ -119,7 +120,7 @@ const InviteRequest = ({
         {formatRequestDate(request, currentUser)}
       </Styled.RequestDate>
       <Styled.RequestStatus>{request.status}</Styled.RequestStatus>
-      <Styled.RequestBtn onClick={event => event.target.focus()}>
+      <Styled.RequestBtn onClick={onFocus}>
         <MoreIcon className="icon icon-small" />
       </Styled.RequestBtn>
       <RequestPopup
@@ -136,7 +137,8 @@ const FriendRequest = ({
   request,
   currentUser,
   onUpdateRequest,
-  onDeleteRequest
+  onDeleteRequest,
+  onFocus
 }) => {
   return (
     <Styled.Request status={request.status}>
@@ -160,7 +162,7 @@ const FriendRequest = ({
         {formatRequestDate(request, currentUser)}
       </Styled.RequestDate>
       <Styled.RequestStatus>{request.status}</Styled.RequestStatus>
-      <Styled.RequestBtn>
+      <Styled.RequestBtn onClick={onFocus}>
         <MoreIcon className="icon icon-small" />
       </Styled.RequestBtn>
       <RequestPopup
@@ -179,12 +181,17 @@ const Request = ({
   onUpdateRequest,
   onDeleteRequest
 }) => {
+  const handleFocus = event => {
+    event.target.parentElement.focus();
+  };
+
   return request.reqType === 'INVITE' ? (
     <InviteRequest
       request={request}
       currentUser={currentUser}
       onUpdateRequest={onUpdateRequest}
       onDeleteRequest={onDeleteRequest}
+      onFocus={handleFocus}
     />
   ) : (
     <FriendRequest
@@ -192,6 +199,7 @@ const Request = ({
       currentUser={currentUser}
       onUpdateRequest={onUpdateRequest}
       onDeleteRequest={onDeleteRequest}
+      onFocus={handleFocus}
     />
   );
 };

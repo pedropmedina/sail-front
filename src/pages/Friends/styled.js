@@ -1,7 +1,7 @@
 import styled from 'styled-components/macro';
 
 export const FriendsWrapper = styled.div`
-  grid-row: 1 / -1;
+  overflow-y: auto;
 `;
 
 export const TopbarBtn = styled.button`

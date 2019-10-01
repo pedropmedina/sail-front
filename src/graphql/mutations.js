@@ -1,7 +1,8 @@
 import gql from 'graphql-tag';
 
-import { planFragment, userFragments, requestFragments } from './fragments';
+import { pinFragments, planFragments, userFragments, requestFragments, commentFragments } from './fragments';
 
+// auth mutations
 export const SIGNUP_USER_MUTATION = gql`
   mutation SignupUser($input: SignupUserInput!) {
     user: signupUser(input: $input) {
@@ -21,60 +22,43 @@ export const LOGIN_USER_MUTATION = gql`
   ${userFragments.default}
 `;
 
+export const BLACKLIST_TOKENS = gql`
+  mutation {
+    blacklistTokens
+  }
+`;
+
+// pin mutations
 export const CREATE_PIN_MUTATION = gql`
   mutation CreatePin($input: CreatePinInput!) {
     pin: createPin(input: $input) {
-      _id
-      title
-      content
-      image
-      longitude
-      latitude
-      author {
-        username
-        email
-      }
-      comments {
-        _id
-        text
-        author {
-          email
-          username
-          name
-        }
-        createdAt
-      }
-      createdAt
+      ...defaultPinFields
     }
   }
+  ${pinFragments.default}
 `;
 
+// comment mutations
 export const CREATE_COMMENT_MUTATION = gql`
   mutation CreateComment($input: CreateCommentInput!) {
     comment: createComment(input: $input) {
-      _id
-      text
-      pin {
-        _id
-      }
-      author {
-        username
-        email
-      }
-      createdAt
+      ...defaultCommentFields
     }
   }
+  ${commentFragments.default}
 `;
 
+// plan mutations
 export const CREATE_PLAN_MUTATION = gql`
   mutation CreatePlan($input: CreatePlanInput!) {
     plan: createPlan(input: $input) {
-      ...planFields
+      ...defaultPlanFields
     }
   }
-  ${planFragment}
+  ${planFragments.default}
 `;
 
+// request mutations
 export const CREATE_REQUEST_MUTATION = gql`
   mutation CreateRequest($input: CreateRequestInput!) {
     request: createRequest(input: $input) {
@@ -120,8 +104,3 @@ export const DELETE_REQUEST_MUTATION = gql`
   ${requestFragments.invite}
 `;
 
-export const BLACKLIST_TOKENS = gql`
-  mutation {
-    blacklistTokens
-  }
-`;

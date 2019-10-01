@@ -55,7 +55,7 @@ const Sidebar = () => {
     logout();
     Cookies.remove('access-token');
     Cookies.remove('refresh-token');
-    history.push('/auth');
+    history.push('/');
   };
 
   return (

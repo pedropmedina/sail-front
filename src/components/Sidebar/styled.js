@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom';
 
 export const Sidebar = styled.nav`
   grid-column: col-1-start / col-1-end;
-  grid-row: row-1-start / row-3-end;
   z-index: 2;
   background-color: var(--color-almost-white);
   box-shadow: ${({ showingCurrentPin, showingDraftPin }) =>

@@ -1,7 +1,6 @@
 import styled from 'styled-components/macro';
 
 export const RequestsWrapper = styled.div`
-  grid-row: 1 / -1;
   padding: 2rem 5rem;
   overflow-y: auto;
 `;

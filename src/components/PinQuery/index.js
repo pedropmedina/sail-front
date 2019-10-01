@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useContext, useEffect, useRef } from 'react';
-import { useMutation, useSubscription } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import { formatDistance } from 'date-fns';
 
 import * as Styled from './styled';
@@ -10,9 +10,8 @@ import { ReactComponent as SendIcon } from '../../assets/SVG/send.svg';
 
 import Context from '../../context';
 import { reverseGeocode } from '../../utils';
-import { DELETE_CURRENT_PIN, UPDATE_CURRENT_PIN } from '../../reducer';
+import { DELETE_CURRENT_PIN } from '../../reducer';
 import { CREATE_COMMENT_MUTATION } from '../../graphql/mutations';
-import { COMMENT_CREATED_SUBSCRIPTION } from '../../graphql/subscriptions';
 
 const TEXTAREA_DEFAULTS = {
   rows: 2,
@@ -23,10 +22,8 @@ const TEXTAREA_DEFAULTS = {
 
 const PinQuery = ({ style }) => {
   const commentListEndEl = useRef(null);
-  const {
-    state: { currentPin },
-    dispatch
-  } = useContext(Context);
+  const { state, dispatch } = useContext(Context);
+  const { currentPin } = state;
   const { _id: pinId, title, content, image, comments } = currentPin;
   const [text, setText] = useState('');
   const [address, setAddress] = useState('');
@@ -34,14 +31,10 @@ const PinQuery = ({ style }) => {
   const [createComment] = useMutation(CREATE_COMMENT_MUTATION, {
     ignoreResults: true
   });
-  const { data } = useSubscription(COMMENT_CREATED_SUBSCRIPTION);
 
   useEffect(() => {
-    if (data) {
-      dispatch({ type: UPDATE_CURRENT_PIN, payload: data.pin });
-    }
     comments.length > 0 && scrollToBottom(commentListEndEl);
-  }, [data, dispatch]);
+  }, [currentPin]);
 
   useEffect(() => {
     if (currentPin) {

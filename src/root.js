@@ -26,6 +26,7 @@ import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 
 const PRIVATE_ROUTES = [
+  { path: '/map', component: App },
   { path: '/plans', component: Plans },
   { path: '/create-plan', component: PlanCreate },
   { path: '/pins', component: Pins },
@@ -37,8 +38,7 @@ const PRIVATE_ROUTES = [
 ];
 
 const PUBLIC_ROUTES = [
-  { path: '/', exact: true, component: App },
-  { path: '/auth', component: Auth }
+  { path: '/', exact: true, component: Auth },
 ];
 
 const Root = () => {

@@ -1,12 +1,13 @@
 import gql from 'graphql-tag';
 
 import {
-  planFragment,
-  pinFragment,
+  pinFragments,
+  planFragments,
   userFragments,
   requestFragments
 } from './fragments';
 
+// user queries
 export const ME_QUERY = gql`
   {
     user: me {
@@ -25,33 +26,36 @@ export const GET_PROFILE_QUERY = gql`
   ${userFragments.profile}
 `;
 
+// pin queries
 export const GET_PINS_QUERY = gql`
   {
     pins: getPins {
-      ...pinFields
+      ...defaultPinFields
     }
   }
-  ${pinFragment}
+  ${pinFragments.default}
 `;
 
 export const GET_PIN_BY_COORDS = gql`
   query GetPinByCoords($input: GetPinByCoordsInput!) {
     pin: getPinByCoords(input: $input) {
-      ...pinFields
+      ...defaultPinFields
     }
   }
-  ${pinFragment}
+  ${pinFragments.default}
 `;
 
+// plan queries
 export const GET_PLANS_QUERY = gql`
   {
     plans: getPlans {
-      ...planFields
+      ...defaultPlanFields
     }
   }
-  ${planFragment}
+  ${planFragments.default}
 `;
 
+// search queries
 export const SEARCH_QUERY = gql`
   query Search($searchText: String!) {
     search(searchText: $searchText) {
@@ -89,6 +93,7 @@ export const SEARCH_FRIENDS_QUERY = gql`
   ${userFragments.people}
 `;
 
+// request queries
 export const GET_REQUESTS_QUERY = gql`
   query GetRequests($reqType: REQUEST_TYPE) {
     requests: getRequests(reqType: $reqType) {

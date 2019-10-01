@@ -4,6 +4,7 @@ import { Popup, CreateBtn as Btn } from '../../stylesShare';
 
 export const PlanCreate = styled.section`
   grid-column: col-1-start / col-2-end !important;
+  overflow-y: auto;
   padding-top: 15rem;
   padding-bottom: 10rem;
 `;

@@ -20,7 +20,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   useEffect(() => {
     // send to login page when unauthenticated
     if (!isLoggedIn) {
-      history.push('/auth');
+      history.push('/');
     }
     establishSession(client, dispatch, setIsLoggedIn);
   }, [isLoggedIn, setIsLoggedIn, dispatch]);

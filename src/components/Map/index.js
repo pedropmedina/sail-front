@@ -1,84 +1,35 @@
 /* eslint-disable no-console, react/prop-types */
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactMapGL, { Marker, Popup } from 'react-map-gl';
-import { useTransition } from 'react-spring';
-import { useQuery } from '@apollo/react-hooks';
 
 import * as Styled from './styled';
 
 import { ReactComponent as PlusIcon } from '../../assets/SVG/plus.svg';
-import { ReactComponent as CompassIcon } from '../../assets/SVG/compass.svg';
 import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
 import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
-
-import PinQuery from '../PinQuery';
-import PinMutation from '../PinMutation';
-import GeocodingSearch from '../GeocodingSearch';
-
-import { GET_PINS_QUERY } from '../../graphql/queries';
-
-// styles for geocoding search component
-const css = `
-  position: absolute;
-  top: 3rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 70vw;
-  max-width: 70rem;
-  z-index: 1;
-  box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.15);
-  border-radius: 0.5rem;
-  color: var(--color-light-grey);
-  background-color: var(--color-almost-white);
-  font-size: 1.6rem;
-`;
 
 const Map = ({
   viewport,
   draftPin,
-  currentPin,
-  showBtns,
   onViewportChange,
   onDragEnd,
-  onCreateDraftPin,
   onClickMarker,
-  onToggleNewBtns,
-  onChangeShowBtnsState,
   onMouseEnterMarker,
   onMouseLeaveMarker,
-  onClickGeocodingResult,
   isLoggedIn,
   popupPin,
   showDraftPinPopup,
   onClickDraftPinPopup,
   draftPinPopup,
-  draftPlan
+  pinsData,
+  onSubscribeToNewComment
 }) => {
-  const { error, loading, data } = useQuery(GET_PINS_QUERY);
-  const transitions = useTransition([draftPin || currentPin], null, {
-    from: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
-    enter: { opacity: 1, zIndex: 1, transform: 'translate3d(0%,0,0)' },
-    leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' }
-  });
-
-  let Pin =
-    !!draftPin && !currentPin
-      ? PinMutation
-      : !draftPin && !draftPlan && !!currentPin
-      ? PinQuery
-      : null;
-
-  if (!error && loading) return <div>Loading...</div>;
+  useEffect(() => {
+    onSubscribeToNewComment();
+  }, []);
 
   return (
     <Styled.Map isLoggedIn={isLoggedIn}>
-      {/* Geocoding search bar */}
-      <GeocodingSearch
-        viewport={viewport}
-        onClickGeocodingResult={onClickGeocodingResult}
-        css={css}
-      />
-
       <ReactMapGL
         {...viewport}
         width="100%"
@@ -88,8 +39,8 @@ const Map = ({
         onViewportChange={onViewportChange}
       >
         {/* Add markers for all existing pins */}
-        {data &&
-          data.pins.map(pin => {
+        {pinsData &&
+          pinsData.pins.map(pin => {
             const { _id, longitude, latitude } = pin;
             return (
               <Marker
@@ -165,29 +116,6 @@ const Map = ({
           </>
         )}
       </ReactMapGL>
-
-      {/* Create/Edit Pin or display current Pin */}
-      {Pin &&
-        transitions.map(
-          ({ item, key, props }) => item && <Pin key={key} style={props} />
-        )}
-
-      {/* Create New Pins and Plans Buttons */}
-      {isLoggedIn && (
-        <>
-          <Styled.ExpandBtn showBtns={showBtns} onClick={onToggleNewBtns}>
-            <PlusIcon className="icon icon-small" />
-          </Styled.ExpandBtn>
-          <Styled.AddBtnWrapper>
-            <Styled.AddBtn onClick={() => onChangeShowBtnsState(false)}>
-              <CompassIcon className="icon icon-smallest" />
-            </Styled.AddBtn>
-            <Styled.AddBtn onClick={onCreateDraftPin}>
-              <PinIcon className="icon icon-smallest" />
-            </Styled.AddBtn>
-          </Styled.AddBtnWrapper>
-        </>
-      )}
     </Styled.Map>
   );
 };

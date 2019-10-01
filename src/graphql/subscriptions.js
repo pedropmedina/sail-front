@@ -1,21 +1,23 @@
 import gql from 'graphql-tag';
 
-import { pinFragment } from './fragments';
+import { pinFragments, commentFragments } from './fragments';
 
+// pin subscriptions
 export const PIN_CREATED_SUBSCRIPTION = gql`
   subscription {
     pin: pinCreated {
-      ...pinFields
+      ...defaultPinFields
     }
   }
-  ${pinFragment}
+  ${pinFragments.default}
 `;
 
+// comment subscriptions
 export const COMMENT_CREATED_SUBSCRIPTION = gql`
   subscription {
-    pin: commentCreated {
-      ...pinFields
+    comment: commentCreated {
+      ...defaultCommentFields
     }
   }
-  ${pinFragment}
+  ${commentFragments.default}
 `;

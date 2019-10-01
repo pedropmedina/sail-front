@@ -1,65 +1,69 @@
 import gql from 'graphql-tag';
 
 // plan fragments
-export const planFragment = gql`
-  fragment planFields on Plan {
-    _id
-    title
-    description
-    date
-    invites {
-      name
-      username
-      email
+export const planFragments = {
+  default: gql`
+    fragment defaultPlanFields on Plan {
+      _id
+      title
+      description
+      date
+      invites {
+        name
+        username
+        email
+      }
+      participants {
+        name
+        username
+        email
+      }
+      location {
+        _id
+        title
+        content
+        image
+        longitude
+        latitude
+        createdAt
+      }
+      author {
+        name
+        username
+        email
+      }
     }
-    participants {
-      name
-      username
-      email
-    }
-    location {
+  `
+};
+
+// pin fragments
+export const pinFragments = {
+  default: gql`
+    fragment defaultPinFields on Pin {
       _id
       title
       content
       image
-      longitude
       latitude
-      createdAt
-    }
-    author {
-      name
-      username
-      email
-    }
-  }
-`;
-
-// pin fragments
-export const pinFragment = gql`
-  fragment pinFields on Pin {
-    _id
-    title
-    content
-    image
-    latitude
-    longitude
-    author {
-      username
-      email
-    }
-    comments {
-      _id
-      text
+      longitude
       author {
-        email
         username
-        name
+        email
+      }
+      comments {
+        _id
+        text
+        author {
+          email
+          username
+          name
+        }
+        createdAt
       }
       createdAt
     }
-    createdAt
-  }
-`;
+  `
+};
 
 // user fragments
 export const userFragments = {
@@ -239,6 +243,27 @@ export const requestFragments = {
         _id
         title
         description
+      }
+      author {
+        name
+        username
+        email
+        image
+      }
+      createdAt
+      updatedAt
+    }
+  `
+};
+
+// comment fragments
+export const commentFragments = {
+  default: gql`
+    fragment defaultCommentFields on Comment {
+      _id
+      text
+      pin {
+        _id
       }
       author {
         name

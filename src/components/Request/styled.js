@@ -111,7 +111,7 @@ export const PopupBtn = styled.button`
         ? 'var(--color-success)'
         : action === 'deny' || action === 'cancel'
         ? 'var(--color-danger)'
-        : 'var(--color-less-white)'};
+        : 'var(--color-light-grey)'};
     color: #fff;
   }
 `;
