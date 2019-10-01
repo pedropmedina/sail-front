@@ -272,7 +272,6 @@ export const commentFragments = {
         image
       }
       createdAt
-      updatedAt
     }
   `
 };

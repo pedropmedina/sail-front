@@ -2,8 +2,6 @@ import styled from 'styled-components/macro';
 import { Popup } from 'react-map-gl';
 
 export const Map = styled.div`
-  grid-column: ${({ isLoggedIn }) =>
-    isLoggedIn ? 'col-2-start / col-3-end' : 'col-1-start / col-3-end'};
   position: relative;
 `;
 

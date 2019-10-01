@@ -11,17 +11,16 @@ import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 const Map = ({
   viewport,
   draftPin,
+  pinsData,
   onViewportChange,
   onDragEnd,
   onClickMarker,
   onMouseEnterMarker,
   onMouseLeaveMarker,
-  isLoggedIn,
   popupPin,
   showDraftPinPopup,
   onClickDraftPinPopup,
   draftPinPopup,
-  pinsData,
   onSubscribeToNewComment
 }) => {
   useEffect(() => {
@@ -29,7 +28,7 @@ const Map = ({
   }, []);
 
   return (
-    <Styled.Map isLoggedIn={isLoggedIn}>
+    <Styled.Map>
       <ReactMapGL
         {...viewport}
         width="100%"

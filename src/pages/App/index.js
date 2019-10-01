@@ -1,5 +1,5 @@
 /* eslint-disable no-console, react/prop-types */
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useApolloClient, useQuery } from '@apollo/react-hooks';
 import { useTransition } from 'react-spring';
 
@@ -28,10 +28,6 @@ import PinQuery from '../../components/PinQuery';
 import PinMutation from '../../components/PinMutation';
 import GeocodingSearch from '../../components/GeocodingSearch';
 
-import { ReactComponent as PlusIcon } from '../../assets/SVG/plus.svg';
-import { ReactComponent as CompassIcon } from '../../assets/SVG/compass.svg';
-import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
-
 // styles for geocoding search component
 const css = `
   position: absolute;
@@ -54,14 +50,12 @@ const App = props => {
   const {
     draftPin,
     currentPin,
-    isLoggedIn,
     popupPin,
     showDraftPinPopup,
     draftPinPopup,
     viewport,
     draftPlan
   } = state;
-  const [showBtns, setShowBtns] = useState(false);
   const { error, loading, data: pinsData, subscribeToMore } = useQuery(
     GET_PINS_QUERY
   );
@@ -86,9 +80,7 @@ const App = props => {
   };
 
   const handleClickMarker = pin => {
-    // remove existing draft pin
     dispatch({ type: DELETE_DRAFT_PIN });
-    // dispatch clicked pin's info to context
     dispatch({ type: UPDATE_CURRENT_PIN, payload: pin });
   };
 
@@ -100,8 +92,9 @@ const App = props => {
     dispatch({ type: DELETE_POPUP_PIN });
   };
 
+  // TODO: Implement draftPin differently once I bring in data from foursquare
+  /*
   const handleCreateDraftPin = () => {
-    // make sure there's not existing draft pin
     if (draftPin) return;
 
     dispatch({ type: DELETE_CURRENT_PIN });
@@ -112,26 +105,17 @@ const App = props => {
       type: UPDATE_DRAFT_PIN,
       payload: { longitude, latitude }
     });
-
-    setShowBtns(false);
   };
+  */
 
   const handleViewportChange = viewport => {
     const { longitude, latitude, zoom } = viewport;
     dispatch({ type: UPDATE_VIEWPORT, payload: { longitude, latitude, zoom } });
   };
 
-  const handleToggleNewBtns = () => {
-    setShowBtns(!showBtns);
-  };
-
   const handleDragEnd = ({ lngLat }) => {
     const [longitude, latitude] = lngLat;
     dispatch({ type: UPDATE_DRAFT_PIN, payload: { longitude, latitude } });
-  };
-
-  const handleShowBtnsState = bool => {
-    setShowBtns(bool);
   };
 
   const handleClickGeocodingResult = async result => {
@@ -205,38 +189,18 @@ const App = props => {
       <Map
         viewport={viewport}
         draftPin={draftPin}
-        currentPin={currentPin}
+        pinsData={pinsData}
         onViewportChange={handleViewportChange}
         onDragEnd={handleDragEnd}
         onClickMarker={handleClickMarker}
         onMouseEnterMarker={handleOnMouseEnterMarker}
         onMouseLeaveMarker={handleOnMouseLeaveMarker}
-        onClickGeocodingResult={handleClickGeocodingResult}
-        isLoggedIn={isLoggedIn}
         popupPin={popupPin}
         showDraftPinPopup={showDraftPinPopup}
-        draftPinPopup={draftPinPopup}
         onClickDraftPinPopup={handleClickDraftPinPopup}
-        draftPlan={draftPlan}
+        draftPinPopup={draftPinPopup}
         onSubscribeToNewComment={subscribeToNewComment}
-        pinsData={pinsData}
       />
-      {/* Lower right action buttons */}
-      {isLoggedIn && (
-        <>
-          <Styled.ExpandBtn showBtns={showBtns} onClick={handleToggleNewBtns}>
-            <PlusIcon className="icon icon-small" />
-          </Styled.ExpandBtn>
-          <Styled.AddBtnWrapper>
-            <Styled.AddBtn onClick={() => handleShowBtnsState(false)}>
-              <CompassIcon className="icon icon-smallest" />
-            </Styled.AddBtn>
-            <Styled.AddBtn onClick={handleCreateDraftPin}>
-              <PinIcon className="icon icon-smallest" />
-            </Styled.AddBtn>
-          </Styled.AddBtnWrapper>
-        </>
-      )}
     </Styled.App>
   );
 };
