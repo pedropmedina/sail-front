@@ -1,6 +1,10 @@
 /* eslint-disable no-console, react/prop-types */
 import React, { useContext } from 'react';
-import { useApolloClient, useQuery } from '@apollo/react-hooks';
+import {
+  useApolloClient,
+  useQuery,
+  useSubscription
+} from '@apollo/react-hooks';
 import { useTransition } from 'react-spring';
 
 import * as Styled from './styled';
@@ -56,27 +60,49 @@ const App = props => {
     viewport,
     draftPlan
   } = state;
-  const { error, loading, data: pinsData, subscribeToMore } = useQuery(
-    GET_PINS_QUERY
-  );
+  const { error, loading, data: pinsData } = useQuery(GET_PINS_QUERY);
   const transitions = useTransition([draftPin || currentPin], null, {
     from: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
     enter: { opacity: 1, zIndex: 1, transform: 'translate3d(0%,0,0)' },
     leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' }
   });
 
-  const subscribeToNewComment = () => {
-    subscribeToMore({
-      document: COMMENT_CREATED_SUBSCRIPTION,
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData) return prev;
+  useSubscription(COMMENT_CREATED_SUBSCRIPTION, {
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      const { cache } = client;
+      const { data: { comment } } = subscriptionData; // prettier-ignore
+      const { pins } = cache.readQuery({ query: GET_PINS_QUERY });
+      cache.writeQuery({
+        query: GET_PINS_QUERY,
+        data: {
+          pins: pins.map(pin => {
+            if (pin._id === comment.pin._id) {
+              pin.comments = [...pin.comments, comment];
+              // update current pin if selected
+              updateCurrentPinOnCommentCreated(
+                pin,
+                currentPin,
+                dispatch,
+                UPDATE_CURRENT_PIN
+              );
+              return pin;
+            }
+            return pin;
+          })
+        }
+      });
+    }
+  });
 
-        const { data: { pin } } = subscriptionData; // prettier-ignore
-        return Object.assign({}, prev, {
-          pins: prev.pins.map(p => (p._id === pin._id ? pin : p))
-        });
-      }
-    });
+  const updateCurrentPinOnCommentCreated = (
+    pin,
+    currentPin,
+    dispatchFn,
+    type
+  ) => {
+    if (currentPin && currentPin._id === pin._id) {
+      dispatchFn({ type, payload: pin });
+    }
   };
 
   const handleClickMarker = pin => {
@@ -199,7 +225,6 @@ const App = props => {
         showDraftPinPopup={showDraftPinPopup}
         onClickDraftPinPopup={handleClickDraftPinPopup}
         draftPinPopup={draftPinPopup}
-        onSubscribeToNewComment={subscribeToNewComment}
       />
     </Styled.App>
   );

@@ -1,5 +1,5 @@
 /* eslint-disable no-console, react/prop-types */
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 
 import * as Styled from './styled';
@@ -20,13 +20,8 @@ const Map = ({
   popupPin,
   showDraftPinPopup,
   onClickDraftPinPopup,
-  draftPinPopup,
-  onSubscribeToNewComment
+  draftPinPopup
 }) => {
-  useEffect(() => {
-    onSubscribeToNewComment();
-  }, []);
-
   return (
     <Styled.Map>
       <ReactMapGL
