@@ -65,6 +65,71 @@ export const pinFragments = {
   `
 };
 
+// auth fragments
+export const authFragments = {
+  default: gql`
+    fragment defaultAuthFields on Auth {
+      token
+      user {
+        email
+        username
+        name
+        image
+        about
+        address {
+          longitude
+          latitude
+        }
+        friends {
+          email
+          username
+          name
+          image
+        }
+        myPlans {
+          _id
+          title
+          description
+          date
+        }
+        inPlans {
+          _id
+          title
+          description
+          date
+        }
+        likedPins {
+          _id
+          title
+          content
+          image
+          latitude
+          longitude
+        }
+        sentRequests {
+          _id
+          to {
+            email
+            username
+          }
+          status
+          reqType
+        }
+        receivedRequests {
+          _id
+          to {
+            email
+            username
+          }
+          status
+          reqType
+        }
+        admin
+      }
+    }
+  `
+};
+
 // user fragments
 export const userFragments = {
   default: gql`

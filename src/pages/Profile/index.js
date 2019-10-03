@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import * as Styled from './styled';
@@ -19,8 +19,12 @@ import Context from '../../context';
 
 const Profile = props => {
   const { state } = useContext(Context);
-  const [address, setAddress] = useState('');
-  const { error, loading, data: profileData } = useQuery(GET_PROFILE_QUERY, {
+  const [address, setAddress] = useState('Unknown');
+  const {
+    error,
+    loading,
+    data: { profile }
+  } = useQuery(GET_PROFILE_QUERY, {
     variables: { username: props.match.params.username }
   });
   const [createRequest] = useMutation(CREATE_REQUEST_MUTATION, {
@@ -29,16 +33,22 @@ const Profile = props => {
 
   useEffect(() => {
     (async () => {
-      if (profileData) {
-        if (profileData.address) {
-          const { longitude, latitude } = profileData.address;
-          setAddress(await reverseGeocode(longitude, latitude));
-        } else {
-          setAddress('Unkown');
+      if (profile && profile.address) {
+        const { longitude, latitude } = profile.address;
+        if ((longitude, latitude)) {
+          setAddress(await prepareUserAddress(profile.address));
         }
       }
     })();
-  }, [profileData]);
+  }, [profile]);
+
+  const prepareUserAddress = async coords => {
+    const { longitude, latitude } = coords;
+    if (longitude && latitude) {
+      return await reverseGeocode(longitude, latitude);
+    }
+    return 'Unknown';
+  };
 
   const handleFriendRequest = async (email, reqType) => {
     const input = { to: email, reqType };
@@ -47,15 +57,7 @@ const Profile = props => {
 
   if (!error && loading) return <div>Loading...</div>;
 
-  const {
-    name,
-    username,
-    email,
-    about,
-    image,
-    friends,
-    inPlans
-  } = profileData.profile;
+  const { name, username, email, about, image, friends, inPlans } = profile;
 
   return (
     <Styled.ProfileWrapper>

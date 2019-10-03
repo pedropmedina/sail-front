@@ -1,29 +1,29 @@
 /* eslint-disable no-console, react/prop-types */
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { useApolloClient } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/react-hooks';
 
-import history from '../../history';
 import Context from '../../context';
-import { checkSession, establishSession } from '../../utils';
+import { ME_QUERY } from '../../graphql/queries';
+import { ADD_CURRENT_USER } from '../../reducer';
+import { getAccessToken } from '../../accessToken';
 
 import * as Styled from './styled';
 
 import Sidebar from '../../components/Sidebar';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const client = useApolloClient();
-  const { dispatch } = useContext(Context);
+  const isLoggedIn = getAccessToken();
+  const { state, dispatch } = useContext(Context);
+  const { data } = useQuery(ME_QUERY);
 
-  // establish session for current user
-  const [isLoggedIn, setIsLoggedIn] = useState(checkSession());
+  // make sure current user is in store at all times when using app
   useEffect(() => {
-    // send to login page when unauthenticated
-    if (!isLoggedIn) {
-      history.push('/');
+    const { currentUser } = state;
+    if (data && !currentUser) {
+      dispatch({ type: ADD_CURRENT_USER, payload: data.user });
     }
-    establishSession(client, dispatch, setIsLoggedIn);
-  }, [isLoggedIn, setIsLoggedIn, dispatch]);
+  }, [data]);
 
   return isLoggedIn ? (
     <Route

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useContext, useEffect } from 'react';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks';
 import { compareAsc, compareDesc } from 'date-fns';
 
 import Context from '../../context';
@@ -18,6 +18,7 @@ import {
   UPDATE_REQUEST_MUTATION,
   DELETE_REQUEST_MUTATION
 } from '../../graphql/mutations';
+import { FRIEND_REQUEST_CREATED_SUBSCRIPTION } from '../../graphql/subscriptions';
 
 const FILTER_SECTIONS = [
   { filter: 'reqType', list: ['friend', 'invite'] },
@@ -57,6 +58,9 @@ const Requests = () => {
     ignoreResults: true
   });
 
+  useSubscription(FRIEND_REQUEST_CREATED_SUBSCRIPTION, {
+    variables: { to: 'this is the "to" variable' }
+  });
   // refetch data guaranteeing synchronicity of the cache with the server
   // during the creation of new requests
   useEffect(() => {

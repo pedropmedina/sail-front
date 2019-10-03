@@ -1,30 +1,39 @@
 import gql from 'graphql-tag';
 
-import { pinFragments, planFragments, userFragments, requestFragments, commentFragments } from './fragments';
+import {
+  pinFragments,
+  planFragments,
+  requestFragments,
+  commentFragments,
+  authFragments
+} from './fragments';
 
 // auth mutations
 export const SIGNUP_USER_MUTATION = gql`
   mutation SignupUser($input: SignupUserInput!) {
-    user: signupUser(input: $input) {
-      email
-      username
-      admin
+    auth: signupUser(input: $input) {
+      token
+      user {
+        name
+        username
+        email
+      }
     }
   }
 `;
 
 export const LOGIN_USER_MUTATION = gql`
   mutation LoginUser($input: LoginUserInput!) {
-    user: loginUser(input: $input) {
-      ...defaultUserFields
+    auth: loginUser(input: $input) {
+      ...defaultAuthFields
     }
   }
-  ${userFragments.default}
+  ${authFragments.default}
 `;
 
-export const BLACKLIST_TOKENS = gql`
+export const LOGOUT_USER_MUTATION = gql`
   mutation {
-    blacklistTokens
+    logoutUser
   }
 `;
 
@@ -103,4 +112,3 @@ export const DELETE_REQUEST_MUTATION = gql`
   ${requestFragments.default}
   ${requestFragments.invite}
 `;
-

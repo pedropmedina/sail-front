@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
 import React, { useContext } from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import * as Cookies from 'js-cookie';
 
 import Context from '../../context';
 import history from '../../history';
+import { getAccessToken, setAccessToken } from '../../accessToken';
 
-import { BLACKLIST_TOKENS } from '../../graphql/mutations';
+import { LOGOUT_USER_MUTATION } from '../../graphql/mutations';
+import { REMOVE_CURRENT_USER } from '../../reducer';
 
 import * as Styled from './styled';
 
@@ -48,13 +49,14 @@ const Profile = () => {
 };
 
 const Sidebar = () => {
-  const { state } = useContext(Context);
-  const [logout] = useMutation(BLACKLIST_TOKENS, { ignoreResults: true });
+  const isLoggedIn = getAccessToken();
+  const { state, dispatch } = useContext(Context);
+  const [logoutUser] = useMutation(LOGOUT_USER_MUTATION);
 
-  const handleLogout = () => {
-    logout();
-    Cookies.remove('access-token');
-    Cookies.remove('refresh-token');
+  const handleLogout = async () => {
+    setAccessToken('');
+    dispatch({ type: REMOVE_CURRENT_USER });
+    await logoutUser();
     history.push('/');
   };
 
@@ -79,7 +81,7 @@ const Sidebar = () => {
       </Styled.List>
       <Styled.AuthWrapper>
         <Styled.AuthBtn>
-          {state.isLoggedIn ? (
+          {isLoggedIn ? (
             <LogoutIcon className="icon icon-small" onClick={handleLogout} />
           ) : (
             <LoginIcon className="icon icon-small" />

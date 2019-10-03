@@ -4,8 +4,9 @@ import { useMutation } from '@apollo/react-hooks';
 import { object as yupObject, string as yupString } from 'yup';
 import keyBy from 'lodash/keyBy';
 
+import { setAccessToken } from '../../accessToken';
 import Context from '../../context';
-import { IS_LOGGED_IN, ADD_CURRENT_USER } from '../../reducer';
+import { ADD_CURRENT_USER } from '../../reducer';
 import {
   SIGNUP_USER_MUTATION,
   LOGIN_USER_MUTATION
@@ -136,10 +137,11 @@ const Auth = ({ history }) => {
   const [loginUser] = useMutation(LOGIN_USER_MUTATION, { ignoreResults: true });
 
   const handleAuthData = authData => {
-    const { data } = authData;
-    dispatch({ type: ADD_CURRENT_USER, payload: data.user });
-    dispatch({ type: IS_LOGGED_IN, payload: true });
-    history.push('/');
+    const { data: { auth } } = authData; // prettier-ignore
+    // dispach current user in response to store
+    dispatch({ type: ADD_CURRENT_USER, payload: auth.user });
+    // set access token
+    setAccessToken(auth.token);
   };
 
   const validateFields = async () => {
@@ -199,6 +201,7 @@ const Auth = ({ history }) => {
         setUsername('');
         setPassword('');
         handleAuthData(authData);
+        history.push('/map');
       } catch (error) {
         console.error(error.message.split(':')[1]);
       }

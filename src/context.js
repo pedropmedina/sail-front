@@ -8,7 +8,6 @@ const INITIAL_VIEWPORT = {
 };
 
 const Context = createContext({
-  isLoggedIn: false,
   currentUser: null,
   viewport: INITIAL_VIEWPORT,
   draftPin: null,

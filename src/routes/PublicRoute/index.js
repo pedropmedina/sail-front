@@ -2,7 +2,8 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
-import { checkSession} from '../../utils';
+import { getAccessToken } from '../../accessToken';
+
 import * as Styled from './styled';
 
 // Just for refenrence. To be remove once finished
@@ -23,18 +24,9 @@ import * as Styled from './styled';
 // );
 
 const PublicRoute = ({ component: Component, ...rest }) => {
-  // const client = useApolloClient();
-  // const { dispatch } = useContext(Context);
+  const isLoggedIn = getAccessToken();
 
-  // establish session for current user
-  // const [isLoggedIn, setIsLoggedIn] = useState(checkSession());
-  // useEffect(() => {
-  //   establishSession(client, dispatch, setIsLoggedIn);
-  // }, [isLoggedIn, setIsLoggedIn, dispatch]);
-
-  return rest.path === '/' && checkSession() ? (
-    <Redirect to="/map" />
-  ) : (
+  return !isLoggedIn ? (
     <Route
       {...rest}
       render={props => (
@@ -43,6 +35,8 @@ const PublicRoute = ({ component: Component, ...rest }) => {
         </Styled.Container>
       )}
     />
+  ) : (
+    <Redirect to="/map" />
   );
 };
 
