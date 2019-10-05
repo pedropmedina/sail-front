@@ -4,8 +4,6 @@ import { Marker } from 'react-map-gl';
 import * as yup from 'yup';
 import { useMutation, useQuery, useApolloClient } from '@apollo/react-hooks';
 
-import { ME_QUERY } from '../../graphql/queries'
-
 import * as Styled from './styled';
 
 import { ReactComponent as PlusIcon } from '../../assets/SVG/plus.svg';
@@ -32,7 +30,11 @@ import {
   UPDATE_DRAFT_PIN_POPUP
 } from '../../reducer';
 
-import { CREATE_PLAN_MUTATION } from '../../graphql/mutations';
+import { ME_QUERY } from '../../graphql/queries';
+import {
+  CREATE_PLAN_MUTATION,
+  CREATE_REQUEST_MUTATION
+} from '../../graphql/mutations';
 import { GET_PLANS_QUERY, GET_PIN_BY_COORDS } from '../../graphql/queries';
 
 const css = `
@@ -56,6 +58,9 @@ const PlanCreate = props => {
   const [dateError, setDateError] = useState('');
   const [invitesError, setInvitesError] = useState('');
   const [createPlan] = useMutation(CREATE_PLAN_MUTATION, {
+    ignoreResults: true
+  });
+  const [createInviteReq] = useMutation(CREATE_REQUEST_MUTATION, {
     ignoreResults: true
   });
   const client = useApolloClient();
@@ -150,6 +155,14 @@ const PlanCreate = props => {
     });
   };
 
+  const handleCreateInviteReq = async (invites, plan) => {
+    for (let invite of invites) {
+      await createInviteReq({
+        variables: { input: { to: invite, reqType: 'INVITE', plan: plan._id } }
+      });
+    }
+  };
+
   const handleCreatePlan = async () => {
     const validated = await validateFields(draftPlan);
     if (!validated) return;
@@ -157,7 +170,7 @@ const PlanCreate = props => {
     // destructure draft plan to get data needed for creating of plan
     const { title, description, location, date, invites } = draftPlan;
 
-    await createPlan({
+    const { data } = await createPlan({
       variables: { input: { title, description, location, date, invites } },
       update: (cache, { data: { plan } }) => {
         const { plans } = cache.readQuery({ query: GET_PLANS_QUERY });
@@ -167,6 +180,10 @@ const PlanCreate = props => {
         });
       }
     });
+
+    // create requests
+    handleCreateInviteReq(invites, data.plan);
+
     // cleanup store and redirect to /plans
     dispatch({ type: DELETE_CURRENT_PIN });
     dispatch({ type: DELETE_DRAFT_PLAN });
@@ -205,7 +222,7 @@ const PlanCreate = props => {
     keyedErrorSetters[errorName](errorValue);
   };
 
-  if (!error && loading) return <div>Loading...</div>
+  if (!error && loading) return <div>Loading...</div>;
 
   return (
     <Styled.PlanCreate>
