@@ -1,12 +1,10 @@
 /* eslint-disable no-console, react/prop-types */
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import { object as yupObject, string as yupString } from 'yup';
 import keyBy from 'lodash/keyBy';
 
 import { setAccessToken } from '../../accessToken';
-import Context from '../../context';
-import { ADD_CURRENT_USER } from '../../reducer';
 import {
   SIGNUP_USER_MUTATION,
   LOGIN_USER_MUTATION
@@ -123,7 +121,6 @@ const Side = ({
 };
 
 const Auth = ({ history }) => {
-  const { dispatch } = useContext(Context);
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -138,8 +135,6 @@ const Auth = ({ history }) => {
 
   const handleAuthData = authData => {
     const { data: { auth } } = authData; // prettier-ignore
-    // dispach current user in response to store
-    dispatch({ type: ADD_CURRENT_USER, payload: auth.user });
     // set access token
     setAccessToken(auth.token);
   };

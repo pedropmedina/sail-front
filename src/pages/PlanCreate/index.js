@@ -2,7 +2,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Marker } from 'react-map-gl';
 import * as yup from 'yup';
-import { useMutation, useApolloClient } from '@apollo/react-hooks';
+import { useMutation, useQuery, useApolloClient } from '@apollo/react-hooks';
+
+import { ME_QUERY } from '../../graphql/queries'
 
 import * as Styled from './styled';
 
@@ -45,7 +47,7 @@ const mapPreviewCss = `
 
 const PlanCreate = props => {
   const { state, dispatch } = useContext(Context);
-  const { draftPlan, currentUser, viewport, currentPin } = state;
+  const { draftPlan, viewport, currentPin } = state;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [titleError, setTitleError] = useState('');
@@ -57,6 +59,7 @@ const PlanCreate = props => {
     ignoreResults: true
   });
   const client = useApolloClient();
+  const { error, loading, data } = useQuery(ME_QUERY);
 
   useEffect(() => {
     // create draftPlan is none exists upon mounting component
@@ -202,6 +205,8 @@ const PlanCreate = props => {
     keyedErrorSetters[errorName](errorValue);
   };
 
+  if (!error && loading) return <div>Loading...</div>
+
   return (
     <Styled.PlanCreate>
       <Styled.Fields>
@@ -274,7 +279,7 @@ const PlanCreate = props => {
         <Styled.Field error={invitesError}>
           <FriendsPicker
             css={css}
-            friends={currentUser && currentUser.friends}
+            friends={data.user.friends}
             defaultInvites={draftPlan ? draftPlan.invites : []}
             onHandleInvites={handleInvites}
           />

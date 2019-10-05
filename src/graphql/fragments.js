@@ -130,6 +130,57 @@ export const authFragments = {
   `
 };
 
+// request fragments
+export const requestFragments = {
+  default: gql`
+    fragment defaultRequestFields on Request {
+      _id
+      to {
+        name
+        username
+        email
+        image
+      }
+      status
+      reqType
+      author {
+        name
+        username
+        email
+        image
+      }
+      createdAt
+      updatedAt
+    }
+  `,
+  invite: gql`
+    fragment inviteRequestFields on InviteRequest {
+      _id
+      to {
+        name
+        username
+        email
+        image
+      }
+      status
+      reqType
+      plan {
+        _id
+        title
+        description
+      }
+      author {
+        name
+        username
+        email
+        image
+      }
+      createdAt
+      updatedAt
+    }
+  `
+};
+
 // user fragments
 export const userFragments = {
   default: gql`
@@ -170,25 +221,25 @@ export const userFragments = {
         longitude
       }
       sentRequests {
-        _id
-        to {
-          email
-          username
+        ... on FriendRequest {
+          ...defaultRequestFields
         }
-        status
-        reqType
+        ... on InviteRequest {
+          ...inviteRequestFields
+        }
       }
       receivedRequests {
-        _id
-        to {
-          email
-          username
+        ... on FriendRequest {
+          ...defaultRequestFields
         }
-        status
-        reqType
+        ... on InviteRequest {
+          ...inviteRequestFields
+        }
       }
       admin
     }
+    ${requestFragments.default}
+    ${requestFragments.invite}
   `,
   people: gql`
     fragment peopleFields on User {
@@ -266,57 +317,6 @@ export const userFragments = {
         latitude
         longitude
       }
-    }
-  `
-};
-
-// request fragments
-export const requestFragments = {
-  default: gql`
-    fragment defaultRequestFields on Request {
-      _id
-      to {
-        name
-        username
-        email
-        image
-      }
-      status
-      reqType
-      author {
-        name
-        username
-        email
-        image
-      }
-      createdAt
-      updatedAt
-    }
-  `,
-  invite: gql`
-    fragment inviteRequestFields on InviteRequest {
-      _id
-      to {
-        name
-        username
-        email
-        image
-      }
-      status
-      reqType
-      plan {
-        _id
-        title
-        description
-      }
-      author {
-        name
-        username
-        email
-        image
-      }
-      createdAt
-      updatedAt
     }
   `
 };

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import * as Styled from './styled';
@@ -10,37 +10,35 @@ import Topbar from '../../components/Topbar';
 import Plan from '../../components/Plan';
 import Friend from '../../components/Friend';
 
-import { GET_PROFILE_QUERY } from '../../graphql/queries';
+import { GET_PROFILE_QUERY, ME_QUERY } from '../../graphql/queries';
 import { CREATE_REQUEST_MUTATION } from '../../graphql/mutations';
 
 import { reverseGeocode } from '../../utils';
 
-import Context from '../../context';
-
 const Profile = props => {
-  const { state } = useContext(Context);
   const [address, setAddress] = useState('Unknown');
   const {
-    error,
-    loading,
-    data: { profile }
+    error: profileError,
+    loading: profileLoading,
+    data: profileData
   } = useQuery(GET_PROFILE_QUERY, {
     variables: { username: props.match.params.username }
   });
+  const { error: meError, loading: meLoading, data: meData } = useQuery(ME_QUERY);
   const [createRequest] = useMutation(CREATE_REQUEST_MUTATION, {
     ignoreResults: true
   });
 
   useEffect(() => {
     (async () => {
-      if (profile && profile.address) {
-        const { longitude, latitude } = profile.address;
+      if (profileData && profileData.address) {
+        const { longitude, latitude } = profileData.address;
         if ((longitude, latitude)) {
-          setAddress(await prepareUserAddress(profile.address));
+          setAddress(await prepareUserAddress(profileData.address));
         }
       }
     })();
-  }, [profile]);
+  }, [profileData]);
 
   const prepareUserAddress = async coords => {
     const { longitude, latitude } = coords;
@@ -55,20 +53,19 @@ const Profile = props => {
     await createRequest({ variables: { input } });
   };
 
-  if (!error && loading) return <div>Loading...</div>;
+  if ((!profileError || !meError) && (profileLoading || meLoading)) return <div>Loading...</div>;
 
-  const { name, username, email, about, image, friends, inPlans } = profile;
+  const { name, username: profileUsername, email, about, image, friends: profileFriends, inPlans } = profileData.profile;
+  const { username: meUsername, friends: meFriends } = meData.user;
 
   return (
     <Styled.ProfileWrapper>
       <Topbar>
         <Styled.FriendRequestBtn
           isVisible={
-            state &&
-            state.currentUser &&
-            state.currentUser.username !== username &&
-            !state.currentUser.friends.some(
-              friend => friend.username === username
+            meUsername !== profileUsername &&
+            !meFriends.some(
+              friend => friend.username === profileUsername 
             )
           }
           onClick={() => handleFriendRequest(email, 'FRIEND')}
@@ -85,7 +82,7 @@ const Profile = props => {
             src={image ? image : 'https://via.placeholder.com/200X300'}
             alt="Profile image"
           />
-          <Styled.Name>{name ? name : username}</Styled.Name>
+          <Styled.Name>{name ? name : profileUsername}</Styled.Name>
           <Styled.Stats>
             <Styled.Stat>
               <Styled.StatHeading>Plans</Styled.StatHeading>
@@ -93,7 +90,7 @@ const Profile = props => {
             </Styled.Stat>
             <Styled.Stat>
               <Styled.StatHeading>Friend</Styled.StatHeading>
-              <Styled.StatData>{friends.length}</Styled.StatData>
+              <Styled.StatData>{profileFriends.length}</Styled.StatData>
             </Styled.Stat>
           </Styled.Stats>
           <Styled.Email>{email}</Styled.Email>
@@ -113,22 +110,22 @@ const Profile = props => {
               </Styled.List>
             ) : (
               <Styled.NoContent>
-                {`${name ? name : username} is yet to be part of any plans.`}
+                {`${name ? name : profileUsername} is yet to be part of any plans.`}
               </Styled.NoContent>
             )}
           </Styled.ContentPlans>
           {/* Friends */}
           <Styled.ContentFriends>
             <Styled.ContentHeading>Friends</Styled.ContentHeading>
-            {friends.length > 0 ? (
+            {profileFriends.length > 0 ? (
               <Styled.List>
-                {friends.map((friend, i) => (
+                {profileFriends.map((friend, i) => (
                   <Friend key={`${friend.username}-${i}`} {...friend} />
                 ))}
               </Styled.List>
             ) : (
               <Styled.NoContent>
-                {`${name ? name : username} hasn't added any friends.`}
+                {`${name ? name : profileUsername} hasn't added any friends.`}
               </Styled.NoContent>
             )}
           </Styled.ContentFriends>

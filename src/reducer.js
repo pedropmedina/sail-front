@@ -2,8 +2,6 @@
 export const CREATE_DRAFT_PIN = 'CREATE_DRAFT_PIN';
 export const UPDATE_DRAFT_PIN = 'UPDATE_DRAFT_PIN';
 export const DELETE_DRAFT_PIN = 'DELETE_DRAFT_PIN';
-export const ADD_CURRENT_USER = 'ADD_CURRENT_USER';
-export const REMOVE_CURRENT_USER = 'REMOVE_CURRENT_USER';
 export const UPDATE_CURRENT_PIN = 'UPDATE_CURRENT_PIN';
 export const DELETE_CURRENT_PIN = 'DELETE_CURRENT_PIN';
 export const SET_POPUP_PIN = 'SET_POPUP_PIN';
@@ -31,10 +29,6 @@ export default function reducer(state, { type, payload }) {
   switch (type) {
     case UPDATE_VIEWPORT:
       return { ...state, viewport: { ...state.viewport, ...payload } };
-    case ADD_CURRENT_USER:
-      return { ...state, currentUser: payload };
-    case REMOVE_CURRENT_USER:
-      return { ...state, currentUser: null };
     case CREATE_DRAFT_PIN:
       return { ...state, draftPin: { longitude: 0, latitude: 0 } };
     case UPDATE_DRAFT_PIN:

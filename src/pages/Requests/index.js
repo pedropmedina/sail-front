@@ -1,9 +1,7 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useContext, useEffect } from 'react';
-import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks';
+import React, { useState } from 'react';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { compareAsc, compareDesc } from 'date-fns';
-
-import Context from '../../context';
 
 import Request from '../../components/Request';
 
@@ -13,12 +11,11 @@ import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
 import { ReactComponent as DownIcon } from '../../assets/SVG/chevron-down.svg';
 import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 
-import { GET_REQUESTS_QUERY } from '../../graphql/queries';
+import { GET_REQUESTS_QUERY, ME_QUERY } from '../../graphql/queries';
 import {
   UPDATE_REQUEST_MUTATION,
   DELETE_REQUEST_MUTATION
 } from '../../graphql/mutations';
-import { FRIEND_REQUEST_CREATED_SUBSCRIPTION } from '../../graphql/subscriptions';
 
 const FILTER_SECTIONS = [
   { filter: 'reqType', list: ['friend', 'invite'] },
@@ -28,57 +25,25 @@ const FILTER_SECTIONS = [
 ];
 
 const Requests = () => {
-  const { state } = useContext(Context);
   const [filters, setFilters] = useState({
     reqType: '',
     status: '',
     relevance: ''
   });
   const [searchText, setSearchText] = useState('');
-  const {
-    error: friendsError,
-    loading: friendsLoading,
-    data: friendsData,
-    refetch: friendsRefetch
-  } = useQuery(GET_REQUESTS_QUERY, {
-    variables: { reqType: 'FRIEND' }
-  });
-  const {
-    error: invitesError,
-    loading: invitesLoading,
-    data: invitesData,
-    refetch: invitesRefetch
-  } = useQuery(GET_REQUESTS_QUERY, {
-    variables: { reqType: 'INVITE' }
-  });
+
+  const { error: reqError, loading: reqLoading, data: reqData } = useQuery(
+    GET_REQUESTS_QUERY
+  );
+  const { error: userError, loading: userLoading, data: userData } = useQuery(
+    ME_QUERY
+  );
   const [updateRequest] = useMutation(UPDATE_REQUEST_MUTATION, {
     ignoreResults: true
   });
   const [deleteRequest] = useMutation(DELETE_REQUEST_MUTATION, {
     ignoreResults: true
   });
-
-  useSubscription(FRIEND_REQUEST_CREATED_SUBSCRIPTION, {
-    variables: { to: 'this is the "to" variable' }
-  });
-  // refetch data guaranteeing synchronicity of the cache with the server
-  // during the creation of new requests
-  useEffect(() => {
-    friendsRefetch();
-    invitesRefetch();
-  }, []);
-
-  // Prepare request data by sent and received requests
-  const prepRequestsBySide = (data, currentUser) => {
-    return data.reduce((acc, request) => {
-      !acc['sent'] && (acc['sent'] = []);
-      !acc['received'] && (acc['received'] = []);
-      request.author.email === currentUser.email
-        ? acc['sent'].push(request)
-        : acc['received'].push(request);
-      return acc;
-    }, {});
-  };
 
   // helpers callback functions for filtering of data
   const sortReqsByDate = (relevance = 'newests') => (req1, req2) =>
@@ -106,31 +71,32 @@ const Requests = () => {
     }
   };
 
-  const filterRequest = (reqs, { status, searchText, relevance }) =>
+  const filterReqs = (reqs, { status, searchText, relevance }) =>
     reqs
       .filter(filterByStatus(status))
       .filter(filterBySearch(searchText))
       .sort(sortReqsByDate(relevance));
 
-  // prepare data by friends and invites. Filter out based on current filters.
-  const filterData = (reqs = [], currentUser = {}, filters = {}) => {
-    // default response for requests split in sent/received
-    const defaultRes = { sent: [], received: [] };
-    // short circuit response with defaultRes if !reqs || reqs !== reqType && reqType !== ''
+  const prepReqsByType = (reqs, type) =>
+    reqs.filter(req => req.reqType === type);
+
+  const prepReqsBySent = (reqs, author) =>
+    reqs.filter(req => req.author.email === author.email);
+
+  const prepReqsByReceived = (reqs, author) =>
+    reqs.filter(req => req.author.email !== author.email);
+
+  // short circuit response with defaultRes if !reqs || reqs !== reqType && reqType !== ''
+  const displayReqs = (reqs = [], filters = {}) => {
     if (
       reqs.length <= 0 ||
       (filters.reqType !== '' &&
         filters.reqType !== reqs[0].reqType.toLowerCase())
     ) {
-      return defaultRes;
+      return [];
     }
-    // prepare data by sent and received requests for both invites and friends
-    let reqsBySide = prepRequestsBySide(reqs, currentUser);
 
-    const sent = filterRequest(reqsBySide.sent, filters);
-    const received = filterRequest(reqsBySide.received, filters);
-
-    return { sent, received };
+    return filterReqs(reqs, filters);
   };
 
   const handleFilter = (name, value) => {
@@ -175,9 +141,8 @@ const Requests = () => {
     });
   };
 
-  if ((!friendsError || !invitesError) && (friendsLoading || invitesLoading)) {
+  if ((!userError || !reqError) && (userLoading || reqLoading))
     return <div>Loading...</div>;
-  }
 
   return (
     <Styled.RequestsWrapper>
@@ -230,90 +195,108 @@ const Requests = () => {
         })}
       </Styled.Filterbar>
       {/* request types */}
-      {state && state.currentUser && friendsData && invitesData && (
-        <Styled.RequestTypes>
-          {/* Invite Request */}
-          <Styled.RequestType>
-            <Styled.RequestTypeHeading>
-              Invite requests
-            </Styled.RequestTypeHeading>
-            <Styled.LeftSide>
-              <Styled.SideHeading>Sent Invites</Styled.SideHeading>
-              <Styled.Requests>
-                {filterData(invitesData.requests, state.currentUser, {
+      <Styled.RequestTypes>
+        {/* Invite Request */}
+        <Styled.RequestType>
+          <Styled.RequestTypeHeading>Invite requests</Styled.RequestTypeHeading>
+          <Styled.LeftSide>
+            <Styled.SideHeading>Sent Invites</Styled.SideHeading>
+            <Styled.Requests>
+              {displayReqs(
+                prepReqsByType(
+                  prepReqsBySent(reqData.requests, userData.user),
+                  'INVITE'
+                ),
+                {
                   ...filters,
                   searchText
-                }).sent.map(request => (
-                  <Request
-                    key={request._id}
-                    request={request}
-                    currentUser={state.currentUser}
-                    onUpdateRequest={handleUpdateRequest}
-                    onDeleteRequest={handleDeleteRequest}
-                  />
-                ))}
-              </Styled.Requests>
-            </Styled.LeftSide>
-            <Styled.RightSide>
-              <Styled.SideHeading>Received Invites</Styled.SideHeading>
-              <Styled.Requests>
-                {filterData(invitesData.requests, state.currentUser, {
+                }
+              ).map(request => (
+                <Request
+                  key={request._id}
+                  request={request}
+                  currentUser={userData.user}
+                  onUpdateRequest={handleUpdateRequest}
+                  onDeleteRequest={handleDeleteRequest}
+                />
+              ))}
+            </Styled.Requests>
+          </Styled.LeftSide>
+          <Styled.RightSide>
+            <Styled.SideHeading>Received Invites</Styled.SideHeading>
+            <Styled.Requests>
+              {displayReqs(
+                prepReqsByType(
+                  prepReqsByReceived(reqData.requests, userData.user),
+                  'INVITE'
+                ),
+                {
                   ...filters,
                   searchText
-                }).received.map(request => (
-                  <Request
-                    key={request._id}
-                    request={request}
-                    currentUser={state.currentUser}
-                    onUpdateRequest={handleUpdateRequest}
-                    onDeleteRequest={handleDeleteRequest}
-                  />
-                ))}
-              </Styled.Requests>
-            </Styled.RightSide>
-          </Styled.RequestType>
-          {/* Friend Request */}
-          <Styled.RequestType>
-            <Styled.RequestTypeHeading>
-              Friend requests
-            </Styled.RequestTypeHeading>
-            <Styled.LeftSide>
-              <Styled.SideHeading>Sent Friend Request</Styled.SideHeading>
-              <Styled.Requests>
-                {filterData(friendsData.requests, state.currentUser, {
+                }
+              ).map(request => (
+                <Request
+                  key={request._id}
+                  request={request}
+                  currentUser={userData.user}
+                  onUpdateRequest={handleUpdateRequest}
+                  onDeleteRequest={handleDeleteRequest}
+                />
+              ))}
+            </Styled.Requests>
+          </Styled.RightSide>
+        </Styled.RequestType>
+        {/* Friend Request */}
+        <Styled.RequestType>
+          <Styled.RequestTypeHeading>Friend requests</Styled.RequestTypeHeading>
+          <Styled.LeftSide>
+            <Styled.SideHeading>Sent Friend Request</Styled.SideHeading>
+            <Styled.Requests>
+              {displayReqs(
+                prepReqsByType(
+                  prepReqsBySent(reqData.requests, userData.user),
+                  'FRIEND'
+                ),
+                {
                   ...filters,
                   searchText
-                }).sent.map(request => (
-                  <Request
-                    key={request._id}
-                    request={request}
-                    currentUser={state.currentUser}
-                    onUpdateRequest={handleUpdateRequest}
-                    onDeleteRequest={handleDeleteRequest}
-                  />
-                ))}
-              </Styled.Requests>
-            </Styled.LeftSide>
-            <Styled.RightSide>
-              <Styled.SideHeading>Received Friend Request</Styled.SideHeading>
-              <Styled.Requests>
-                {filterData(friendsData.requests, state.currentUser, {
+                }
+              ).map(request => (
+                <Request
+                  key={request._id}
+                  request={request}
+                  currentUser={userData.user}
+                  onUpdateRequest={handleUpdateRequest}
+                  onDeleteRequest={handleDeleteRequest}
+                />
+              ))}
+            </Styled.Requests>
+          </Styled.LeftSide>
+          <Styled.RightSide>
+            <Styled.SideHeading>Received Friend Request</Styled.SideHeading>
+            <Styled.Requests>
+              {displayReqs(
+                prepReqsByType(
+                  prepReqsByReceived(reqData.requests, userData.user),
+                  'FRIEND'
+                ),
+                {
                   ...filters,
                   searchText
-                }).received.map(request => (
-                  <Request
-                    key={request._id}
-                    request={request}
-                    currentUser={state.currentUser}
-                    onUpdateRequest={handleUpdateRequest}
-                    onDeleteRequest={handleDeleteRequest}
-                  />
-                ))}
-              </Styled.Requests>
-            </Styled.RightSide>
-          </Styled.RequestType>
-        </Styled.RequestTypes>
-      )}
+                }
+              ).map(request => (
+                <Request
+                  key={request._id}
+                  request={request}
+                  currentUser={userData.user}
+                  onUpdateRequest={handleUpdateRequest}
+                  onDeleteRequest={handleDeleteRequest}
+                />
+              ))}
+            </Styled.Requests>
+          </Styled.RightSide>
+        </Styled.RequestType>
+      </Styled.RequestTypes>
     </Styled.RequestsWrapper>
   );
 };

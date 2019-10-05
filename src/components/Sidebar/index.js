@@ -1,13 +1,12 @@
 /* eslint-disable react/prop-types */
 import React, { useContext } from 'react';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useApolloClient } from '@apollo/react-hooks';
 
 import Context from '../../context';
 import history from '../../history';
-import { getAccessToken, setAccessToken } from '../../accessToken';
+import { getAccessToken, deleteAccessToken } from '../../accessToken';
 
 import { LOGOUT_USER_MUTATION } from '../../graphql/mutations';
-import { REMOVE_CURRENT_USER } from '../../reducer';
 
 import * as Styled from './styled';
 
@@ -50,13 +49,14 @@ const Profile = () => {
 
 const Sidebar = () => {
   const isLoggedIn = getAccessToken();
-  const { state, dispatch } = useContext(Context);
+  const { state } = useContext(Context);
   const [logoutUser] = useMutation(LOGOUT_USER_MUTATION);
+  const client = useApolloClient();
 
   const handleLogout = async () => {
-    setAccessToken('');
-    dispatch({ type: REMOVE_CURRENT_USER });
     await logoutUser();
+    await client.clearStore();
+    deleteAccessToken();
     history.push('/');
   };
 

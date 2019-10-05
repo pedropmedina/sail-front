@@ -23,11 +23,17 @@ export const COMMENT_CREATED_SUBSCRIPTION = gql`
 `;
 
 // request subscriptions
-export const FRIEND_REQUEST_CREATED_SUBSCRIPTION = gql`
-  subscription FriendRequestCreated($to: String!) {
-    request: requestCreated(to: $to) {
-      ...defaultRequestFields
+export const REQUEST_CREATED_SUBSCRIPTION = gql`
+  subscription {
+    request: requestCreated {
+      ... on FriendRequest {
+        ...defaultRequestFields
+      }
+      ... on InviteRequest {
+        ...inviteRequestFields
+      }
     }
   }
   ${requestFragments.default}
+  ${requestFragments.invite}
 `;

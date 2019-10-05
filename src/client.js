@@ -9,11 +9,15 @@ import { onError } from 'apollo-link-error';
 import { ApolloLink, Observable, split, from } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
-import { TokenRefreshLink } from 'apollo-link-token-refresh';
 import jwtDecode from 'jwt-decode';
 
+import history from './history';
 import introspectionQueryResultData from './fragmentTypes.json';
-import { setAccessToken, getAccessToken } from './accessToken';
+import {
+  setAccessToken,
+  getAccessToken,
+  deleteAccessToken
+} from './accessToken';
 
 // initialize fragment matcher
 const fragmentMatcher = new IntrospectionFragmentMatcher({
@@ -68,11 +72,15 @@ const wsLink = new WebSocketLink({
   options: {
     reconnect: true,
     lazy: true,
-    connectionParams: {
-      authToken: getAccessToken()
-    }
+    connectionParams: () => ({
+      authToken: getAccessToken() || ''
+    })
   }
 });
+
+// fixes issues with websocket closing before connection established
+wsLink.subscriptionClient.maxConnectTimeGenerator.duration = () =>
+  wsLink.subscriptionClient.maxConnectTimeGenerator.max;
 
 // Send data to corresponding link based on the operation type.
 // Subscriptions will be sent via websocket transport whereas
@@ -105,37 +113,47 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 // token refresh link handles expires access token in the background
 // as long as the refresh token is valid
-const tokenRefreshLink = new TokenRefreshLink({
-  accessTokenField: 'accessToken',
-  isTokenValidOrUndefined: () => {
-    const token = getAccessToken();
-    // true if there's not access token
-    if (!token) return true;
-    // true if token has expired
-    try {
-      const { exp } = jwtDecode(token);
-      return Date.now() >= exp * 1000 ? true : false;
-    } catch (error) {
-      return false;
-    }
-  },
-  fetchAccessToken: () => {
-    return fetch('http://localhost:4000/refresh_token', {
+const refreshTokenLink = new ApolloLink((operation, forward) => {
+  // get current accessToken in the local storage
+  const token = getAccessToken();
+  // check token validity fn
+  const isTokenValid = token => {
+    const { exp } = jwtDecode(token);
+    return Date.now() <= exp * 1000;
+  };
+  // fetch new access access token fn
+  const fetchAccesToken = async () => {
+    const res = await fetch('http://localhost:4000/refresh_token', {
       method: 'POST',
       credentials: 'include'
     });
-  },
-  handleFetch: accessToken => {
-    setAccessToken(accessToken);
-  },
-  handleError: err => {
-    console.warn('Your refresh token is invalid. Try to relogin');
-    console.error(err);
+    const { accessToken } = await res.json();
+    return accessToken;
+  };
+  // handle fetch result fn
+  const handleFetch = async () => {
+    const accessToken = await fetchAccesToken();
+    if (!accessToken) {
+      deleteAccessToken();
+      history.push('/');
+    } else {
+      setAccessToken(accessToken);
+    }
+  };
+  // check is current access token is undefined or invalid
+  const isTokenUndefinedOrValid = !token || !isTokenValid(token);
+  //  if not token found in storage or expired token,
+  // fetch /refresh_token and check if refreshToken is valid
+  // and if so set new accessToken in the response else logout user
+  if (isTokenUndefinedOrValid) {
+    handleFetch(isTokenUndefinedOrValid);
   }
+
+  return forward(operation);
 });
 
 const client = new ApolloClient({
-  link: from([tokenRefreshLink, errorLink, requestLink, splitLink]),
+  link: from([refreshTokenLink, errorLink, requestLink, splitLink]),
   cache
 });
 

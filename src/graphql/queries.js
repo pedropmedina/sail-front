@@ -95,8 +95,8 @@ export const SEARCH_FRIENDS_QUERY = gql`
 
 // request queries
 export const GET_REQUESTS_QUERY = gql`
-  query GetRequests($reqType: REQUEST_TYPE) {
-    requests: getRequests(reqType: $reqType) {
+  query {
+    requests: getRequests {
       ... on FriendRequest {
         ...defaultRequestFields
       }
