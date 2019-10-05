@@ -37,3 +37,34 @@ export const REQUEST_CREATED_SUBSCRIPTION = gql`
   ${requestFragments.default}
   ${requestFragments.invite}
 `;
+
+export const REQUEST_UPDATED_SUBSCRIPTION = gql`
+  subscription {
+    request: requestUpdated {
+      ... on FriendRequest {
+        ...defaultRequestFields
+      }
+      ... on InviteRequest {
+        ...inviteRequestFields
+      }
+    }
+  }
+  ${requestFragments.default}
+  ${requestFragments.invite}
+`;
+
+// request subscriptions
+export const REQUEST_DELETED_SUBSCRIPTION = gql`
+  subscription {
+    request: requestDeleted {
+      ... on FriendRequest {
+        ...defaultRequestFields
+      }
+      ... on InviteRequest {
+        ...inviteRequestFields
+      }
+    }
+  }
+  ${requestFragments.default}
+  ${requestFragments.invite}
+`;

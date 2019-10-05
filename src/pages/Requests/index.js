@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { useMutation, useQuery } from '@apollo/react-hooks';
+import { useMutation, useQuery, useSubscription } from '@apollo/react-hooks';
 import { compareAsc, compareDesc } from 'date-fns';
 
 import Request from '../../components/Request';
@@ -16,6 +16,11 @@ import {
   UPDATE_REQUEST_MUTATION,
   DELETE_REQUEST_MUTATION
 } from '../../graphql/mutations';
+import {
+  REQUEST_CREATED_SUBSCRIPTION,
+  REQUEST_UPDATED_SUBSCRIPTION,
+  REQUEST_DELETED_SUBSCRIPTION
+} from '../../graphql/subscriptions';
 
 const FILTER_SECTIONS = [
   { filter: 'reqType', list: ['friend', 'invite'] },
@@ -33,9 +38,10 @@ const Requests = () => {
   const [searchText, setSearchText] = useState('');
 
   const { error: reqError, loading: reqLoading, data: reqData } = useQuery(
-    GET_REQUESTS_QUERY
+    GET_REQUESTS_QUERY,
+    { fetchPolicy: 'cache-and-network' }
   );
-  const { error: userError, loading: userLoading, data: userData } = useQuery(
+  const { error: meError, loading: meLoading, data: meData } = useQuery(
     ME_QUERY
   );
   const [updateRequest] = useMutation(UPDATE_REQUEST_MUTATION, {
@@ -45,7 +51,33 @@ const Requests = () => {
     ignoreResults: true
   });
 
-  // helpers callback functions for filtering of data
+  useSubscription(REQUEST_CREATED_SUBSCRIPTION, {
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      const { request } = subscriptionData.data;
+      if (request) {
+        const { requests } = client.readQuery({ query: GET_REQUESTS_QUERY });
+        client.writeQuery({
+          query: GET_REQUESTS_QUERY,
+          data: { requests: requests.concat([request]) }
+        });
+      }
+    }
+  });
+
+  useSubscription(REQUEST_UPDATED_SUBSCRIPTION);
+
+  useSubscription(REQUEST_DELETED_SUBSCRIPTION, {
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      const { request } = subscriptionData.data;
+      const { requests } = client.readQuery({ query: GET_REQUESTS_QUERY });
+      client.writeQuery({
+        query: GET_REQUESTS_QUERY,
+        data: { requests: requests.filter(req => req._id !== request._id) }
+      });
+    }
+  });
+
+  // helpers callback functions for filtering of requests
   const sortReqsByDate = (relevance = 'newests') => (req1, req2) =>
     !relevance || relevance === 'newests'
       ? compareDesc(parseInt(req1.updatedAt), parseInt(req2.updatedAt))
@@ -71,8 +103,17 @@ const Requests = () => {
     }
   };
 
-  const filterReqs = (reqs, { status, searchText, relevance }) =>
+  const filterByType = reqType => req =>
+    reqType ? req.reqType.toLowerCase() === reqType : true;
+
+  const filterByDenied = me => req => {
+    return req.to.email === me.email ? req.status !== 'DENIED' : true;
+  };
+
+  const filterReqs = (reqs, { reqType, status, searchText, relevance }) =>
     reqs
+      .filter(filterByDenied(meData.user))
+      .filter(filterByType(reqType))
       .filter(filterByStatus(status))
       .filter(filterBySearch(searchText))
       .sort(sortReqsByDate(relevance));
@@ -85,19 +126,6 @@ const Requests = () => {
 
   const prepReqsByReceived = (reqs, author) =>
     reqs.filter(req => req.author.email !== author.email);
-
-  // short circuit response with defaultRes if !reqs || reqs !== reqType && reqType !== ''
-  const displayReqs = (reqs = [], filters = {}) => {
-    if (
-      reqs.length <= 0 ||
-      (filters.reqType !== '' &&
-        filters.reqType !== reqs[0].reqType.toLowerCase())
-    ) {
-      return [];
-    }
-
-    return filterReqs(reqs, filters);
-  };
 
   const handleFilter = (name, value) => {
     setFilters(prevFilters => ({ ...prevFilters, [name]: value }));
@@ -125,24 +153,13 @@ const Requests = () => {
 
   const handleDeleteRequest = reqId => {
     deleteRequest({
-      variables: { reqId },
-      update: (cache, { data: { request } }) => {
-        const { reqType } = request;
-        const { requests } = cache.readQuery({
-          query: GET_REQUESTS_QUERY,
-          variables: { reqType }
-        });
-        cache.writeQuery({
-          query: GET_REQUESTS_QUERY,
-          variables: { reqType },
-          data: { requests: requests.filter(req => req._id !== request._id) }
-        });
-      }
+      variables: { reqId }
     });
   };
 
-  if ((!userError || !reqError) && (userLoading || reqLoading))
+  if (((!meError || !reqError) && (meLoading || reqLoading)) || !reqData) {
     return <div>Loading...</div>;
+  }
 
   return (
     <Styled.RequestsWrapper>
@@ -202,9 +219,9 @@ const Requests = () => {
           <Styled.LeftSide>
             <Styled.SideHeading>Sent Invites</Styled.SideHeading>
             <Styled.Requests>
-              {displayReqs(
+              {filterReqs(
                 prepReqsByType(
-                  prepReqsBySent(reqData.requests, userData.user),
+                  prepReqsBySent(reqData.requests, meData.user),
                   'INVITE'
                 ),
                 {
@@ -215,7 +232,7 @@ const Requests = () => {
                 <Request
                   key={request._id}
                   request={request}
-                  currentUser={userData.user}
+                  currentUser={meData.user}
                   onUpdateRequest={handleUpdateRequest}
                   onDeleteRequest={handleDeleteRequest}
                 />
@@ -225,9 +242,9 @@ const Requests = () => {
           <Styled.RightSide>
             <Styled.SideHeading>Received Invites</Styled.SideHeading>
             <Styled.Requests>
-              {displayReqs(
+              {filterReqs(
                 prepReqsByType(
-                  prepReqsByReceived(reqData.requests, userData.user),
+                  prepReqsByReceived(reqData.requests, meData.user),
                   'INVITE'
                 ),
                 {
@@ -238,7 +255,7 @@ const Requests = () => {
                 <Request
                   key={request._id}
                   request={request}
-                  currentUser={userData.user}
+                  currentUser={meData.user}
                   onUpdateRequest={handleUpdateRequest}
                   onDeleteRequest={handleDeleteRequest}
                 />
@@ -252,9 +269,9 @@ const Requests = () => {
           <Styled.LeftSide>
             <Styled.SideHeading>Sent Friend Request</Styled.SideHeading>
             <Styled.Requests>
-              {displayReqs(
+              {filterReqs(
                 prepReqsByType(
-                  prepReqsBySent(reqData.requests, userData.user),
+                  prepReqsBySent(reqData.requests, meData.user),
                   'FRIEND'
                 ),
                 {
@@ -265,7 +282,7 @@ const Requests = () => {
                 <Request
                   key={request._id}
                   request={request}
-                  currentUser={userData.user}
+                  currentUser={meData.user}
                   onUpdateRequest={handleUpdateRequest}
                   onDeleteRequest={handleDeleteRequest}
                 />
@@ -275,9 +292,9 @@ const Requests = () => {
           <Styled.RightSide>
             <Styled.SideHeading>Received Friend Request</Styled.SideHeading>
             <Styled.Requests>
-              {displayReqs(
+              {filterReqs(
                 prepReqsByType(
-                  prepReqsByReceived(reqData.requests, userData.user),
+                  prepReqsByReceived(reqData.requests, meData.user),
                   'FRIEND'
                 ),
                 {
@@ -288,7 +305,7 @@ const Requests = () => {
                 <Request
                   key={request._id}
                   request={request}
-                  currentUser={userData.user}
+                  currentUser={meData.user}
                   onUpdateRequest={handleUpdateRequest}
                   onDeleteRequest={handleDeleteRequest}
                 />
