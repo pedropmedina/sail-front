@@ -300,7 +300,17 @@ export const userFragments = {
         latitude
         longitude
       }
+      sentRequests {
+        ... on FriendRequest {
+          ...defaultRequestFields
+        }
+        ... on InviteRequest {
+          ...inviteRequestFields
+        }
+      }
     }
+    ${requestFragments.default}
+    ${requestFragments.invite}
   `
 };
 

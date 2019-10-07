@@ -26,7 +26,7 @@ const Plan = ({ title, description, date, participants, location }) => {
         setAddress(await reverseGeocode(longitude, latitude));
       })();
     }
-  });
+  }, []);
 
   return (
     <Styled.Plan>

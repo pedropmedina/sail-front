@@ -20,27 +20,30 @@ const Profile = props => {
   const {
     error: profileError,
     loading: profileLoading,
-    data: profileData
+    data: { profile }
   } = useQuery(GET_PROFILE_QUERY, {
-    variables: { username: props.match.params.username }
+    variables: { username: props.match.params.username },
+    fetchPolicy: 'cache-and-network'
   });
-  const { error: meError, loading: meLoading, data: meData } = useQuery(
-    ME_QUERY
-  );
+  const {
+    error: meError,
+    loading: meLoading,
+    data: { user }
+  } = useQuery(ME_QUERY, { fetchPolicy: 'cache-and-network' });
   const [createRequest] = useMutation(CREATE_REQUEST_MUTATION, {
     ignoreResults: true
   });
 
   useEffect(() => {
     (async () => {
-      if (profileData && profileData.address) {
-        const { longitude, latitude } = profileData.address;
+      if (profile && profile.address) {
+        const { longitude, latitude } = profile.address;
         if ((longitude, latitude)) {
-          setAddress(await prepareUserAddress(profileData.address));
+          setAddress(await prepareUserAddress(profile.address));
         }
       }
     })();
-  }, [profileData]);
+  }, [profile]);
 
   const prepareUserAddress = async coords => {
     const { longitude, latitude } = coords;
@@ -55,29 +58,38 @@ const Profile = props => {
     await createRequest({ variables: { input } });
   };
 
-  if ((!profileError || !meError) && (profileLoading || meLoading))
-    return <div>Loading...</div>;
+  // there are three cases when I don't want to show send friend request button:
+  // 1. current profile is me
+  // 2. current profile is already friend
+  // 3. there's an active request between profile and me
+  const showSendRequestBtn = (profile, me) => {
+    const checkForReq = (reqs, username) =>
+      reqs.some(req => req.reqType === 'FRIEND' && req.to === username);
+    const isSame = me.username === profile.username;
+    const isFriend = me.friends.some(
+      friend => friend.username === profile.username
+    );
+    const haveISentReq = checkForReq(me.sentRequests, profile.username);
+    const hasProfileSentReq = checkForReq(profile.sentRequests, me.username);
 
-  const {
-    name,
-    username: profileUsername,
-    email,
-    about,
-    image,
-    friends: profileFriends,
-    inPlans
-  } = profileData.profile;
-  const { username: meUsername, friends: meFriends } = meData.user;
+    return isSame || isFriend || haveISentReq || hasProfileSentReq;
+  };
+
+  const showNameOrUsername = data => (data.name ? data.name : data.username);
+
+  if (
+    ((!profileError || !meError) && (profileLoading || meLoading)) ||
+    (!profile && !user)
+  ) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Styled.ProfileWrapper>
       <Topbar>
         <Styled.FriendRequestBtn
-          isVisible={
-            meUsername !== profileUsername &&
-            !meFriends.some(friend => friend.username === profileUsername)
-          }
-          onClick={() => handleFriendRequest(profileUsername, 'FRIEND')}
+          isVisible={!showSendRequestBtn(profile, user)}
+          onClick={() => handleFriendRequest(profile.username, 'FRIEND')}
         >
           <UserPlusIcon className="icon icon-small" />
           Send Friend Request
@@ -88,55 +100,61 @@ const Profile = props => {
         {/* Profile details  */}
         <Styled.ProfileDetails>
           <Styled.ProfileImg
-            src={image ? image : 'https://via.placeholder.com/200X300'}
+            src={
+              profile.image
+                ? profile.image
+                : 'https://via.placeholder.com/200X300'
+            }
             alt="Profile image"
           />
-          <Styled.Name>{name ? name : profileUsername}</Styled.Name>
+          <Styled.Name>{showNameOrUsername(profile)}</Styled.Name>
           <Styled.Stats>
             <Styled.Stat>
               <Styled.StatHeading>Plans</Styled.StatHeading>
-              <Styled.StatData>{inPlans.length}</Styled.StatData>
+              <Styled.StatData>{profile.inPlans.length}</Styled.StatData>
             </Styled.Stat>
             <Styled.Stat>
               <Styled.StatHeading>Friend</Styled.StatHeading>
-              <Styled.StatData>{profileFriends.length}</Styled.StatData>
+              <Styled.StatData>{profile.friends.length}</Styled.StatData>
             </Styled.Stat>
           </Styled.Stats>
-          <Styled.Email>{email}</Styled.Email>
+          <Styled.Email>{profile.email}</Styled.Email>
           <Styled.Location>{address}</Styled.Location>
-          <Styled.About>{about ? about : 'Tells about you!'}</Styled.About>
+          <Styled.About>
+            {profile.about ? profile.about : 'Tells about you!'}
+          </Styled.About>
         </Styled.ProfileDetails>
         {/* Content */}
         <Styled.Content>
           {/* Plans */}
           <Styled.ContentPlans>
             <Styled.ContentHeading>Plans</Styled.ContentHeading>
-            {inPlans.length > 0 ? (
+            {profile.inPlans.length > 0 ? (
               <Styled.List>
-                {inPlans.map(plan => (
+                {profile.inPlans.map(plan => (
                   <Plan key={plan._id} {...plan} />
                 ))}
               </Styled.List>
             ) : (
               <Styled.NoContent>
-                {`${
-                  name ? name : profileUsername
-                } is yet to be part of any plans.`}
+                {`${showNameOrUsername(
+                  profile
+                )} is yet to be part of any plans.`}
               </Styled.NoContent>
             )}
           </Styled.ContentPlans>
           {/* Friends */}
           <Styled.ContentFriends>
             <Styled.ContentHeading>Friends</Styled.ContentHeading>
-            {profileFriends.length > 0 ? (
+            {profile.friends.length > 0 ? (
               <Styled.List>
-                {profileFriends.map((friend, i) => (
+                {profile.friends.map((friend, i) => (
                   <Friend key={`${friend.username}-${i}`} {...friend} />
                 ))}
               </Styled.List>
             ) : (
               <Styled.NoContent>
-                {`${name ? name : profileUsername} hasn't added any friends.`}
+                {`${showNameOrUsername(profile)} hasn't added any friends.`}
               </Styled.NoContent>
             )}
           </Styled.ContentFriends>
