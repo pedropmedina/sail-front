@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useReducer, useContext } from 'react';
+import React, { useReducer, useContext, useEffect } from 'react';
 import { Router, Switch } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
 import { ApolloProvider } from '@apollo/react-hooks';
@@ -10,6 +10,7 @@ import history from './history';
 import Context from './context';
 import reducer from './reducer';
 import client from './client';
+import { renewSession } from './utils';
 
 import PublicRoute from './routes/PublicRoute';
 import PrivateRoute from './routes/PrivateRoute';
@@ -44,6 +45,10 @@ const Root = () => {
   const initialState = useContext(Context);
   // initialize reducer with intial state
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    renewSession();
+  }, []);
 
   return (
     <>

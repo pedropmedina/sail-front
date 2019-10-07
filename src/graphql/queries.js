@@ -78,19 +78,19 @@ export const SEARCH_QUERY = gql`
 export const SEARCH_PEOPLE_QUERY = gql`
   query Search($searchText: String!) {
     people: searchPeople(searchText: $searchText) {
-      ...peopleFields
+      ...friendsFields
     }
   }
-  ${userFragments.people}
+  ${userFragments.friends}
 `;
 
 export const SEARCH_FRIENDS_QUERY = gql`
   {
     friends: searchFriends {
-      ...peopleFields
+      ...friendsFields
     }
   }
-  ${userFragments.people}
+  ${userFragments.friends}
 `;
 
 // request queries

@@ -9,15 +9,10 @@ import { onError } from 'apollo-link-error';
 import { ApolloLink, Observable, split, from } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
-import jwtDecode from 'jwt-decode';
 
-import history from './history';
 import introspectionQueryResultData from './fragmentTypes.json';
-import {
-  setAccessToken,
-  getAccessToken,
-  deleteAccessToken
-} from './accessToken';
+import { getAccessToken } from './accessToken';
+import { renewSession } from './utils';
 
 // initialize fragment matcher
 const fragmentMatcher = new IntrospectionFragmentMatcher({
@@ -111,49 +106,14 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   }
 });
 
-// token refresh link handles expires access token in the background
-// as long as the refresh token is valid
-const refreshTokenLink = new ApolloLink((operation, forward) => {
-  // get current accessToken in the local storage
-  const token = getAccessToken();
-  // check token validity fn
-  const isTokenValid = token => {
-    const { exp } = jwtDecode(token);
-    return Date.now() <= exp * 1000;
-  };
-  // fetch new access access token fn
-  const fetchAccesToken = async () => {
-    const res = await fetch('http://localhost:4000/refresh_token', {
-      method: 'POST',
-      credentials: 'include'
-    });
-    const { accessToken } = await res.json();
-    return accessToken;
-  };
-  // handle fetch result fn
-  const handleFetch = async () => {
-    const accessToken = await fetchAccesToken();
-    if (!accessToken) {
-      deleteAccessToken();
-      history.push('/');
-    } else {
-      setAccessToken(accessToken);
-    }
-  };
-  // check is current access token is undefined or invalid
-  const isTokenUndefinedOrValid = !token || !isTokenValid(token);
-  //  if not token found in storage or expired token,
-  // fetch /refresh_token and check if refreshToken is valid
-  // and if so set new accessToken in the response else logout user
-  if (isTokenUndefinedOrValid) {
-    handleFetch(isTokenUndefinedOrValid);
-  }
-
+// handle expired access token in each request as long as the refresh token is valid
+const renewSessionLink = new ApolloLink((operation, forward) => {
+  renewSession();
   return forward(operation);
 });
 
 const client = new ApolloClient({
-  link: from([refreshTokenLink, errorLink, requestLink, splitLink]),
+  link: from([renewSessionLink, errorLink, requestLink, splitLink]),
   cache
 });
 

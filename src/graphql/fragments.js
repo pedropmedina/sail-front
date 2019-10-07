@@ -115,15 +115,6 @@ export const authFragments = {
           status
           reqType
         }
-        receivedRequests {
-          _id
-          to {
-            email
-            username
-          }
-          status
-          reqType
-        }
         admin
       }
     }
@@ -228,21 +219,13 @@ export const userFragments = {
           ...inviteRequestFields
         }
       }
-      receivedRequests {
-        ... on FriendRequest {
-          ...defaultRequestFields
-        }
-        ... on InviteRequest {
-          ...inviteRequestFields
-        }
-      }
       admin
     }
     ${requestFragments.default}
     ${requestFragments.invite}
   `,
-  people: gql`
-    fragment peopleFields on User {
+  friends: gql`
+    fragment friendsFields on User {
       email
       username
       name

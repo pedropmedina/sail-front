@@ -24,7 +24,9 @@ const Profile = props => {
   } = useQuery(GET_PROFILE_QUERY, {
     variables: { username: props.match.params.username }
   });
-  const { error: meError, loading: meLoading, data: meData } = useQuery(ME_QUERY);
+  const { error: meError, loading: meLoading, data: meData } = useQuery(
+    ME_QUERY
+  );
   const [createRequest] = useMutation(CREATE_REQUEST_MUTATION, {
     ignoreResults: true
   });
@@ -48,14 +50,23 @@ const Profile = props => {
     return 'Unknown';
   };
 
-  const handleFriendRequest = async (email, reqType) => {
-    const input = { to: email, reqType };
+  const handleFriendRequest = async (username, reqType) => {
+    const input = { to: username, reqType };
     await createRequest({ variables: { input } });
   };
 
-  if ((!profileError || !meError) && (profileLoading || meLoading)) return <div>Loading...</div>;
+  if ((!profileError || !meError) && (profileLoading || meLoading))
+    return <div>Loading...</div>;
 
-  const { name, username: profileUsername, email, about, image, friends: profileFriends, inPlans } = profileData.profile;
+  const {
+    name,
+    username: profileUsername,
+    email,
+    about,
+    image,
+    friends: profileFriends,
+    inPlans
+  } = profileData.profile;
   const { username: meUsername, friends: meFriends } = meData.user;
 
   return (
@@ -64,11 +75,9 @@ const Profile = props => {
         <Styled.FriendRequestBtn
           isVisible={
             meUsername !== profileUsername &&
-            !meFriends.some(
-              friend => friend.username === profileUsername 
-            )
+            !meFriends.some(friend => friend.username === profileUsername)
           }
-          onClick={() => handleFriendRequest(email, 'FRIEND')}
+          onClick={() => handleFriendRequest(profileUsername, 'FRIEND')}
         >
           <UserPlusIcon className="icon icon-small" />
           Send Friend Request
@@ -110,7 +119,9 @@ const Profile = props => {
               </Styled.List>
             ) : (
               <Styled.NoContent>
-                {`${name ? name : profileUsername} is yet to be part of any plans.`}
+                {`${
+                  name ? name : profileUsername
+                } is yet to be part of any plans.`}
               </Styled.NoContent>
             )}
           </Styled.ContentPlans>

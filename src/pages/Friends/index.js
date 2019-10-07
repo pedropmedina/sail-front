@@ -11,7 +11,9 @@ import Topbar from '../../components/Topbar';
 import Friend from '../../components/Friend';
 
 const Friends = () => {
-  const { error, loading, data: friendsData } = useQuery(SEARCH_FRIENDS_QUERY);
+  const { error, loading, data: friendsData } = useQuery(SEARCH_FRIENDS_QUERY, {
+    fetchPolicy: 'cache-and-network'
+  });
 
   if (!error && loading) return <div>Loading...</div>;
 

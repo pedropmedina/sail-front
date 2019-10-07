@@ -2,7 +2,11 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Marker } from 'react-map-gl';
 import * as yup from 'yup';
-import { useMutation, useQuery, useApolloClient } from '@apollo/react-hooks';
+import {
+  useMutation,
+  useLazyQuery,
+  useApolloClient
+} from '@apollo/react-hooks';
 
 import * as Styled from './styled';
 
@@ -30,7 +34,7 @@ import {
   UPDATE_DRAFT_PIN_POPUP
 } from '../../reducer';
 
-import { ME_QUERY } from '../../graphql/queries';
+import { SEARCH_FRIENDS_QUERY } from '../../graphql/queries';
 import {
   CREATE_PLAN_MUTATION,
   CREATE_REQUEST_MUTATION
@@ -64,7 +68,9 @@ const PlanCreate = props => {
     ignoreResults: true
   });
   const client = useApolloClient();
-  const { error, loading, data } = useQuery(ME_QUERY);
+  const [queryFriends, { data: friendsData }] = useLazyQuery(
+    SEARCH_FRIENDS_QUERY
+  );
 
   useEffect(() => {
     // create draftPlan is none exists upon mounting component
@@ -222,8 +228,6 @@ const PlanCreate = props => {
     keyedErrorSetters[errorName](errorValue);
   };
 
-  if (!error && loading) return <div>Loading...</div>;
-
   return (
     <Styled.PlanCreate>
       <Styled.Fields>
@@ -293,10 +297,12 @@ const PlanCreate = props => {
           />
           {dateError && <Styled.FieldError>{dateError}</Styled.FieldError>}
         </Styled.Field>
-        <Styled.Field error={invitesError}>
+        <Styled.Field error={invitesError} onClick={queryFriends}>
           <FriendsPicker
             css={css}
-            friends={data.user.friends}
+            friends={
+              friendsData && friendsData.friends ? friendsData.friends : []
+            }
             defaultInvites={draftPlan ? draftPlan.invites : []}
             onHandleInvites={handleInvites}
           />

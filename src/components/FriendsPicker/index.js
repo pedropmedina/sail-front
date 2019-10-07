@@ -85,11 +85,11 @@ const FriendsPicker = ({
                           .includes(searchText.trim().toLowerCase())
                       : f;
                   })
-                  .map(({ name, username, email, image }, i) => (
+                  .map(({ name, username, image }, i) => (
                     <Styled.Friend
-                      key={`${i}-${email}`}
-                      onClick={() => handleAddInvite(email)}
-                      disabled={invites.includes(email)}
+                      key={`${i}-${username}`}
+                      onClick={() => handleAddInvite(username)}
+                      disabled={invites.includes(username)}
                     >
                       <Styled.FriendImg
                         src={image ? image : 'https://via.placeholder.com/50'}

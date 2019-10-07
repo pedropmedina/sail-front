@@ -1,5 +1,13 @@
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 
+import history from './history';
+import {
+  getAccessToken,
+  setAccessToken,
+  deleteAccessToken,
+  validateAccessToken,
+  renewAccessToken
+} from './accessToken';
 
 // authenticate geocoding service
 const geocodingService = mbxGeocoding({
@@ -25,4 +33,18 @@ export const searchOnTimeout = (fn, ms) => {
   timeout = setTimeout(fn, ms);
 
   return timeout;
+};
+
+export const renewSession = async () => {
+  const token = getAccessToken();
+  const isTokenUndefinedOrInvalid = !token || !validateAccessToken(token);
+  if (isTokenUndefinedOrInvalid) {
+    const accessToken = await renewAccessToken();
+    if (!accessToken) {
+      deleteAccessToken();
+      history.push('/');
+    } else {
+      setAccessToken(accessToken);
+    }
+  }
 };
