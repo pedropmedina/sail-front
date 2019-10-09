@@ -39,8 +39,8 @@ export const renewSession = async () => {
   const token = getAccessToken();
   const isTokenUndefinedOrInvalid = !token || !validateAccessToken(token);
   if (isTokenUndefinedOrInvalid) {
-    const accessToken = await renewAccessToken();
-    if (!accessToken) {
+    const { ok, accessToken } = await renewAccessToken();
+    if (!ok) {
       deleteAccessToken();
       history.push('/');
     } else {

@@ -18,6 +18,5 @@ export const renewAccessToken = async () => {
     credentials: 'include'
   });
   // response comes as {ok: boolean, acccesToken: token || ''}
-  const { accessToken } = await res.json();
-  return accessToken;
+  return await res.json();
 };

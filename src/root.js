@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useReducer, useContext, useEffect } from 'react';
+import React, { useReducer, useContext, useEffect, useState } from 'react';
 import { Router, Switch } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
 import { ApolloProvider } from '@apollo/react-hooks';
@@ -19,6 +19,7 @@ import App from './pages/App';
 import Auth from './pages/Auth';
 import Plans from './pages/Plans';
 import PlanCreate from './pages/PlanCreate';
+import PlanView from './pages/PlanView';
 import Pins from './pages/Pins';
 import Chats from './pages/Chats';
 import Friends from './pages/Friends';
@@ -35,7 +36,8 @@ const PRIVATE_ROUTES = [
   { path: '/friends', component: Friends },
   { path: '/requests', component: Requests },
   { path: '/settings', component: Settings },
-  { path: '/profile/:username', component: Profile }
+  { path: '/profile/:username', component: Profile },
+  { path: '/plan/:planId', component: PlanView }
 ];
 
 const PUBLIC_ROUTES = [{ path: '/', exact: true, component: Auth }];
@@ -45,10 +47,14 @@ const Root = () => {
   const initialState = useContext(Context);
   // initialize reducer with intial state
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     renewSession();
+    setLoading(false);
   }, []);
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <>

@@ -55,6 +55,15 @@ export const GET_PLANS_QUERY = gql`
   ${planFragments.default}
 `;
 
+export const GET_PLAN_QUERY = gql`
+  query GetPlan($planId: ID!) {
+    plan: getPlan(planId: $planId) {
+      ...defaultPlanFields
+    }
+  }
+  ${planFragments.default}
+`;
+
 // search queries
 export const SEARCH_QUERY = gql`
   query Search($searchText: String!) {

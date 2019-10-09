@@ -1,5 +1,29 @@
 import gql from 'graphql-tag';
 
+// conversation fragments
+export const conversationFragments = {
+  default: gql`
+    fragment defaultConversationFields on Conversation {
+      _id
+      participants {
+        name
+        username
+        email
+      }
+      messages {
+        _id
+        content
+      }
+      keyedMessagesByUser
+      author {
+        name
+        username
+        email
+      }
+    }
+  `
+};
+
 // plan fragments
 export const planFragments = {
   default: gql`
@@ -18,6 +42,9 @@ export const planFragments = {
         username
         email
       }
+      chat {
+        ...defaultConversationFields
+      }
       location {
         _id
         title
@@ -33,6 +60,7 @@ export const planFragments = {
         email
       }
     }
+    ${conversationFragments.default}
   `
 };
 

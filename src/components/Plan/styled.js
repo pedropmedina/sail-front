@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro';
+import { Link } from 'react-router-dom';
 
 export const Plan = styled.li`
   width: 50rem;
@@ -6,11 +7,32 @@ export const Plan = styled.li`
   margin: 1.5rem;
   box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.1);
   border-radius: 0.3rem;
+  color: var(--color-light-grey);
+  transition: all 0.2s;
+
+  :hover {
+    background-color: var(--color-less-white);
+  }
 
   > * {
     &:not(:last-child) {
       margin-bottom: 1rem;
     }
+  }
+`;
+
+export const PlanLink = styled(Link)`
+  :link,
+  :visited,
+  :active,
+  :hover {
+    text-decoration: none;
+    display: block;
+    color: inherit;
+  }
+
+  > * {
+    padding: 0.5rem;
   }
 `;
 
@@ -21,14 +43,12 @@ export const Title = styled.h3`
 `;
 
 export const Description = styled.p`
-  color: var(--color-light-grey);
   font-size: 1.2rem;
 `;
 
 export const Date = styled(Description)``;
 
 export const Participants = styled.div`
-  color: var(--color-light-grey);
   display: flex;
 `;
 

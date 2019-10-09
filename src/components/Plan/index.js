@@ -17,7 +17,7 @@ const mapCss = `
   height: 25rem;
 `;
 
-const Plan = ({ title, description, date, participants, location }) => {
+const Plan = ({ _id, title, description, date, participants, location }) => {
   const [address, setAddress] = useState('');
   useEffect(() => {
     if (location) {
@@ -30,41 +30,43 @@ const Plan = ({ title, description, date, participants, location }) => {
 
   return (
     <Styled.Plan>
-      <Styled.Location>
-        <MapPreview
-          longitude={location.longitude}
-          latitude={location.latitude}
-          css={mapCss}
-        >
-          <Marker longitude={location.longitude} latitude={location.latitude}>
-            <PinIcon className="icon icon-small pin-icon" />
-          </Marker>
-          <Popup
+      <Styled.PlanLink to={`/plan/${_id}`}>
+        <Styled.Location>
+          <MapPreview
             longitude={location.longitude}
             latitude={location.latitude}
-            offsetLeft={24}
-            offsetTop={12}
-            anchor="left"
-            closeButton={false}
+            css={mapCss}
           >
-            <p style={{ width: '15rem' }}>{address}</p>
-          </Popup>
-        </MapPreview>
-      </Styled.Location>
-      <Styled.Title>{title}</Styled.Title>
-      <Styled.Description>{description}</Styled.Description>
-      <Styled.Date>
-        <CalendarIcon className="icon icon-smallest" />{' '}
-        {format(new Date(parseInt(date)), 'MMM do, yyyy')}
-      </Styled.Date>
-      <Styled.Participants>
-        {participants.map((participant, i) => (
-          <Styled.ParticipantImg
-            key={`${participant.email}-${i}`}
-            src="https://via.placeholder.com/60"
-          />
-        ))}
-      </Styled.Participants>
+            <Marker longitude={location.longitude} latitude={location.latitude}>
+              <PinIcon className="icon icon-small pin-icon" />
+            </Marker>
+            <Popup
+              longitude={location.longitude}
+              latitude={location.latitude}
+              offsetLeft={24}
+              offsetTop={12}
+              anchor="left"
+              closeButton={false}
+            >
+              <p style={{ width: '15rem' }}>{address}</p>
+            </Popup>
+          </MapPreview>
+        </Styled.Location>
+        <Styled.Title>{title}</Styled.Title>
+        <Styled.Description>{description}</Styled.Description>
+        <Styled.Date>
+          <CalendarIcon className="icon icon-smallest" />{' '}
+          {format(new Date(parseInt(date)), 'MMM do, yyyy')}
+        </Styled.Date>
+        <Styled.Participants>
+          {participants.map((participant, i) => (
+            <Styled.ParticipantImg
+              key={`${participant.email}-${i}`}
+              src="https://via.placeholder.com/60"
+            />
+          ))}
+        </Styled.Participants>
+      </Styled.PlanLink>
     </Styled.Plan>
   );
 };

@@ -108,8 +108,23 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 // handle expired access token in each request as long as the refresh token is valid
 const renewSessionLink = new ApolloLink((operation, forward) => {
-  renewSession();
-  return forward(operation);
+  return new Observable(observer => {
+    let handle;
+    Promise.resolve(operation)
+      .then(() => renewSession())
+      .then(() => {
+        handle = forward(operation).subscribe({
+          next: observer.next.bind(observer),
+          error: observer.error.bind(observer),
+          complete: observer.complete.bind(observer)
+        });
+      })
+      .catch(observer.error.bind(observer));
+
+    return () => {
+      if (handle) handle.unsubscribe();
+    };
+  });
 });
 
 const client = new ApolloClient({
