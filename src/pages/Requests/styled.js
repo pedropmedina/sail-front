@@ -31,7 +31,7 @@ export const Requests = styled.ul`
 `;
 
 export const Side = styled.div`
-  flex: 1 1 48%;
+  flex: 1 1 auto;
   padding: 2rem;
 `;
 

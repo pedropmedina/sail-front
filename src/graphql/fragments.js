@@ -36,11 +36,13 @@ export const planFragments = {
         name
         username
         email
+        image
       }
       participants {
         name
         username
         email
+        image
       }
       chat {
         ...defaultConversationFields
