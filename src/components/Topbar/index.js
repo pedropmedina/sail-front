@@ -25,12 +25,17 @@ const Topbar = ({ children }) => {
   const [conductSearch, { data }] = useLazyQuery(SEARCH_QUERY);
 
   useEffect(() => {
-    const timeout = searchOnTimeout(() => {
-      conductSearch({ variables: { searchText } });
-    }, 400);
+    let timeout;
+    let isSubscribed = true;
+    if (isSubscribed) {
+      timeout = searchOnTimeout(() => {
+        conductSearch({ variables: { searchText } });
+      }, 400);
+    }
 
     return () => {
       clearTimeout(timeout);
+      isSubscribed = false;
     };
   }, [searchText]);
 

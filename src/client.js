@@ -55,6 +55,36 @@ const requestLink = new ApolloLink((operation, forward) => {
   });
 });
 
+// handle expired access token in each request as long as the refresh token is valid
+const renewSessionLink = new ApolloLink((operation, forward) => {
+  return new Observable(observer => {
+    let handle;
+    Promise.resolve(operation)
+      .then(() => renewSession())
+      .then(() => {
+        handle = forward(operation).subscribe({
+          next: observer.next.bind(observer),
+          error: observer.error.bind(observer),
+          complete: observer.complete.bind(observer)
+        });
+      })
+      .catch(observer.error.bind(observer));
+
+    return () => {
+      if (handle) handle.unsubscribe();
+    };
+  });
+});
+
+// websocket middleware to handle authentication on each operation
+const subscriptionAuthMiddleware = {
+  applyMiddleware: async (options, next) => {
+    await renewSession();
+    options.authToken = getAccessToken();
+    next();
+  }
+};
+
 // http link handling queries and mutations
 const httpLink = new HttpLink({
   uri: 'http://localhost:4000/graphql',
@@ -66,12 +96,12 @@ const wsLink = new WebSocketLink({
   uri: 'ws://localhost:4000/graphql',
   options: {
     reconnect: true,
-    lazy: true,
-    connectionParams: () => ({
-      authToken: getAccessToken() || ''
-    })
+    lazy: true
   }
 });
+
+// pass in subscription middlewares
+wsLink.subscriptionClient.use([subscriptionAuthMiddleware]);
 
 // fixes issues with websocket closing before connection established
 wsLink.subscriptionClient.maxConnectTimeGenerator.duration = () =>
@@ -104,27 +134,6 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) {
     console.log(`[Network error]: ${networkError}`);
   }
-});
-
-// handle expired access token in each request as long as the refresh token is valid
-const renewSessionLink = new ApolloLink((operation, forward) => {
-  return new Observable(observer => {
-    let handle;
-    Promise.resolve(operation)
-      .then(() => renewSession())
-      .then(() => {
-        handle = forward(operation).subscribe({
-          next: observer.next.bind(observer),
-          error: observer.error.bind(observer),
-          complete: observer.complete.bind(observer)
-        });
-      })
-      .catch(observer.error.bind(observer));
-
-    return () => {
-      if (handle) handle.unsubscribe();
-    };
-  });
 });
 
 const client = new ApolloClient({

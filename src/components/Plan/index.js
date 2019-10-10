@@ -20,12 +20,20 @@ const mapCss = `
 const Plan = ({ _id, title, description, date, participants, location }) => {
   const [address, setAddress] = useState('');
   useEffect(() => {
-    if (location) {
-      const { longitude, latitude } = location;
-      (async () => {
-        setAddress(await reverseGeocode(longitude, latitude));
-      })();
+    let isSubscribed = true;
+
+    const { longitude, latitude } = location;
+    if (longitude && latitude) {
+      reverseGeocode(longitude, latitude).then(addr => {
+        if (isSubscribed) {
+          setAddress(addr);
+        }
+      });
     }
+
+    return () => {
+      isSubscribed = false;
+    };
   }, []);
 
   return (

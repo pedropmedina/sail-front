@@ -106,13 +106,13 @@ const Requests = () => {
   const filterByType = reqType => req =>
     reqType ? req.reqType.toLowerCase() === reqType : true;
 
-  const filterByDenied = me => req => {
-    return req.to.email === me.email ? req.status !== 'DENIED' : true;
+  const filterByNoPending = me => req => {
+    return req.to.username === me.username ? req.status === 'PENDING' : true;
   };
 
   const filterReqs = (reqs, { reqType, status, searchText, relevance }) =>
     reqs
-      .filter(filterByDenied(meData.user))
+      .filter(filterByNoPending(meData.user))
       .filter(filterByType(reqType))
       .filter(filterByStatus(status))
       .filter(filterBySearch(searchText))

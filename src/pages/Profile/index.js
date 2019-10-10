@@ -78,8 +78,9 @@ const Profile = props => {
   const showNameOrUsername = data => (data.name ? data.name : data.username);
 
   if (
-    ((!profileError || !meError) && (profileLoading || meLoading)) ||
-    (!profile && !user)
+    !profileError &&
+    !meError &&
+    (profileLoading || meLoading || (!profile && !user))
   ) {
     return <div>Loading...</div>;
   }
