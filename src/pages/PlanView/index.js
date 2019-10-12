@@ -1,25 +1,57 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import { format } from 'date-fns';
 import { Marker } from 'react-map-gl';
 
 import * as Styled from './styled';
 
 import MapPreview from '../../components/MapPreview';
+import Chat from '../../components/Chat';
 import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
 
 import { GET_PLAN_QUERY } from '../../graphql/queries';
+import { CREATE_MESSAGE_MUTATION } from '../../graphql/mutations';
+import { MESSAGE_CREATED_SUBSCRIPTION } from '../../graphql/subscriptions';
 
 const mapCss = `
   height: 25rem;
 `;
 
 const PlanView = props => {
-  const { error, loading, data } = useQuery(GET_PLAN_QUERY, {
+  const { error, loading, data, subscribeToMore } = useQuery(GET_PLAN_QUERY, {
     variables: { planId: props.match.params.planId }
   });
   const { plan } = data;
+  const [createMessage] = useMutation(CREATE_MESSAGE_MUTATION, {
+    ignoreResults: true
+  });
+
+  const handleCreateMessage = conversation => async content => {
+    await createMessage({ variables: { input: { conversation, content } } });
+  };
+
+  const subscribeToNewMessages = conversationId => () => {
+    subscribeToMore({
+      document: MESSAGE_CREATED_SUBSCRIPTION,
+      variables: { conversationId },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const { message } = subscriptionData.data;
+        const messages = prev.plan.chat.messages;
+        return {
+          ...prev,
+          plan: {
+            ...prev.plan,
+            chat: {
+              ...prev.plan.chat,
+              messages: [...messages, message]
+            }
+          }
+        };
+      }
+    });
+  };
 
   if (!error && loading) return <div>Loading...</div>;
 
@@ -91,7 +123,13 @@ const PlanView = props => {
         </Styled.LeftPanel>
         {/* Panel with chat */}
         <Styled.RightPanel>
-          <Styled.Chat>This is the chat</Styled.Chat>
+          <Styled.Chat>
+            <Chat
+              data={plan.chat.messages}
+              onCreateNew={handleCreateMessage(plan.chat._id)}
+              subscribeToNew={subscribeToNewMessages(plan.chat._id)}
+            />
+          </Styled.Chat>
         </Styled.RightPanel>
       </Styled.Panels>
     </Styled.PlanViewWrapper>

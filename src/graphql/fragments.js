@@ -13,8 +13,12 @@ export const conversationFragments = {
       messages {
         _id
         content
+        createdAt
+        author {
+          name
+          username
+        }
       }
-      keyedMessagesByUser
       author {
         name
         username
@@ -82,7 +86,7 @@ export const pinFragments = {
       }
       comments {
         _id
-        text
+        content
         author {
           email
           username
@@ -349,7 +353,7 @@ export const commentFragments = {
   default: gql`
     fragment defaultCommentFields on Comment {
       _id
-      text
+      content
       pin {
         _id
       }
@@ -360,6 +364,26 @@ export const commentFragments = {
         image
       }
       createdAt
+    }
+  `
+};
+
+// message fragments
+export const messageFragments = {
+  default: gql`
+    fragment defaultMessageFields on Message {
+      _id
+      content
+      createdAt
+      conversation {
+        _id
+      }
+      author {
+        name
+        username
+        email
+        image
+      }
     }
   `
 };

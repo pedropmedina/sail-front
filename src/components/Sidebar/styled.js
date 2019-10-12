@@ -9,6 +9,7 @@ export const Sidebar = styled.nav`
     !(showingCurrentPin || showingDraftPin)
       ? '0 1rem 1rem 1rem rgba(0, 0, 0, 0.1)'
       : 'unset'};
+
   display: grid;
   grid-template-rows: repeat(20, minmax(max-content, 5vh));
   grid-template-columns: repeat(6, 16.6%);

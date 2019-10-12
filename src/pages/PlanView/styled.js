@@ -4,7 +4,6 @@ import { Popup as P } from '../../stylesShare';
 
 export const PlanViewWrapper = styled.div`
   padding: 2rem 5rem;
-  overflow-y: auto;
   color: var(--color-light-grey);
 `;
 
@@ -12,15 +11,21 @@ export const Panels = styled.article`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  height: 100%;
 `;
 
 export const Panel = styled.section`
-  flex: 1 1 auto;
+  flex: 1 1 48%;
+  padding: 2rem;
 `;
 
-export const LeftPanel = styled(Panel)``;
+export const LeftPanel = styled(Panel)`
+  overflow-y: auto;
+`;
 
-export const RightPanel = styled(Panel)``;
+export const RightPanel = styled(Panel)`
+  height: 100%;
+`;
 
 export const MapPreview = styled.div`
   margin-bottom: 1.5rem;
@@ -74,12 +79,12 @@ export const UserPic = styled.img`
 export const Popup = styled(P)`
   .mapboxgl-popup-content {
     box-shadow: none;
-    background-color: var(--color-almost-white);
+    background-color: var(--color-less-white);
   }
 
   div.mapboxgl-popup-tip {
-    border-right-color: var(--color-almost-white);
-    border-left-color: var(--color-almost-white);
+    border-right-color: var(--color-less-white);
+    border-left-color: var(--color-less-white);
   }
 `;
 
@@ -89,4 +94,6 @@ export const PopupImg = styled.img`
   object-fit: cover;
 `;
 
-export const Chat = styled.div``;
+export const Chat = styled.div`
+  height: 100%;
+`;

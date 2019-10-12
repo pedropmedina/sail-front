@@ -5,7 +5,8 @@ import {
   planFragments,
   requestFragments,
   commentFragments,
-  authFragments
+  authFragments,
+  messageFragments
 } from './fragments';
 
 // auth mutations
@@ -112,3 +113,12 @@ export const DELETE_REQUEST_MUTATION = gql`
   ${requestFragments.default}
   ${requestFragments.invite}
 `;
+
+export const CREATE_MESSAGE_MUTATION = gql`
+  mutation CreateMessage($input: CreateMessageInput!) {
+    createMessage(input: $input) {
+      ...defaultMessageFields
+    }
+  }
+  ${messageFragments.default}
+`

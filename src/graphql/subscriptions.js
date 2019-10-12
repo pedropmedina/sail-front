@@ -1,6 +1,11 @@
 import gql from 'graphql-tag';
 
-import { pinFragments, commentFragments, requestFragments } from './fragments';
+import {
+  pinFragments,
+  commentFragments,
+  requestFragments,
+  messageFragments
+} from './fragments';
 
 // pin subscriptions
 export const PIN_CREATED_SUBSCRIPTION = gql`
@@ -53,7 +58,6 @@ export const REQUEST_UPDATED_SUBSCRIPTION = gql`
   ${requestFragments.invite}
 `;
 
-// request subscriptions
 export const REQUEST_DELETED_SUBSCRIPTION = gql`
   subscription {
     request: requestDeleted {
@@ -67,4 +71,14 @@ export const REQUEST_DELETED_SUBSCRIPTION = gql`
   }
   ${requestFragments.default}
   ${requestFragments.invite}
+`;
+
+// message subscriptions
+export const MESSAGE_CREATED_SUBSCRIPTION = gql`
+  subscription MessageCreated($conversationId: ID!) {
+    message: messageCreated(conversationId: $conversationId) {
+      ...defaultMessageFields
+    }
+  }
+  ${messageFragments.default}
 `;
