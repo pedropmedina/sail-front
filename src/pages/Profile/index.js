@@ -77,6 +77,13 @@ const Profile = props => {
 
   const showNameOrUsername = data => (data.name ? data.name : data.username);
 
+  const hidePlans = user => plan =>
+    plan.private
+      ? [...plan.participants, ...plan.invites].some(
+          u => u.username === user.username
+        )
+      : true;
+
   if (
     !profileError &&
     !meError &&
@@ -130,18 +137,22 @@ const Profile = props => {
           {/* Plans */}
           <Styled.ContentPlans>
             <Styled.ContentHeading>Plans</Styled.ContentHeading>
-            {profile.inPlans.length > 0 ? (
-              <Styled.List>
-                {profile.inPlans.map(plan => (
-                  <Plan key={plan._id} {...plan} />
-                ))}
-              </Styled.List>
-            ) : (
+            {profile.inPlans.length <= 0 ? (
               <Styled.NoContent>
                 {`${showNameOrUsername(
                   profile
                 )} is yet to be part of any plans.`}
               </Styled.NoContent>
+            ) : profile.inPlans.filter(hidePlans(user)).length <= 0 ? (
+              <Styled.NoContent>
+                {`${showNameOrUsername(profile)}'s plans are private.`}
+              </Styled.NoContent>
+            ) : (
+              <Styled.List>
+                {profile.inPlans.filter(hidePlans(user)).map(plan => (
+                  <Plan key={plan._id} {...plan} />
+                ))}
+              </Styled.List>
             )}
           </Styled.ContentPlans>
           {/* Friends */}

@@ -1,6 +1,11 @@
 /* eslint-disable no-console, react/prop-types */
 import React from 'react';
-import ReactMapGL, { Marker, Popup } from 'react-map-gl';
+import ReactMapGL, {
+  Marker,
+  Popup,
+  GeolocateControl,
+  NavigationControl
+} from 'react-map-gl';
 
 import * as Styled from './styled';
 
@@ -32,6 +37,15 @@ const Map = ({
         mapStyle="mapbox://styles/mapbox/light-v9"
         onViewportChange={onViewportChange}
       >
+        {/* Map controls */}
+        <Styled.Controls>
+          <GeolocateControl
+            positionOptions={{ enableHighAccuracy: true }}
+            trackUserLocation={true}
+          />
+          <NavigationControl />
+        </Styled.Controls>
+
         {/* Add markers for all existing pins */}
         {pinsData &&
           pinsData.pins.map(pin => {

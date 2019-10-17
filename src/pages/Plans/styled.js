@@ -9,7 +9,6 @@ export const Plans = styled.ul`
   padding: 2rem 5rem;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   max-width: 170rem;
   margin: 0 auto;
 `;

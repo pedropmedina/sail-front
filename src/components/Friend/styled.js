@@ -6,68 +6,33 @@ export const Friend = styled.li`
   color: var(--color-light-grey);
   padding: 1rem;
   margin: 1.5rem;
-  box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.1);
-  border-radius: 0.3rem;
+  box-shadow: 0 0.5rem 1.5rem 0.2rem rgba(0, 0, 0, 0.1);
 
   display: grid;
-  grid-template-columns: 8rem minmax(min-content, 25rem);
-  grid-template-rows: repeat(3, min-content);
-  column-gap: 1rem;
-  row-gap: 1.5rem;
+  grid-template-columns: min-content 1fr;
+  gap: 1rem;
 `;
 
-export const Row = styled.div`
-  grid-column: 1 / -1;
+export const Row = styled.div``;
+
+export const DetailsRow = styled(Row)`
+  grid-column: 1 / span 1;
 `;
 
 export const StatsRow = styled(Row)`
-  grid-row: 1 / span 1;
-
+  grid-column: 2 / span 1;
   display: flex;
 `;
 
-export const DetailsRow = styled(Row)`
-  grid-row: 2 / span 1;
-`;
-
-export const FriendsFriendsRow = styled(Row)`
-  grid-row: 3 / span 1;
-
-  display: flex;
-`;
-
-export const FriendsFriend = styled.figure`
-  height: 6rem;
-  width: 6rem;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-right: -1.5rem;
-  border: 0.2rem solid var(--color-almost-white);
-  cursor: pointer;
-`;
-
-export const FriendsFriendImg = styled.img``;
-
-export const Img = styled.img`
-  margin-right: 2rem;
-  border-radius: 0.5rem;
-`;
-
-export const FriendStats = styled.div`
-  flex: 1;
-
+export const Stats = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
 `;
 
-export const FriendStat = styled.div`
-  flex-basis: 50%;
-
-  > * {
-    text-align: center;
-  }
+export const Stat = styled.div`
+  text-align: center;
 `;
 
 export const StatHeading = styled.h6`
@@ -88,50 +53,29 @@ export const Link = styled(L)`
   :active {
     flex-basis: 70%;
     padding: 0.5rem 2rem;
-    margin-top: 1rem;
     text-decoration: none;
     font-size: 1.2rem;
-    background-color: var(--color-less-white);
-    color: var(--color-light-grey);
+    background-color: var(--color-medium-grey);
+    color: var(--color-almost-white);
     text-align: center;
-    border-radius: 0.5rem;
     transition: all 0.2s;
   }
 
   :hover {
-    background-color: var(--color-medium-grey);
-    color: var(--color-almost-white);
+    background-color: var(--color-dark-grey);
   }
 `;
 
 export const Name = styled.h4`
-  grid-column: 1 / -1;
-  grid-row: 2 / span 1;
   font-weight: 700;
   text-transform: capitalize;
   color: var(--color-medium-grey);
 `;
 
-export const About = styled.p`
-  font-size: 1.4rem;
-  margin-bottom: 0.5rem;
-`;
-
-export const Email = styled(Name)`
-  text-transform: lowercase;
+export const Address = styled.p`
   font-size: 1.2rem;
-  font-weight: 300;
-  color: var(--color-light-grey);
-
-  svg {
-    font-size: 1.2rem;
-    margin-right: 0.5rem;
-  }
 `;
 
-export const Address = styled(About)`
-  svg {
-    font-size: 1.2rem;
-    margin-right: 0.5rem;
-  }
+export const Img = styled.img`
+  border-radius: 0.5rem;
 `;

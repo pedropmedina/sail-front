@@ -28,7 +28,7 @@ const DEFAULT_DRAFT_PLAN = {
 export default function reducer(state, { type, payload }) {
   switch (type) {
     case UPDATE_VIEWPORT:
-      return { ...state, viewport: { ...state.viewport, ...payload } };
+      return { ...state, viewport: payload };
     case CREATE_DRAFT_PIN:
       return { ...state, draftPin: { longitude: 0, latitude: 0 } };
     case UPDATE_DRAFT_PIN:

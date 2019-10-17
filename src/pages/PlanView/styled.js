@@ -5,6 +5,7 @@ import { Popup as P } from '../../stylesShare';
 export const PlanViewWrapper = styled.div`
   padding: 2rem 5rem;
   color: var(--color-light-grey);
+  overflow-y: auto;
 `;
 
 export const Panels = styled.article`
@@ -15,7 +16,7 @@ export const Panels = styled.article`
 `;
 
 export const Panel = styled.section`
-  flex: 1 1 48%;
+  flex: 1 1 auto;
   padding: 2rem;
 `;
 

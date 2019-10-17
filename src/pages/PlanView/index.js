@@ -20,16 +20,13 @@ const mapCss = `
 
 const PlanView = props => {
   const { error, loading, data, subscribeToMore } = useQuery(GET_PLAN_QUERY, {
-    variables: { planId: props.match.params.planId }
+    variables: { planId: props.match.params.planId },
+    fetchPolicy: 'cache-and-network'
   });
   const { plan } = data;
   const [createMessage] = useMutation(CREATE_MESSAGE_MUTATION, {
     ignoreResults: true
   });
-
-  const handleCreateMessage = conversation => async content => {
-    await createMessage({ variables: { input: { conversation, content } } });
-  };
 
   const subscribeToNewMessages = conversationId => () => {
     subscribeToMore({
@@ -51,6 +48,10 @@ const PlanView = props => {
         };
       }
     });
+  };
+
+  const handleCreateMessage = conversation => async content => {
+    await createMessage({ variables: { input: { conversation, content } } });
   };
 
   if (!error && loading) return <div>Loading...</div>;

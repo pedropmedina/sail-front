@@ -311,7 +311,13 @@ export const userFragments = {
         title
         description
         date
+        private
         participants {
+          name
+          username
+          email
+        }
+        invites {
           name
           username
           email

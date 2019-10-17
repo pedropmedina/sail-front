@@ -6,6 +6,7 @@ import {
   useSubscription
 } from '@apollo/react-hooks';
 import { useTransition } from 'react-spring';
+import { FlyToInterpolator } from 'react-map-gl';
 
 import * as Styled from './styled';
 
@@ -64,15 +65,12 @@ const App = props => {
     viewport,
     draftPlan
   } = state;
-  const { error, loading, data: pinsData } = useQuery(
-    GET_PINS_QUERY
-  );
+  const { error, loading, data: pinsData } = useQuery(GET_PINS_QUERY);
   const transitions = useTransition([draftPin || currentPin], null, {
     from: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
     enter: { opacity: 1, zIndex: 1, transform: 'translate3d(0%,0,0)' },
     leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' }
   });
-
 
   useSubscription(PIN_CREATED_SUBSCRIPTION, {
     onSubscriptionData: ({ client, subscriptionData }) => {
@@ -168,7 +166,7 @@ const App = props => {
   */
 
   const handleViewportChange = viewport => {
-    const { longitude, latitude, zoom } = viewport;
+    const { longitude, latitude, zoom = 13 } = viewport;
     dispatch({ type: UPDATE_VIEWPORT, payload: { longitude, latitude, zoom } });
   };
 
@@ -182,7 +180,13 @@ const App = props => {
     const [longitude, latitude] = result.center;
     dispatch({
       type: UPDATE_VIEWPORT,
-      payload: { longitude, latitude, zoom: 13 }
+      payload: {
+        longitude,
+        latitude,
+        zoom: 13,
+        transitionInterpolator: new FlyToInterpolator(),
+        transitionDuration: 3000
+      }
     });
     // check for matching pin with given coordinates
     const { data } = await client.query({

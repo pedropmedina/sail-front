@@ -61,3 +61,29 @@ export const CustomPopup = styled(Popup)`
     border-left-color: var(--color-medium-grey);
   }
 `;
+
+export const Controls = styled.div`
+  width: 5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: absolute;
+  bottom: 3rem;
+  right: 3rem;
+
+  > * {
+    flex-basis: 100%;
+  }
+
+  > *:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
+  .mapboxgl-ctrl-group {
+    box-shadow: none;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: unset;
+    box-shadow: none;
+  }
+`;

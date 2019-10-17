@@ -26,7 +26,6 @@ export const Friends = styled.div`
 export const FriendsList = styled.ul`
   list-style: none;
 
-  display: grid;
-  grid-template-columns: repeat(4, max-content);
-  grid-gap: 3rem;
+  display: flex;
+  flex-wrap: wrap;
 `;
