@@ -5,16 +5,12 @@ import { useMutation } from '@apollo/react-hooks';
 import { object, string } from 'yup';
 import keyBy from 'lodash/keyBy';
 
-import history from '../../history';
 import Context from '../../context';
 import {
   DELETE_DRAFT_PIN,
   SHOW_DRAFT_PIN_POPUP,
-  UPDATE_DRAFT_PLAN,
-  DELETE_DRAFT_PLAN,
-  UPDATE_CURRENT_PIN
+  DELETE_DRAFT_PLAN
 } from '../../reducer';
-import { GET_PINS_QUERY } from '../../graphql/queries';
 import { CREATE_PIN_MUTATION } from '../../graphql/mutations';
 
 import * as Styled from './styled';
@@ -113,32 +109,11 @@ const PinMutation = ({ style }) => {
 
     const { longitude, latitude } = state.draftPin;
     const { url } = await handleFileUpload();
-    const { data } = await createPin({
-      variables: { input: { title, content, image: url, longitude, latitude } },
-      update: (cache, { data: { pin } }) => {
-        const { pins } = cache.readQuery({ query: GET_PINS_QUERY });
-        cache.writeQuery({
-          query: GET_PINS_QUERY,
-          data: { pins: pins.concat([pin]) }
-        });
-      }
+    await createPin({
+      variables: { input: { title, content, image: url, longitude, latitude } }
     });
-    setTitle('');
-    setContent('');
-    setImage('');
     dispatch({ type: DELETE_DRAFT_PIN });
     dispatch({ type: SHOW_DRAFT_PIN_POPUP, payload: false });
-
-    // if creation of pin was initiated when creating new plan,
-    // update draftPlan and continue with the creation of plan
-    if (state.draftPlan) {
-      dispatch({
-        type: UPDATE_DRAFT_PLAN,
-        payload: { location: data.pin._id }
-      });
-      dispatch({type: UPDATE_CURRENT_PIN, payload: data.pin})
-      history.push('/create-plan');
-    }
   };
 
   const validateForm = async () => {

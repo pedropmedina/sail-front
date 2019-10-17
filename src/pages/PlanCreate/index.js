@@ -119,7 +119,7 @@ const PlanCreate = props => {
         payload: { longitude, latitude }
       });
       dispatch({ type: SHOW_DRAFT_PIN_POPUP, payload: true });
-      props.history.push('/');
+      props.history.push('/map');
     }
   };
 

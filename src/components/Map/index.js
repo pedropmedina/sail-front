@@ -74,13 +74,18 @@ const Map = ({
         {/* Show marker for draft pin */}
         {draftPin && (
           <Marker
-            {...draftPin}
+            key={draftPin.id}
+            longitude={draftPin.longitude}
+            latitude={draftPin.latitude}
             draggable={true}
             onDragEnd={onDragEnd}
             offsetLeft={-24 / 2}
             offsetTop={-24}
           >
-            <PinIcon className="icon icon-small draft-pin-icon-draggable" />
+            <PinIcon
+              className="icon icon-small draft-pin-icon-draggable"
+              onClick={() => onClickMarker(draftPin)}
+            />
           </Marker>
         )}
 

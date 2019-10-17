@@ -11,7 +11,10 @@ import * as Styled from './styled';
 
 import Context from '../../context';
 import { GET_PINS_QUERY, GET_PIN_BY_COORDS } from '../../graphql/queries';
-import { COMMENT_CREATED_SUBSCRIPTION } from '../../graphql/subscriptions';
+import {
+  COMMENT_CREATED_SUBSCRIPTION,
+  PIN_CREATED_SUBSCRIPTION
+} from '../../graphql/subscriptions';
 import {
   CREATE_DRAFT_PIN,
   UPDATE_DRAFT_PIN,
@@ -24,7 +27,8 @@ import {
   UPDATE_VIEWPORT,
   CREATE_DRAFT_PIN_POPUP,
   UPDATE_DRAFT_PIN_POPUP,
-  DELETE_DRAFT_PIN_POPUP
+  DELETE_DRAFT_PIN_POPUP,
+  UPDATE_DRAFT_PLAN
 } from '../../reducer';
 
 import Map from '../../components/Map';
@@ -60,11 +64,40 @@ const App = props => {
     viewport,
     draftPlan
   } = state;
-  const { error, loading, data: pinsData } = useQuery(GET_PINS_QUERY);
+  const { error, loading, data: pinsData } = useQuery(
+    GET_PINS_QUERY
+  );
   const transitions = useTransition([draftPin || currentPin], null, {
     from: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
     enter: { opacity: 1, zIndex: 1, transform: 'translate3d(0%,0,0)' },
     leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' }
+  });
+
+
+  useSubscription(PIN_CREATED_SUBSCRIPTION, {
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      const { data: { pin }} = subscriptionData; // prettier-ignore
+      const { pins } = client.readQuery({ query: GET_PINS_QUERY });
+      client.writeQuery({
+        query: GET_PINS_QUERY,
+        data: { pins: [...pins, pin] }
+      });
+      // update query for getPinByCoords if create pin was started while creating new plan
+      if (state.draftPlan) {
+        const { longitude, latitude } = pin;
+        client.writeQuery({
+          query: GET_PIN_BY_COORDS,
+          variables: { input: { longitude, latitude } },
+          data: { pin }
+        });
+        dispatch({
+          type: UPDATE_DRAFT_PLAN,
+          payload: { location: pin._id }
+        });
+        dispatch({ type: UPDATE_CURRENT_PIN, payload: pin });
+        props.history.push('/create-plan');
+      }
+    }
   });
 
   useSubscription(COMMENT_CREATED_SUBSCRIPTION, {
@@ -184,7 +217,6 @@ const App = props => {
       dispatch({ type: CREATE_DRAFT_PIN });
       dispatch({ type: UPDATE_DRAFT_PIN, payload: draftPinPopup });
     }
-
     dispatch({ type: SHOW_DRAFT_PIN_POPUP, payload: false });
     dispatch({ type: DELETE_DRAFT_PIN_POPUP });
   };
