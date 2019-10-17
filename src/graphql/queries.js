@@ -4,7 +4,8 @@ import {
   pinFragments,
   planFragments,
   userFragments,
-  requestFragments
+  requestFragments,
+  conversationFragments
 } from './fragments';
 
 // user queries
@@ -116,4 +117,14 @@ export const GET_REQUESTS_QUERY = gql`
   }
   ${requestFragments.default}
   ${requestFragments.invite}
+`;
+
+// conversation queries
+export const GET_CONVERSATIONS_QUERY = gql`
+  query {
+    chats: getConversations {
+      ...defaultConversationFields
+    }
+  }
+  ${conversationFragments.default}
 `;

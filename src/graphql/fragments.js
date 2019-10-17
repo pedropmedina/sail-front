@@ -9,6 +9,7 @@ export const conversationFragments = {
         name
         username
         email
+        image
       }
       messages {
         _id
@@ -24,6 +25,7 @@ export const conversationFragments = {
         username
         email
       }
+      createdAt
     }
   `
 };
