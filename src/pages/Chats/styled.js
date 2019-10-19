@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 
 export const ChatsWrapper = styled.div`
   padding: 2rem 5rem;
@@ -13,7 +13,7 @@ export const Panels = styled.article`
 `;
 
 export const Panel = styled.section`
-  flex: 1 1 40rem;
+  flex: 1 1 30rem;
   padding: 1rem;
 `;
 
@@ -37,6 +37,7 @@ export const ChatItem = styled.li`
   flex-basis: 100%;
   padding: 1.5rem;
   cursor: pointer;
+  border-left: 0.3rem solid transparent;
 
   :not(:last-child) {
     border-bottom: 0.1rem solid var(--color-less-white);
@@ -45,6 +46,13 @@ export const ChatItem = styled.li`
   :hover {
     background-color: var(--color-less-white);
   }
+
+  ${({ isSelected }) =>
+    isSelected &&
+    css`
+      border-left: 0.3rem solid var(--color-medium-grey);
+      background-color: var(--color-less-white);
+    `}
 `;
 
 export const ChatPreview = styled.div`
@@ -58,12 +66,19 @@ export const ChatPreviewLeft = styled.div``;
 
 export const ChatPreviewRight = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, minmax(min-content, 1fr));
+  grid-template-columns: 1fr max-content;
   column-gap: 1rem;
 `;
 
-export const ChatMsg = styled.p`
+export const ChatMsg = styled.div`
+  grid-column: 1 / span 1;
+  overflow: hidden;
+`;
+
+export const MsgContent = styled.p`
   font-size: 1.4rem;
+  overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
 `;
 
@@ -113,4 +128,13 @@ export const ChatDate = styled.p`
   text-align: right;
   grid-column: 2 / span 1;
   grid-row: 1 / span 1;
+`;
+
+export const NoChatSelected = styled.div`
+  color: var(--color-light-grey);
+  background-color: var(--color-less-white);
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

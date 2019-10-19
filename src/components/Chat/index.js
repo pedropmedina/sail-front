@@ -72,19 +72,25 @@ const Chat = ({ data, onCreateNew, subscribeToNew }) => {
                 key={message._id}
                 ref={arr.length - 1 === index ? refEl : null}
               >
-                <Styled.MessageName>
-                  {displayName(message.author)}
-                </Styled.MessageName>
-                <Styled.MessagePic
-                  src={'https://via.placeholder.com/40'}
-                  alt="User Img"
-                />
-                <Styled.MessageContent>{message.content}</Styled.MessageContent>
-                <Styled.MessageTime>
-                  {formatDistanceToNow(parseInt(message.createdAt), {
-                    addSuffix: true
-                  })}
-                </Styled.MessageTime>
+                <Styled.MessageLeftSide>
+                  <Styled.MessagePic
+                    src={'https://via.placeholder.com/40'}
+                    alt="User Img"
+                  />
+                  <Styled.MessageName>
+                    {displayName(message.author)}
+                  </Styled.MessageName>
+                </Styled.MessageLeftSide>
+                <Styled.MessageRightSide>
+                  <Styled.MessageContent>
+                    {message.content}
+                  </Styled.MessageContent>
+                  <Styled.MessageTime>
+                    {formatDistanceToNow(parseInt(message.createdAt), {
+                      addSuffix: true
+                    })}
+                  </Styled.MessageTime>
+                </Styled.MessageRightSide>
               </Styled.Message>
             ))}
           </Styled.Messages>

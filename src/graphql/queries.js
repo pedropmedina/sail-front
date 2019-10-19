@@ -128,3 +128,12 @@ export const GET_CONVERSATIONS_QUERY = gql`
   }
   ${conversationFragments.default}
 `;
+
+export const GET_CONVERSATION_QUERY = gql`
+  query GetConversation($conversationId: ID!) {
+    chat:getConversation(conversationId: $conversationId) {
+      ...defaultConversationFields
+    }
+  }
+  ${conversationFragments.default}
+`

@@ -75,7 +75,7 @@ export const REQUEST_DELETED_SUBSCRIPTION = gql`
 
 // message subscriptions
 export const MESSAGE_CREATED_SUBSCRIPTION = gql`
-  subscription MessageCreated($conversationId: ID!) {
+  subscription MessageCreated($conversationId: ID) {
     message: messageCreated(conversationId: $conversationId) {
       ...defaultMessageFields
     }

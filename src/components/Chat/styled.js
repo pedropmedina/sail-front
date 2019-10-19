@@ -27,51 +27,52 @@ export const Messages = styled.ul`
 `;
 
 export const Message = styled.li`
-  display: grid;
-  grid-template-columns: max-content minmax(min-content, 1fr);
-  grid-template-rows: max-content 3.5rem max-content;
-  column-gap: 1.5rem;
-  row-gap: 0.2rem;
   font-size: 1.2rem;
   padding: 1rem;
   color: var(--color-light-grey);
+
+  display: grid;
+  grid-template-columns: max-content minmax(min-content, 1fr);
+  column-gap: 1.5rem;
+`;
+
+export const MessageLeftSide = styled.div``;
+
+export const MessageRightSide = styled.div`
+  display: grid;
+  grid-template-columns: minmax(min-content, max-content) minmax(
+      max-content,
+      1fr
+    );
+  column-gap: 2rem;
 `;
 
 export const UserImg = styled.img`
   display: inline-block;
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 4rem;
+  height: 4rem;
   object-fit: cover;
   border-radius: 50%;
-  padding: 0.2rem;
 `;
 
 export const UserName = styled.p``;
 
 export const MessageContent = styled.div`
-  grid-column: 2 / -1;
-  grid-row: 2 / -1;
-  justify-self: start;
-
-  padding: 1.5rem;
+  grid-column: 1 / span 1;
+  align-self: start;
+  padding: 1rem;
   background-color: var(--color-almost-white);
   border-radius: 0 1rem 1rem 1rem;
 `;
 
 export const MessageTime = styled.p`
-  grid-column: 2 / -1;
-
+  grid-column: 2 / span 1;
   text-align: right;
 `;
 
-export const MessagePic = styled(UserImg)`
-  grid-column: 1 / span 1;
-  grid-row: 2 / span 1;
-`;
+export const MessagePic = styled(UserImg)``;
 
 export const MessageName = styled(UserName)`
-  grid-column: 1 / span 1;
-  grid-row: 3 / span 1;
   font-size: 1rem;
   text-align: center;
 `;
