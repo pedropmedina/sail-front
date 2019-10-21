@@ -88,6 +88,7 @@ export const CreateBtn = styled.button`
   cursor: pointer;
   transition: all 0.2s;
   display: flex;
+  justify-content: space-between;
   align-items: center;
 
   &:hover {
@@ -95,7 +96,6 @@ export const CreateBtn = styled.button`
   }
 
   > svg {
-    margin-right: 1rem;
     font-size: 2.4rem;
     fill: currentColor;
   }

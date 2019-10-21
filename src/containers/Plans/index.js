@@ -26,7 +26,6 @@ const Plans = ({ history }) => {
       <Topbar>
         <CreateBtn onClick={handleCreate}>
           <PlusIcon className="icon icon-small" />
-          Add Plan
         </CreateBtn>
       </Topbar>
       <Styled.Plans>

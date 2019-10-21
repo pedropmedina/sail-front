@@ -4,7 +4,8 @@ import {
   pinFragments,
   commentFragments,
   requestFragments,
-  messageFragments
+  messageFragments,
+  conversationFragments
 } from './fragments';
 
 // pin subscriptions
@@ -81,4 +82,14 @@ export const MESSAGE_CREATED_SUBSCRIPTION = gql`
     }
   }
   ${messageFragments.default}
+`;
+
+// coversation subscriptions
+export const CONVERSATION_CREATED_SUBSCRIPTION = gql`
+  subscription {
+    conversation: conversationCreated {
+      ...defaultConversationFields
+    }
+  }
+  ${conversationFragments.default}
 `;

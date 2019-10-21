@@ -6,7 +6,8 @@ import {
   requestFragments,
   commentFragments,
   authFragments,
-  messageFragments
+  messageFragments,
+  conversationFragments
 } from './fragments';
 
 // auth mutations
@@ -121,4 +122,13 @@ export const CREATE_MESSAGE_MUTATION = gql`
     }
   }
   ${messageFragments.default}
+`
+
+export const CREATE_CONVERSATION_MUTATION = gql`
+  mutation CreateConversation($input: CreateConversationInput!) {
+    conversation: createConversation(input: $input) {
+      ...defaultConversationFields
+    }
+  }
+  ${conversationFragments.default}
 `

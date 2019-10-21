@@ -15,17 +15,17 @@ import { renewSession } from './utils';
 import PublicRoute from './routes/PublicRoute';
 import PrivateRoute from './routes/PrivateRoute';
 
-import App from './pages/App';
-import Auth from './pages/Auth';
-import Plans from './pages/Plans';
-import PlanCreate from './pages/PlanCreate';
-import PlanView from './pages/PlanView';
-import Pins from './pages/Pins';
-import Chats from './pages/Chats';
-import Friends from './pages/Friends';
-import Requests from './pages/Requests';
-import Settings from './pages/Settings';
-import Profile from './pages/Profile';
+import App from './containers/App';
+import Auth from './containers/Auth';
+import Plans from './containers/Plans';
+import PlanCreate from './containers/PlanCreate';
+import PlanView from './containers/PlanView';
+import Pins from './containers/Pins';
+import Chats from './containers/Chats';
+import Friends from './containers/Friends';
+import Requests from './containers/Requests';
+import Settings from './containers/Settings';
+import Profile from './containers/Profile';
 
 const PRIVATE_ROUTES = [
   { path: '/map', component: App },

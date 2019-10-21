@@ -6,7 +6,7 @@ export const ChatsWrapper = styled.div`
 `;
 
 export const Panels = styled.article`
-  height: 100%;
+  height: calc(100% - 15rem);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -135,6 +135,61 @@ export const NoChatSelected = styled.div`
   background-color: var(--color-less-white);
   height: 100%;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+`;
+
+export const Topbar = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 1rem;
+  margin-bottom: 3rem;
+`;
+
+export const TopbarSide = styled.div`
+  flex: 1 1 auto;
+`;
+
+export const TopbarLeft = styled(TopbarSide)``;
+
+export const TopbarRight = styled(TopbarSide)``;
+
+export const FilterMessages = styled.form`
+  height: 100%;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  position: relative;
+`;
+
+export const FilterMessagesInput = styled.input`
+  width: 100%;
+  height: 100%;
+  border: none;
+  text-indent: 5rem;
+  font-size: 1.6rem;
+  background-color: var(--color-less-white);
+  color: var(--color-light-grey);
+  outline: none;
+
+  :focus {
+    background-color: #fff;
+  }
+
+  ::placeholder {
+    color: var(--color-light-grey);
+  }
+`;
+
+export const FilterBtn = styled.button`
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  color: var(--color-light-grey);
+  padding: 0 1rem;
 `;
