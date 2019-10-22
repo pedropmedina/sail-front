@@ -136,6 +136,8 @@ const Chats = () => {
     );
   };
 
+  const filterOutPlanChats = chats => chats.filter(chat => !chat.plan);
+
   if (!error && loading) return <div>Loading...</div>;
 
   return (
@@ -252,7 +254,9 @@ const Chats = () => {
             <ChatCreate
               onCancelNewMessage={handleCancelNewMessage}
               onCreateNewChat={handleCreateNewChat}
-              findExistingChat={findExistingChat(data.chats)}
+              findExistingChat={findExistingChat(
+                filterOutPlanChats(data.chats)
+              )}
               onCreateMessage={handleNewMessage}
             />
           </Styled.RightPanel>

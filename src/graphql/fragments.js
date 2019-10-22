@@ -20,6 +20,7 @@ export const conversationFragments = {
           username
         }
       }
+      plan
       author {
         name
         username

@@ -38,8 +38,12 @@ const ChatCreate = ({
   }, [searchText]);
 
   useEffect(() => {
-    const chat = findExistingChat(participants);
-    chat ? setExistingChat(chat) : setExistingChat(null);
+    if (participants.length > 0) {
+      const chat = findExistingChat(participants);
+      chat ? setExistingChat(chat) : setExistingChat(null);
+    } else {
+      setExistingChat(null);
+    }
   }, [participants]);
 
   const handleChange = event => {
