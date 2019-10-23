@@ -68,7 +68,7 @@ const ChatCreate = ({
       const { data } = await createChat({
         variables: { input: { participants, message } }
       });
-      onCreateNewChat(data.conversation._id);
+      onCreateNewChat(data.conversation);
     } else {
       onCreateMessage(existingChat._id)(message);
     }

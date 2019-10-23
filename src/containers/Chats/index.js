@@ -12,14 +12,19 @@ import ChatCreate from '../../components/ChatCreate';
 import Chat from '../../components/Chat';
 import {
   GET_CONVERSATIONS_QUERY,
-  GET_CONVERSATION_QUERY
+  GET_CONVERSATION_QUERY,
+  ME_QUERY
 } from '../../graphql/queries';
 import {
   MESSAGE_CREATED_SUBSCRIPTION,
   CONVERSATION_CREATED_SUBSCRIPTION
 } from '../../graphql/subscriptions';
-import { CREATE_MESSAGE_MUTATION } from '../../graphql/mutations';
+import {
+  CREATE_MESSAGE_MUTATION,
+  UPDATE_CONVERSATION_UNREADCOUNT_MUTATION
+} from '../../graphql/mutations';
 
+// TODO: update unreadCount badge on every new message
 const Chats = () => {
   const [selected, setSelected] = useState(null);
   const [searchText, setSearchText] = useState('');
@@ -27,11 +32,23 @@ const Chats = () => {
   const { error, loading, data, subscribeToMore } = useQuery(
     GET_CONVERSATIONS_QUERY
   );
+  const { error: meError, loading: meLoading, data: meData } = useQuery(
+    ME_QUERY
+  );
   const [
     getChat,
     { error: chatError, loading: chatLoading, data: chatData }
   ] = useLazyQuery(GET_CONVERSATION_QUERY);
   const [createMessage] = useMutation(CREATE_MESSAGE_MUTATION);
+  const [updateConversationUnreadCount] = useMutation(
+    UPDATE_CONVERSATION_UNREADCOUNT_MUTATION,
+    { ignoreResults: true }
+  );
+
+  useEffect(() => {
+    subscribeToNewMessages();
+    subscribeToNewConversations();
+  }, []);
 
   useEffect(() => {
     if (data.chats && !chatData) {
@@ -39,9 +56,24 @@ const Chats = () => {
     }
   }, [data]);
 
+  // reset unreadCount in selected conversation for current user
   useEffect(() => {
-    subscribeToNewMessages();
-  }, []);
+    const updateUnreadCount = async (chat, me) => {
+      const { _id: conversationId, unreadCount } = chat;
+      const unreadCountId = unreadCount.find(
+        unread => unread.username === me.username
+      )._id;
+      await updateConversationUnreadCount({
+        variables: {
+          input: { conversationId, unreadCountId, operation: 'RESET' }
+        }
+      });
+    };
+
+    if (selected && selected._id && (meData && meData.user)) {
+      updateUnreadCount(selected, meData.user);
+    }
+  }, [selected, meData]);
 
   const subscribeToNewMessages = () => {
     subscribeToMore({
@@ -57,7 +89,9 @@ const Chats = () => {
         return Object.assign({}, prev, { chats });
       }
     });
+  };
 
+  const subscribeToNewConversations = () => {
     subscribeToMore({
       document: CONVERSATION_CREATED_SUBSCRIPTION,
       updateQuery: (prev, { subscriptionData }) => {
@@ -71,9 +105,9 @@ const Chats = () => {
   };
 
   const setDefaultChat = index => {
-    const conversationId = data.chats[index]._id;
-    getChat({ variables: { conversationId } });
-    setSelected(conversationId);
+    const conversation = data.chats[index];
+    getChat({ variables: { conversationId: conversation._id } });
+    setSelected(conversation);
   };
 
   const handleNewMessage = conversation => async content => {
@@ -90,9 +124,9 @@ const Chats = () => {
     setDefaultChat(0);
   };
 
-  const handleClickChatItem = conversationId => {
-    getChat({ variables: { conversationId } });
-    setSelected(conversationId);
+  const handleClickChatItem = conversation => {
+    getChat({ variables: { conversationId: conversation._id } });
+    setSelected(conversation);
     if (showChatCreate) setShowChatCreate(false);
   };
 
@@ -117,10 +151,10 @@ const Chats = () => {
     setSelected(null);
   };
 
-  const handleCreateNewChat = async conversationId => {
+  const handleCreateNewChat = async conversation => {
     setShowChatCreate(false);
-    await getChat({ variables: { conversationId } });
-    setSelected(conversationId);
+    await getChat({ variables: { conversationId: conversation._id } });
+    setSelected(conversation);
   };
 
   // find existing chat for current participants
@@ -138,7 +172,15 @@ const Chats = () => {
 
   const filterOutPlanChats = chats => chats.filter(chat => !chat.plan);
 
-  if (!error && loading) return <div>Loading...</div>;
+  const getUnreadCount = (chat, username) => {
+    const unreadCount = chat.unreadCount.find(
+      unread => unread.username === username
+    );
+    return unreadCount.count;
+  };
+
+  if ((!error || !meError) && (loading || meLoading))
+    return <div>Loading...</div>;
 
   return (
     <Styled.ChatsWrapper>
@@ -168,8 +210,8 @@ const Chats = () => {
             {filterChats(data.chats).map(chat => (
               <Styled.ChatItem
                 key={chat._id}
-                onClick={() => handleClickChatItem(chat._id)}
-                isSelected={chat._id === selected}
+                onClick={() => handleClickChatItem(chat)}
+                isSelected={selected ? chat._id === selected._id : false}
               >
                 <Styled.ChatPreview>
                   <Styled.ChatPreviewLeft>
@@ -214,16 +256,21 @@ const Chats = () => {
                         )
                       )}
                     </Styled.ChatParticipantsNames>
-                    <Styled.ChatMsg>
-                      <Styled.MsgContent>
-                        {chat.messages[chat.messages.length - 1].content}
-                      </Styled.MsgContent>
-                    </Styled.ChatMsg>
                     <Styled.ChatDate>
                       {formatDistanceToNow(parseInt(chat.createdAt), {
                         addSuffix: true
                       })}
                     </Styled.ChatDate>
+                    <Styled.ChatMsg>
+                      <Styled.MsgContent>
+                        {chat.messages[chat.messages.length - 1].content}
+                      </Styled.MsgContent>
+                    </Styled.ChatMsg>
+                    {getUnreadCount(chat, meData.user.username) > 0 && (
+                      <Styled.UnreadCountBadge>
+                        {getUnreadCount(chat, meData.user.username)} new
+                      </Styled.UnreadCountBadge>
+                    )}
                   </Styled.ChatPreviewRight>
                 </Styled.ChatPreview>
               </Styled.ChatItem>

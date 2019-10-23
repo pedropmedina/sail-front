@@ -38,6 +38,7 @@ export const ChatItem = styled.li`
   padding: 1.5rem;
   cursor: pointer;
   border-left: 0.3rem solid transparent;
+  position: relative;
 
   :not(:last-child) {
     border-bottom: 0.1rem solid var(--color-less-white);
@@ -192,4 +193,13 @@ export const FilterBtn = styled.button`
   background-color: transparent;
   color: var(--color-light-grey);
   padding: 0 1rem;
+`;
+
+export const UnreadCountBadge = styled.div`
+  background-color: var(--color-earth-red);
+  color: var(--color-almost-white);
+  border-radius: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

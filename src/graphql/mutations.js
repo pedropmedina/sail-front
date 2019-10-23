@@ -122,8 +122,9 @@ export const CREATE_MESSAGE_MUTATION = gql`
     }
   }
   ${messageFragments.default}
-`
+`;
 
+// conversation mutations
 export const CREATE_CONVERSATION_MUTATION = gql`
   mutation CreateConversation($input: CreateConversationInput!) {
     conversation: createConversation(input: $input) {
@@ -131,4 +132,15 @@ export const CREATE_CONVERSATION_MUTATION = gql`
     }
   }
   ${conversationFragments.default}
-`
+`;
+
+export const UPDATE_CONVERSATION_UNREADCOUNT_MUTATION = gql`
+  mutation UpdateConversationUnreadCount(
+    $input: UpdateConversationUnreadCountInput!
+  ) {
+    conversation: updateConversationUnreadCount(input: $input) {
+      ...defaultConversationFields
+    }
+  }
+  ${conversationFragments.default}
+`;
