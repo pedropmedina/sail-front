@@ -117,7 +117,7 @@ export const DELETE_REQUEST_MUTATION = gql`
 
 export const CREATE_MESSAGE_MUTATION = gql`
   mutation CreateMessage($input: CreateMessageInput!) {
-    createMessage(input: $input) {
+    message: createMessage(input: $input) {
       ...defaultMessageFields
     }
   }

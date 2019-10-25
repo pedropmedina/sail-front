@@ -4,7 +4,6 @@ import {
   pinFragments,
   commentFragments,
   requestFragments,
-  messageFragments,
   conversationFragments
 } from './fragments';
 
@@ -77,11 +76,11 @@ export const REQUEST_DELETED_SUBSCRIPTION = gql`
 // message subscriptions
 export const MESSAGE_CREATED_SUBSCRIPTION = gql`
   subscription MessageCreated($conversationId: ID) {
-    message: messageCreated(conversationId: $conversationId) {
-      ...defaultMessageFields
+    conversation: messageCreated(conversationId: $conversationId) {
+      ...defaultConversationFields
     }
   }
-  ${messageFragments.default}
+  ${conversationFragments.default}
 `;
 
 // coversation subscriptions

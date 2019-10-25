@@ -70,7 +70,7 @@ const ChatCreate = ({
       });
       onCreateNewChat(data.conversation);
     } else {
-      onCreateMessage(existingChat._id)(message);
+      onCreateMessage(existingChat)(message);
     }
   };
 
