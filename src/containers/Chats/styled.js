@@ -58,7 +58,7 @@ export const ChatItem = styled.li`
 
 export const ChatPreview = styled.div`
   display: grid;
-  grid-template-columns: minmax(max-content, 5rem) minmax(min-content, 1fr);
+  grid-template-columns: max-content minmax(min-content, 1fr);
   align-items: center;
   gap: 1rem;
 `;
@@ -69,6 +69,19 @@ export const ChatPreviewRight = styled.div`
   display: grid;
   grid-template-columns: 1fr max-content;
   column-gap: 1rem;
+`;
+
+export const ChatPlan = styled.p`
+  grid-column: 1 / -1;
+  grid-row: 1 / span 1;
+  display: flex;
+  align-items: center;
+
+  > svg {
+    fill: currentColor;
+    font-size: 1.2rem;
+    margin-right: 0.3rem;
+  }
 `;
 
 export const ChatMsg = styled.div`
@@ -91,16 +104,22 @@ export const ChatParticipantsImgs = styled.ul`
   display: flex;
   flex-direction: row-reverse;
   justify-content: center;
-  flex-wrap: wrap;
 `;
 
 export const ChatParticipantImg = styled.li`
-  width: ${({ dimension }) => (dimension ? dimension + 'rem' : '5rem')};
-  height: ${({ dimension }) => (dimension ? dimension + 'rem' : '5rem')};
-
   :not(:last-child) {
-    margin-left: -1rem;
+    margin-left: -4.5rem;
   }
+`;
+
+export const ParticipantImg = styled.img`
+  width: 5rem;
+  height: 5rem;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
+  border: 0.2rem solid var(--color-almost-white);
+  display: inline-block;
 `;
 
 export const ChatParticipantsNames = styled.ul`
@@ -113,16 +132,6 @@ export const ChatParticipantsNames = styled.ul`
 export const ChatParticipantName = styled.li`
   font-size: 1.6rem;
   color: var(--color-medium-grey);
-`;
-
-export const ParticipantImg = styled.img`
-  width: ${({ dimension }) => (dimension ? dimension + 'rem' : '5rem')};
-  height: ${({ dimension }) => (dimension ? dimension + 'rem' : '5rem')};
-  object-fit: cover;
-  object-position: center;
-  border-radius: 50%;
-  border: 0.2rem solid var(--color-almost-white);
-  display: inline-block;
 `;
 
 export const ChatDate = styled.p`

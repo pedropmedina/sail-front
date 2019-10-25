@@ -7,6 +7,7 @@ import * as Styled from './styled';
 import { CreateBtn } from '../../stylesShare';
 import { ReactComponent as EditIcon } from '../../assets/SVG/edit.svg';
 import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
+import { ReactComponent as CalendarIcon } from '../../assets/SVG/calendar.svg';
 import ChatCreate from '../../components/ChatCreate';
 
 import Chat from '../../components/Chat';
@@ -28,7 +29,8 @@ const Chats = () => {
   const [searchText, setSearchText] = useState('');
   const [showChatCreate, setShowChatCreate] = useState(false);
   const { error, loading, data, subscribeToMore } = useQuery(
-    GET_CONVERSATIONS_QUERY
+    GET_CONVERSATIONS_QUERY,
+    { fetchPolicy: 'cache-and-network' }
   );
   const { error: meError, loading: meLoading, data: meData } = useQuery(
     ME_QUERY
@@ -139,10 +141,13 @@ const Chats = () => {
   };
 
   const filterChats = chats =>
-    chats.filter(chat =>
-      chat.participants.some(participant =>
-        participant.username.toLowerCase().includes(searchText)
-      )
+    chats.filter(
+      chat =>
+        chat.participants.some(participant =>
+          participant.username.toLowerCase().includes(searchText.toLowerCase())
+        ) ||
+        (chat.plan &&
+          chat.plan.title.toLowerCase().includes(searchText.toLowerCase()))
     );
 
   const handleClickNewChat = () => {
@@ -174,6 +179,14 @@ const Chats = () => {
       unread => unread.username === username
     );
     return unreadCount.count;
+  };
+
+  // if a two party chat, only return the other participant else return all participants
+  const prepareParticipantsData = (chat, me) => {
+    const { plan, participants } = chat;
+    return !plan && participants.length === 2
+      ? participants.filter(participant => participant.username !== me.username)
+      : participants;
   };
 
   if ((!error || !meError) && (loading || meLoading))
@@ -217,44 +230,41 @@ const Chats = () => {
                 <Styled.ChatPreview>
                   <Styled.ChatPreviewLeft>
                     <Styled.ChatParticipantsImgs>
-                      {chat.participants.map(participant => (
-                        <Styled.ChatParticipantImg
-                          key={participant.username}
-                          dimension={
-                            chat.participants.length > 1
-                              ? 5 / chat.participants.length
-                              : 5
-                          }
-                        >
-                          <Styled.ParticipantImg
-                            src={
-                              participant.image
-                                ? participant
-                                : 'https://via.placeholder.com/70'
-                            }
-                            alt="User Image"
-                            dimension={
-                              chat.participants.length > 1
-                                ? 5 / chat.participants.length
-                                : 5
-                            }
-                          />
-                        </Styled.ChatParticipantImg>
-                      ))}
+                      {prepareParticipantsData(chat, meData.user).map(
+                        participant => (
+                          <Styled.ChatParticipantImg key={participant.username}>
+                            <Styled.ParticipantImg
+                              src={
+                                participant.image
+                                  ? participant
+                                  : 'https://via.placeholder.com/70'
+                              }
+                              alt="participant image"
+                            />
+                          </Styled.ChatParticipantImg>
+                        )
+                      )}
                     </Styled.ChatParticipantsImgs>
                   </Styled.ChatPreviewLeft>
                   <Styled.ChatPreviewRight>
+                    {chat.plan && (
+                      <Styled.ChatPlan>
+                        <CalendarIcon />
+                        {chat.plan.title}
+                      </Styled.ChatPlan>
+                    )}
                     <Styled.ChatParticipantsNames>
-                      {chat.participants.map((participant, i, arr) =>
-                        !(arr.length - 1 === i) ? (
-                          <Styled.ChatParticipantName key={participant.email}>
-                            {participant.username},&nbsp;
-                          </Styled.ChatParticipantName>
-                        ) : (
-                          <Styled.ChatParticipantName key={participant.email}>
-                            {participant.username}
-                          </Styled.ChatParticipantName>
-                        )
+                      {prepareParticipantsData(chat, meData.user).map(
+                        (participant, i, arr) =>
+                          !(arr.length - 1 === i) ? (
+                            <Styled.ChatParticipantName key={participant.email}>
+                              {participant.username},&nbsp;
+                            </Styled.ChatParticipantName>
+                          ) : (
+                            <Styled.ChatParticipantName key={participant.email}>
+                              {participant.username}
+                            </Styled.ChatParticipantName>
+                          )
                       )}
                     </Styled.ChatParticipantsNames>
                     <Styled.ChatDate>
