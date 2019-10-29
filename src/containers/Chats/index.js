@@ -17,10 +17,6 @@ import {
   ME_QUERY
 } from '../../graphql/queries';
 import {
-  MESSAGE_CREATED_SUBSCRIPTION,
-  CONVERSATION_CREATED_SUBSCRIPTION
-} from '../../graphql/subscriptions';
-import {
   CREATE_MESSAGE_MUTATION,
   UPDATE_CONVERSATION_UNREADCOUNT_MUTATION
 } from '../../graphql/mutations';
@@ -28,10 +24,9 @@ import {
 const Chats = () => {
   const [searchText, setSearchText] = useState('');
   const [showChatCreate, setShowChatCreate] = useState(false);
-  const { error, loading, data, subscribeToMore } = useQuery(
-    GET_CONVERSATIONS_QUERY,
-    { fetchPolicy: 'cache-and-network' }
-  );
+  const { error, loading, data } = useQuery(GET_CONVERSATIONS_QUERY, {
+    fetchPolicy: 'cache-and-network'
+  });
   const { error: meError, loading: meLoading, data: meData } = useQuery(
     ME_QUERY
   );
@@ -46,55 +41,21 @@ const Chats = () => {
   );
 
   useEffect(() => {
-    subscribeToNewConversations();
-    subscribeToNewMessages();
-  }, []);
-
-  useEffect(() => {
     if (data.chats && !chatData) {
       setDefaultChat(0);
     }
   }, [data]);
 
-  // reset unreadCount in selected conversation for current user
+  // reset unreadCount in selected conversation
   useEffect(() => {
-    if (chatData && chatData.chat && (meData && meData.user)) {
-      handleUpdateUnreadCount(chatData.chat, meData.user, 'RESET');
+    if (chatData && chatData.chat) {
+      handleUpdateUnreadCount(chatData.chat, 'RESET');
     }
-  }, [chatData, meData]);
+  }, [chatData]);
 
-  const subscribeToNewMessages = () => {
-    subscribeToMore({
-      document: MESSAGE_CREATED_SUBSCRIPTION,
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) return prev;
-        const { data: { conversation } } = subscriptionData // prettier-ignore
-        const chats = prev.chats.map(chat =>
-          chat._id === conversation._id ? conversation : chat
-        );
-        return Object.assign({}, prev, { chats });
-      }
-    });
-  };
-
-  const subscribeToNewConversations = () => {
-    subscribeToMore({
-      document: CONVERSATION_CREATED_SUBSCRIPTION,
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) return prev;
-        const { data: { conversation }} = subscriptionData // prettier-ignore
-        return Object.assign({}, prev, {
-          chats: [...prev.chats, conversation]
-        });
-      }
-    });
-  };
-
-  const handleUpdateUnreadCount = async (chat, me, operation) => {
+  const handleUpdateUnreadCount = async (chat, operation) => {
     const { _id: conversationId, unreadCount } = chat;
-    const { _id: unreadCountId, count } = unreadCount.find(
-      unread => unread.username === me.username
-    );
+    const { _id: unreadCountId, count } = unreadCount;
     // only update if new messages have been posted
     if (count > 0) {
       await updateConversationUnreadCount({
@@ -173,13 +134,6 @@ const Chats = () => {
   };
 
   const filterOutPlanChats = chats => chats.filter(chat => !chat.plan);
-
-  const getUnreadCount = (chat, username) => {
-    const unreadCount = chat.unreadCount.find(
-      unread => unread.username === username
-    );
-    return unreadCount.count;
-  };
 
   // if a two party chat, only return the other participant else return all participants
   const prepareParticipantsData = (chat, me) => {
@@ -277,12 +231,12 @@ const Chats = () => {
                         {chat.messages[chat.messages.length - 1].content}
                       </Styled.MsgContent>
                     </Styled.ChatMsg>
-                    {getUnreadCount(chat, meData.user.username) > 0 &&
+                    {chat.unreadCount.count > 0 &&
                       (chatData &&
                         chatData.chat &&
                         chat._id !== chatData.chat._id) && (
                         <Styled.UnreadCountBadge>
-                          {getUnreadCount(chat, meData.user.username)} new
+                          {chat.unreadCount.count} new
                         </Styled.UnreadCountBadge>
                       )}
                   </Styled.ChatPreviewRight>

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { useMutation, useQuery, useSubscription } from '@apollo/react-hooks';
+import { useMutation, useQuery} from '@apollo/react-hooks';
 import { compareAsc, compareDesc } from 'date-fns';
 
 import Request from '../../components/Request';
@@ -16,11 +16,6 @@ import {
   UPDATE_REQUEST_MUTATION,
   DELETE_REQUEST_MUTATION
 } from '../../graphql/mutations';
-import {
-  REQUEST_CREATED_SUBSCRIPTION,
-  REQUEST_UPDATED_SUBSCRIPTION,
-  REQUEST_DELETED_SUBSCRIPTION
-} from '../../graphql/subscriptions';
 
 const FILTER_SECTIONS = [
   { filter: 'reqType', list: ['friend', 'invite'] },
@@ -38,8 +33,7 @@ const Requests = () => {
   const [searchText, setSearchText] = useState('');
 
   const { error: reqError, loading: reqLoading, data: reqData } = useQuery(
-    GET_REQUESTS_QUERY,
-    { fetchPolicy: 'cache-and-network' }
+    GET_REQUESTS_QUERY
   );
   const { error: meError, loading: meLoading, data: meData } = useQuery(
     ME_QUERY
@@ -49,32 +43,6 @@ const Requests = () => {
   });
   const [deleteRequest] = useMutation(DELETE_REQUEST_MUTATION, {
     ignoreResults: true
-  });
-
-  useSubscription(REQUEST_CREATED_SUBSCRIPTION, {
-    onSubscriptionData: ({ client, subscriptionData }) => {
-      const { request } = subscriptionData.data;
-      if (request) {
-        const { requests } = client.readQuery({ query: GET_REQUESTS_QUERY });
-        client.writeQuery({
-          query: GET_REQUESTS_QUERY,
-          data: { requests: requests.concat([request]) }
-        });
-      }
-    }
-  });
-
-  useSubscription(REQUEST_UPDATED_SUBSCRIPTION);
-
-  useSubscription(REQUEST_DELETED_SUBSCRIPTION, {
-    onSubscriptionData: ({ client, subscriptionData }) => {
-      const { request } = subscriptionData.data;
-      const { requests } = client.readQuery({ query: GET_REQUESTS_QUERY });
-      client.writeQuery({
-        query: GET_REQUESTS_QUERY,
-        data: { requests: requests.filter(req => req._id !== request._id) }
-      });
-    }
   });
 
   // helpers callback functions for filtering of requests

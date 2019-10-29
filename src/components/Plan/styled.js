@@ -50,6 +50,8 @@ export const Date = styled(Description)``;
 
 export const Participants = styled.div`
   display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
 `;
 
 export const ParticipantImg = styled.img`
@@ -58,8 +60,8 @@ export const ParticipantImg = styled.img`
   border-radius: 50%;
   border: 0.3rem solid var(--color-almost-white);
 
-  &:not(:first-child) {
-    margin-left: -2.5rem;
+  &:not(:last-child) {
+    margin-left: -4rem;
   }
 `;
 

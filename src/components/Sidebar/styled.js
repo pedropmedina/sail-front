@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import { NavLink } from 'react-router-dom';
 
 export const Sidebar = styled.nav`
@@ -36,6 +36,7 @@ export const Pic = styled.img`
 export const Name = styled.figcaption`
   margin-top: 1rem;
   font-size: 1.2rem;
+  text-transform: capitalize;
 `;
 
 export const Location = styled.span`
@@ -72,10 +73,27 @@ export const List = styled.ul`
 export const Item = styled.li`
   display: flex;
   justify-content: center;
+  position: relative;
 
-  &:not(:last-child) {
+  :not(:last-child) {
     margin-bottom: 2rem;
   }
+
+  ${({ isDirtyMsg, isDirtyReq }) =>
+    (isDirtyMsg || isDirtyReq) &&
+    css`
+      ::after {
+        content: '';
+        display: inline-block;
+        position: absolute;
+        top: 0.3rem;
+        right: 0.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 50%;
+        background-color: var(--color-earth-red);
+      }
+    `}
 `;
 
 export const Link = styled(NavLink)`
