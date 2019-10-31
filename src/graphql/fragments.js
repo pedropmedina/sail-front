@@ -218,6 +218,26 @@ export const requestFragments = {
   `
 };
 
+// comment fragments
+export const commentFragments = {
+  default: gql`
+    fragment defaultCommentFields on Comment {
+      _id
+      content
+      pin {
+        _id
+      }
+      author {
+        name
+        username
+        email
+        image
+      }
+      createdAt
+    }
+  `
+};
+
 // user fragments
 export const userFragments = {
   default: gql`
@@ -249,6 +269,17 @@ export const userFragments = {
         description
         date
       }
+      myPins {
+        _id
+        title
+        content
+        image
+        latitude
+        longitude
+        comments {
+          ...defaultCommentFields
+        }
+      }
       likedPins {
         _id
         title
@@ -256,6 +287,9 @@ export const userFragments = {
         image
         latitude
         longitude
+        comments {
+          ...defaultCommentFields
+        }
       }
       sentRequests {
         ... on FriendRequest {
@@ -269,6 +303,7 @@ export const userFragments = {
     }
     ${requestFragments.default}
     ${requestFragments.invite}
+    ${commentFragments.default}
   `,
   friends: gql`
     fragment friendsFields on User {
@@ -363,26 +398,6 @@ export const userFragments = {
     }
     ${requestFragments.default}
     ${requestFragments.invite}
-  `
-};
-
-// comment fragments
-export const commentFragments = {
-  default: gql`
-    fragment defaultCommentFields on Comment {
-      _id
-      content
-      pin {
-        _id
-      }
-      author {
-        name
-        username
-        email
-        image
-      }
-      createdAt
-    }
   `
 };
 

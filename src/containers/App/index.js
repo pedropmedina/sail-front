@@ -156,22 +156,6 @@ const App = props => {
     dispatch({ type: DELETE_POPUP_PIN });
   };
 
-  // TODO: Implement draftPin differently once I bring in data from foursquare
-  /*
-  const handleCreateDraftPin = () => {
-    if (draftPin) return;
-
-    dispatch({ type: DELETE_CURRENT_PIN });
-    dispatch({ type: CREATE_DRAFT_PIN });
-
-    const { longitude, latitude } = viewport;
-    dispatch({
-      type: UPDATE_DRAFT_PIN,
-      payload: { longitude, latitude }
-    });
-  };
-  */
-
   const handleViewportChange = viewport => {
     const { longitude, latitude, zoom = 13 } = viewport;
     dispatch({ type: UPDATE_VIEWPORT, payload: { longitude, latitude, zoom } });
