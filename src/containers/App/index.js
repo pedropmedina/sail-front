@@ -11,7 +11,11 @@ import { FlyToInterpolator } from 'react-map-gl';
 import * as Styled from './styled';
 
 import Context from '../../context';
-import { GET_PINS_QUERY, GET_PIN_BY_COORDS } from '../../graphql/queries';
+import {
+  GET_PINS_QUERY,
+  GET_PIN_BY_COORDS,
+  ME_QUERY
+} from '../../graphql/queries';
 import {
   COMMENT_CREATED_SUBSCRIPTION,
   PIN_CREATED_SUBSCRIPTION
@@ -66,6 +70,9 @@ const App = props => {
     draftPlan
   } = state;
   const { error, loading, data: pinsData } = useQuery(GET_PINS_QUERY);
+  const { error: meError, loading: meLoading, data: meData } = useQuery(
+    ME_QUERY
+  );
   const transitions = useTransition([draftPin || currentPin], null, {
     from: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
     enter: { opacity: 1, zIndex: 1, transform: 'translate3d(0%,0,0)' },
@@ -232,7 +239,8 @@ const App = props => {
       ? PinQuery
       : null;
 
-  if (!error && loading) return <div>Loading...</div>;
+  if ((!error && loading) || (!meError && meLoading))
+    return <div>Loading...</div>;
 
   return (
     <Styled.App>
@@ -245,7 +253,8 @@ const App = props => {
       {/* Create/Edit Pin or display current Pin */}
       {Pin &&
         transitions.map(
-          ({ item, key, props }) => item && <Pin key={key} style={props} />
+          ({ item, key, props }) =>
+            item && <Pin key={key} style={props} me={meData.user} />
         )}
       {/* Map view  */}
       <Map

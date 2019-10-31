@@ -69,6 +69,18 @@ export const CREATE_PLAN_MUTATION = gql`
   ${planFragments.default}
 `;
 
+export const LIKE_PIN = gql`
+  mutation LikePin($pinId: ID!) {
+    likePin(pinId: $pinId)
+  }
+`;
+
+export const UNLIKE_PIN = gql`
+  mutation UnlikePin($pinId: ID!) {
+    unlikePin(pinId: $pinId)
+  }
+`;
+
 // request mutations
 export const CREATE_REQUEST_MUTATION = gql`
   mutation CreateRequest($input: CreateRequestInput!) {

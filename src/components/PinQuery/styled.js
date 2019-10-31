@@ -10,7 +10,19 @@ export const PinQuery = styled.article`
   grid-template-rows: min-content minmax(0, 1fr);
 `;
 
-export const TopPanel = styled.section``;
+export const TopPanel = styled.section`
+  position: relative;
+
+  svg {
+    position: absolute;
+    right: 2rem;
+    top: 2rem;
+    fill: ${({ isLiked }) =>
+      isLiked ? 'var(--color-earth-red)' : 'var(--color-almost-white)'};
+    font-size: 2.5rem;
+    cursor: pointer;
+  }
+`;
 
 export const BottomPanel = styled.section``;
 
