@@ -58,7 +58,6 @@ export const FormField = styled.div`
 
 export const ButtonField = styled(FormField)`
   flex: unset;
-  margin-top: 3rem;
 `;
 
 export const SettingsNav = styled.div`

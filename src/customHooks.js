@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useQuery } from '@apollo/react-hooks';
+
+import { ME_QUERY } from './graphql/queries';
 
 const TEXTAREA_DEFAULTS = {
   rows: 2,
@@ -7,8 +10,51 @@ const TEXTAREA_DEFAULTS = {
   lineHeight: 24
 };
 
+const INPUTS_DEFAULTS = {
+  firstName: '',
+  lastName: '',
+  username: '',
+  email: '',
+  about: '',
+  phone: '',
+  image: '',
+  address: ''
+};
+
+// user profile details and privacy
 export const useProfileForm = () => {
-  const [inputs, setInputs] = useState({});
+  const [inputs, setInputs] = useState(INPUTS_DEFAULTS);
+  const { data } = useQuery(ME_QUERY);
+
+  useEffect(() => {
+    if (data && data.user) {
+      setupIntialValues(data);
+    }
+  }, [data]);
+
+  const setupIntialValues = data => {
+    const {
+      firstName,
+      lastName,
+      username,
+      email,
+      about,
+      phone,
+      image,
+      address
+    } = data.user;
+    setInputs(prevState => ({
+      ...prevState,
+      firstName,
+      lastName,
+      username,
+      email,
+      about,
+      phone,
+      image,
+      address
+    }));
+  };
 
   const handleChange = cb => event => {
     const { name, value } = event.target;
@@ -21,9 +67,14 @@ export const useProfileForm = () => {
     if (cb && typeof cb === 'function') cb(inputs);
   };
 
-  return { inputs, handleChange, handleSubmit };
+  const handleCancel = () => {
+    setupIntialValues(data);
+  };
+
+  return { inputs, handleChange, handleSubmit, handleCancel };
 };
 
+// textarea row growth
 export const useTextarea = () => {
   const [rows, setRows] = useState(TEXTAREA_DEFAULTS.rows);
 

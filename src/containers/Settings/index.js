@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useContext } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import Avatar from 'react-avatar';
 import { ClipLoader } from 'react-spinners';
 
@@ -25,7 +25,6 @@ const FormField = ({
   placeholder,
   inputs,
   handleChange,
-  defaultValue,
   rows
 }) => (
   <Styled.FormField>
@@ -35,13 +34,7 @@ const FormField = ({
         id={name}
         name={name}
         placeholder={placeholder ? placeholder : label}
-        value={
-          defaultValue && !inputs[name]
-            ? defaultValue
-            : !inputs[name]
-            ? ''
-            : inputs[name]
-        }
+        value={inputs[name]}
         onChange={handleChange}
         required
         rows={rows}
@@ -52,13 +45,7 @@ const FormField = ({
         id={name}
         name={name}
         placeholder={placeholder ? placeholder : label}
-        value={
-          defaultValue && !inputs[name]
-            ? defaultValue
-            : !inputs[name]
-            ? ''
-            : inputs[name]
-        }
+        value={inputs[name]}
         onChange={handleChange}
         required
       />
@@ -67,7 +54,7 @@ const FormField = ({
   </Styled.FormField>
 );
 
-const Privacy = ({ handleSubmit, handleChange, inputs, me }) => {
+const Privacy = ({ handleSubmit, handleChange, inputs }) => {
   return (
     <>
       <Form onSubmit={handleSubmit()} noValidate>
@@ -79,7 +66,6 @@ const Privacy = ({ handleSubmit, handleChange, inputs, me }) => {
             label="Username"
             inputs={inputs}
             handleChange={handleChange}
-            defaultValue={me.username ? me.username : null}
           />
         </Styled.FormFields>
         {/* Password */}
@@ -114,14 +100,14 @@ const Privacy = ({ handleSubmit, handleChange, inputs, me }) => {
 };
 
 const UserDetails = ({
+  inputs,
+  viewport,
+  rows,
+  isLoadingUpdate,
   handleSubmit,
   handleChange,
-  inputs,
-  me,
-  viewport,
-  handleClickGeocodingResult,
-  isLoadingUpdate,
-  rows
+  handleCancel,
+  handleClickGeocodingResult
 }) => {
   const css = {
     wrapper: `
@@ -175,7 +161,6 @@ const UserDetails = ({
             label="First Name"
             inputs={inputs}
             handleChange={handleChange}
-            defaultValue={me.firstName ? me.firstName : null}
           />
           <FormField
             type="text"
@@ -183,7 +168,6 @@ const UserDetails = ({
             label="Last Name"
             inputs={inputs}
             handleChange={handleChange}
-            defaultValue={me.lastName ? me.lastName : null}
           />
         </Styled.FormFields>
         {/* Contact information */}
@@ -194,7 +178,6 @@ const UserDetails = ({
             label="Email"
             inputs={inputs}
             handleChange={handleChange}
-            defaultValue={me.email ? me.email : null}
           />
           <FormField
             type="text"
@@ -202,7 +185,6 @@ const UserDetails = ({
             label="Phone#"
             inputs={inputs}
             handleChange={handleChange}
-            defaultValue={me.phone ? me.phone : null}
           />
         </Styled.FormFields>
         {/* About section */}
@@ -213,7 +195,6 @@ const UserDetails = ({
             label="About"
             inputs={inputs}
             handleChange={handleChange}
-            defaultValue={me.about ? me.about : null}
             rows={rows}
           />
         </Styled.FormFields>
@@ -226,13 +207,6 @@ const UserDetails = ({
               css={css}
             />
           </Styled.FormField>
-          {/* <FormField
-            type="text"
-            name="address"
-            label="Address"
-            inputs={inputs}
-            handleChange={handleChange}
-          /> */}
         </Styled.FormFields>
         {/* Action buttons */}
         <Styled.FormFields>
@@ -251,7 +225,9 @@ const UserDetails = ({
             </SaveButton>
           </Styled.ButtonField>
           <Styled.ButtonField>
-            <CancelButton type="button">Cancel</CancelButton>
+            <CancelButton type="button" onClick={handleCancel}>
+              Cancel
+            </CancelButton>
           </Styled.ButtonField>
         </Styled.FormFields>
       </Form>
@@ -260,10 +236,9 @@ const UserDetails = ({
 };
 
 const Settings = () => {
-  const { inputs, handleChange, handleSubmit } = useProfileForm();
+  const { inputs, handleChange, handleSubmit, handleCancel } = useProfileForm();
   const { rows, handleTextareaChange } = useTextarea();
   const { path, url } = useRouteMatch();
-  const { error, loading, data } = useQuery(ME_QUERY);
   const [updateUser, { loading: loadingUpdate }] = useMutation(
     UPDATE_USER_MUTATION
   );
@@ -272,17 +247,18 @@ const Settings = () => {
 
   const handleClickGeocodingResult = () => {};
 
-  if (!error && loading) return <div>Loading...</div>;
-
-  // console.log(data.user);
-  // console.log(inputs);
-
   const handleUpdateUser = async inputs => {
     await updateUser({
       variables: {
         input: {
           ...inputs
         }
+      },
+      update: (cache, { data: { updateUser } }) => {
+        cache.writeQuery({
+          query: ME_QUERY,
+          data: { user: updateUser }
+        });
       }
     });
   };
@@ -318,13 +294,13 @@ const Settings = () => {
           <Route exact path={`${path}`}>
             <UserDetails
               inputs={inputs}
+              rows={rows}
+              viewport={viewport}
+              isLoadingUpdate={loadingUpdate}
               handleChange={handleChange(handleTextareaChange)}
               handleSubmit={handleSubmit(handleUpdateUser)}
-              me={data.user}
-              viewport={viewport}
+              handleCancel={handleCancel}
               handleClickGeocodingResult={handleClickGeocodingResult}
-              isLoadingUpdate={loadingUpdate}
-              rows={rows}
             />
           </Route>
           <Route path={`${path}/privacy`}>
@@ -332,7 +308,6 @@ const Settings = () => {
               inputs={inputs}
               handleChange={handleChange()}
               handleSubmit={handleSubmit}
-              me={data.user}
             />
           </Route>
         </Switch>
