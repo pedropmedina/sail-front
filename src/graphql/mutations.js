@@ -7,7 +7,8 @@ import {
   commentFragments,
   authFragments,
   messageFragments,
-  conversationFragments
+  conversationFragments,
+  userFragments
 } from './fragments';
 
 // auth mutations
@@ -16,7 +17,8 @@ export const SIGNUP_USER_MUTATION = gql`
     auth: signupUser(input: $input) {
       token
       user {
-        name
+      firstName
+      lastName
         username
         email
       }
@@ -38,6 +40,16 @@ export const LOGOUT_USER_MUTATION = gql`
     logoutUser
   }
 `;
+
+// user mutations
+export const UPDATE_USER_MUTATION = gql`
+  mutation UpdateUser($input: UpdateUserInput!) {
+    updateUser(input: $input) {
+      ...defaultUserFields
+    }
+  }
+  ${userFragments.default}
+`
 
 // pin mutations
 export const CREATE_PIN_MUTATION = gql`

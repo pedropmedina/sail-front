@@ -14,6 +14,16 @@ export default createGlobalStyle`
     --color-warning: #f2c446;
     --color-danger: #e64e4e;
     --color-success: #54b078;
+
+    --size-largest: 9rem;
+    --size-large: 6rem;
+    --size-medium: 4rem;
+    --size-small: 2rem;
+    --size-smallest: 1rem;
+
+    --font-size-large: 2rem;
+    --font-size-medium: 1.6rem;
+    --font-size-small: 1.4rem;
   }
 
   html {

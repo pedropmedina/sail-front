@@ -27,7 +27,7 @@ export const GeocodingInput = styled.input`
   height: 100%;
   text-indent: 5rem;
   border: none;
-  color: var(--color-dark-grey);
+  color: var(--color-almost-black);
   background-color: inherit;
   outline: none;
   border-radius: inherit;
@@ -51,7 +51,7 @@ export const GeocodingResults = styled.section`
   display: none;
   padding: 2rem 0;
   background-color: var(--color-almost-white);
-  box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.5rem 1.5rem 0.5rem rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
   position: absolute;
   left: 0;

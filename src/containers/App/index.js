@@ -42,20 +42,22 @@ import PinMutation from '../../components/PinMutation';
 import GeocodingSearch from '../../components/GeocodingSearch';
 
 // styles for geocoding search component
-const css = `
-  position: absolute;
-  top: 3rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 70vw;
-  max-width: 70rem;
-  z-index: 1;
-  box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.15);
-  border-radius: 0.5rem;
-  color: var(--color-light-grey);
-  background-color: var(--color-almost-white);
-  font-size: 1.6rem;
-`;
+const css = {
+  wrapper: `
+    position: absolute;
+    top: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70vw;
+    max-width: 70rem;
+    z-index: 1;
+    box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+    color: var(--color-light-grey);
+    background-color: var(--color-almost-white);
+    font-size: 1.6rem;
+`
+};
 
 const App = props => {
   const client = useApolloClient();

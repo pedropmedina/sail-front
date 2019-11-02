@@ -53,3 +53,8 @@
   transform: translateY(-0.2rem);
   cursor: grab;
 }
+
+.activeLink {
+  border-bottom: 0.3rem solid red !important;
+  color: red !important;
+}

@@ -77,11 +77,15 @@ const GeocodingSearch = ({
 
   return (
     <ClickOutside onClickOutside={onClickOutside} onClickInside={onClickInside}>
-      <Styled.GeocodingWrapper css={css}>
-        <Styled.Geocoding>
+      <Styled.GeocodingWrapper css={css.wrapper || ''}>
+        <Styled.Geocoding css={css.geocoding || ''}>
           {/* Geocoding Search form */}
-          <Styled.GeocodingSearch onSubmit={hanldeSubmit}>
+          <Styled.GeocodingSearch
+            onSubmit={hanldeSubmit}
+            css={css.search || ''}
+          >
             <Styled.GeocodingInput
+              css={css.input || ''}
               type="text"
               value={text}
               placeholder="Search by location, category, city..."
@@ -91,12 +95,14 @@ const GeocodingSearch = ({
           </Styled.GeocodingSearch>
           {/* Geocoding search results  */}
           <Styled.GeocodingResults
+            css={css.results || ''}
             showResults={showResults && geocodingResults.length > 0}
           >
-            <Styled.ResultList>
+            <Styled.ResultList css={css.list || ''}>
               {geocodingResults.map((result, index) => {
                 return (
                   <Styled.ResultItem
+                    css={css.item || ''}
                     key={index}
                     onClick={() => {
                       setShowResults(false);

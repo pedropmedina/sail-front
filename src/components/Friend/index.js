@@ -4,7 +4,7 @@ import React from 'react';
 import * as Styled from './styled';
 
 const Friend = ({
-  name = '',
+  firstName = '',
   username = '',
   address = {},
   image = '',
@@ -18,7 +18,7 @@ const Friend = ({
         src={image ? image : 'https://via.placeholder.com/80'}
         alt="Profile image"
       />
-      <Styled.Name>{name ? name : username}</Styled.Name>
+      <Styled.Name>{firstName ? firstName : username}</Styled.Name>
       <Styled.Address>
         {address.longitude && address.latitude ? '' : 'Miami, FL'}
       </Styled.Address>

@@ -5,18 +5,12 @@ import { formatDistanceToNow } from 'date-fns';
 import * as Styled from './styled';
 
 import { ReactComponent as SendIcon } from '../../assets/SVG/send.svg';
-
-const TEXTAREA_DEFAULTS = {
-  rows: 2,
-  minRows: 2,
-  maxRows: 10,
-  lineHeight: 24
-};
+import { useTextarea } from '../../customHooks';
 
 const Chat = ({ data, onCreateNew, subscribeToNew }) => {
   const refEl = useRef(null);
   const [text, setText] = useState('');
-  const [rows, setRows] = useState(TEXTAREA_DEFAULTS.rows);
+  const { rows, handleTextareaChange } = useTextarea();
 
   useEffect(() => {
     if (subscribeToNew && subscribeToNew instanceof Function) {
@@ -34,25 +28,12 @@ const Chat = ({ data, onCreateNew, subscribeToNew }) => {
     ref.current.scrollIntoView({ block: 'start', behavior: 'smooth' });
   };
 
-  const displayName = ({ name, username }) => (name ? name : username);
+  const displayName = ({ firstname, username }) =>
+    firstname ? firstname : username;
 
-  const handleOnChange = e => {
-    const { minRows, maxRows, lineHeight } = TEXTAREA_DEFAULTS;
-    const prevRows = e.target.rows;
-    e.target.rows = minRows; // reset rows
-    const currentRows = ~~(e.target.scrollHeight / lineHeight);
-
-    if (currentRows === prevRows) {
-      e.target.rows = currentRows;
-    }
-
-    if (currentRows >= maxRows) {
-      e.target.rows = maxRows;
-      e.target.scrollTop = e.target.scrollHeight;
-    }
-
-    setRows(currentRows < maxRows ? currentRows : maxRows);
-    setText(e.target.value);
+  const handleOnChange = event => {
+    handleTextareaChange(event);
+    setText(event.target.value);
   };
 
   const handleSubmit = async e => {

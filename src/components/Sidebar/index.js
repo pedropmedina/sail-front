@@ -46,7 +46,7 @@ const ITEMS = [
 
 const Profile = props => {
   const { data } = props;
-  const { username, name, image } = data;
+  const { username, firstName, image } = data;
   return (
     <Styled.Profile>
       <Styled.Figure>
@@ -54,7 +54,7 @@ const Profile = props => {
           src={image ? image : 'https://via.placeholder.com/70'}
           alt="profile pic"
         />
-        <Styled.Name>{name ? name : username}</Styled.Name>
+        <Styled.Name>{firstName ? firstName : username}</Styled.Name>
         <Styled.Location>Miami, FL</Styled.Location>
       </Styled.Figure>
       <Styled.ProfileMoreBtn>
@@ -200,11 +200,7 @@ const Sidebar = () => {
               hasModifiedReqs(reqData.requests, meData.user)
             }
           >
-            <Styled.Link
-              to={text === 'map' ? '/' : `/${text}`}
-              activeClassName="selected-navLink"
-              exact
-            >
+            <Styled.Link to={`/${text}`} activeClassName="selected-navLink">
               <Icon fill="currentColor" className="icon icon-small" />
             </Styled.Link>
           </Styled.Item>

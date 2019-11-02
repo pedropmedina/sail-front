@@ -76,8 +76,8 @@ const FriendsPicker = ({
               {friends &&
                 friends
                   .filter(f => {
-                    const s = f.name
-                      ? f.name + f.username + f.email
+                    const s = f.firstName
+                      ? f.firstName + f.username + f.email
                       : f.username + f.email;
                     return searchText
                       ? s
@@ -85,7 +85,7 @@ const FriendsPicker = ({
                           .includes(searchText.trim().toLowerCase())
                       : f;
                   })
-                  .map(({ name, username, image }, i) => (
+                  .map(({ firstName, username, image }, i) => (
                     <Styled.Friend
                       key={`${i}-${username}`}
                       onClick={() => handleAddInvite(username)}
@@ -94,7 +94,7 @@ const FriendsPicker = ({
                       <Styled.FriendImg
                         src={image ? image : 'https://via.placeholder.com/50'}
                       />
-                      {name ? name : username}
+                      {firstName ? firstName : username}
                     </Styled.Friend>
                   ))}
             </Styled.FriendsList>

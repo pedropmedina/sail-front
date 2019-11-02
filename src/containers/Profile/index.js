@@ -75,7 +75,7 @@ const Profile = props => {
     return isSame || isFriend || haveISentReq || hasProfileSentReq;
   };
 
-  const showNameOrUsername = data => (data.name ? data.name : data.username);
+  const showNameOrUsername = data => (data.firstName ? data.firstName : data.username);
 
   const hidePlans = user => plan =>
     plan.private

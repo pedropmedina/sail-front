@@ -16,7 +16,7 @@ const isAuthor = (author, currentUser) => author.email === currentUser.email;
 const formatRequestDate = (request, currentUser) => {
   return request.status !== 'PENDING' && isAuthor(request.author, currentUser)
     ? `${
-        request.to.name ? request.to.name : request.to.username
+        request.to.firstName ? request.to.firstName : request.to.username
       } ${request.status.toLowerCase()} your request ${formatDistance(
         parseInt(request.updatedAt),
         Date.now(),
@@ -29,11 +29,11 @@ const formatRequestDate = (request, currentUser) => {
 
 const displayHeadingName = (request, currentUser) => {
   return isAuthor(request.author, currentUser)
-    ? request.to.name
-      ? request.to.name
+    ? request.to.firstName
+      ? request.to.firstName
       : request.to.username
-    : request.author.name
-    ? request.author.name
+    : request.author.firstName
+    ? request.author.firstName
     : request.author.username;
 };
 

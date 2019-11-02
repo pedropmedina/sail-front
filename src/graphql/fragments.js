@@ -6,7 +6,8 @@ export const conversationFragments = {
     fragment defaultConversationFields on Conversation {
       _id
       participants {
-        name
+        firstName
+        lastName
         username
         email
         image
@@ -16,7 +17,8 @@ export const conversationFragments = {
         content
         createdAt
         author {
-          name
+          firstName
+          lastName
           username
         }
       }
@@ -31,7 +33,8 @@ export const conversationFragments = {
         description
       }
       author {
-        name
+        firstName
+        lastName
         username
         email
       }
@@ -49,13 +52,15 @@ export const planFragments = {
       description
       date
       invites {
-        name
+        firstName
+        lastName
         username
         email
         image
       }
       participants {
-        name
+        firstName
+        lastName
         username
         email
         image
@@ -73,7 +78,8 @@ export const planFragments = {
         createdAt
       }
       author {
-        name
+        firstName
+        lastName
         username
         email
       }
@@ -102,7 +108,8 @@ export const pinFragments = {
         author {
           email
           username
-          name
+          firstName
+          lastName
         }
         createdAt
       }
@@ -119,7 +126,8 @@ export const authFragments = {
       user {
         email
         username
-        name
+        firstName
+        lastName
         image
         about
         address {
@@ -129,7 +137,8 @@ export const authFragments = {
         friends {
           email
           username
-          name
+          firstName
+          lastName
           image
         }
         myPlans {
@@ -173,7 +182,8 @@ export const requestFragments = {
     fragment defaultRequestFields on Request {
       _id
       to {
-        name
+        firstName
+        lastName
         username
         email
         image
@@ -181,7 +191,8 @@ export const requestFragments = {
       status
       reqType
       author {
-        name
+        firstName
+        lastName
         username
         email
         image
@@ -194,7 +205,8 @@ export const requestFragments = {
     fragment inviteRequestFields on InviteRequest {
       _id
       to {
-        name
+        firstName
+        lastName
         username
         email
         image
@@ -207,7 +219,8 @@ export const requestFragments = {
         description
       }
       author {
-        name
+        firstName
+        lastName
         username
         email
         image
@@ -228,7 +241,8 @@ export const commentFragments = {
         _id
       }
       author {
-        name
+        firstName
+        lastName
         username
         email
         image
@@ -242,9 +256,11 @@ export const commentFragments = {
 export const userFragments = {
   default: gql`
     fragment defaultUserFields on User {
-      email
+      firstName
+      lastName
       username
-      name
+      email
+      phone
       image
       about
       address {
@@ -254,7 +270,8 @@ export const userFragments = {
       friends {
         email
         username
-        name
+        firstName
+        lastName
         image
       }
       myPlans {
@@ -309,7 +326,8 @@ export const userFragments = {
     fragment friendsFields on User {
       email
       username
-      name
+      firstName
+      lastName
       image
       address {
         longitude
@@ -322,7 +340,8 @@ export const userFragments = {
       friends {
         email
         username
-        name
+        firstName
+        lastName
         image
         address {
           longitude
@@ -336,7 +355,8 @@ export const userFragments = {
     fragment profileFields on User {
       email
       username
-      name
+      firstName
+      lastName
       image
       about
       address {
@@ -346,7 +366,8 @@ export const userFragments = {
       friends {
         email
         username
-        name
+        firstName
+        lastName
         image
         address {
           longitude
@@ -360,12 +381,14 @@ export const userFragments = {
         date
         private
         participants {
-          name
+          firstName
+          lastName
           username
           email
         }
         invites {
-          name
+          firstName
+          lastName
           username
           email
         }
@@ -412,7 +435,8 @@ export const messageFragments = {
         _id
       }
       author {
-        name
+        firstName
+        lastName
         username
         email
         image
