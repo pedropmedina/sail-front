@@ -138,7 +138,7 @@ const UserDetails = ({
       <Styled.AvatarWrapper>
         <Avatar
           name="Pedro Medina"
-          round={true}
+          round={5}
           size="90"
           textSizeRatio={3}
           style={{ boxShadow: '0 .5rem 1rem .2rem rgba(0,0,0,.2)' }}

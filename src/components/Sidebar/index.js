@@ -46,7 +46,7 @@ const ITEMS = [
 
 const Profile = props => {
   const { data } = props;
-  const { username, firstName, image } = data;
+  const { username, firstName, lastName, image } = data;
   return (
     <Styled.Profile>
       <Styled.Figure>
@@ -54,7 +54,13 @@ const Profile = props => {
           src={image ? image : 'https://via.placeholder.com/70'}
           alt="profile pic"
         />
-        <Styled.Name>{firstName ? firstName : username}</Styled.Name>
+        <Styled.Name>
+          {firstName && lastName
+            ? firstName + ' ' + lastName
+            : firstName
+            ? firstName
+            : username}
+        </Styled.Name>
         <Styled.Location>Miami, FL</Styled.Location>
       </Styled.Figure>
       <Styled.ProfileMoreBtn>

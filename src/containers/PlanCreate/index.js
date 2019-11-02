@@ -282,7 +282,6 @@ const PlanCreate = props => {
             <GeocodingSearch
               viewport={viewport}
               onClickGeocodingResult={handleClickGeocodingResult}
-              css={css}
             />
           )}
           {locationError && (

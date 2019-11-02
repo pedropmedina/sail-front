@@ -18,11 +18,10 @@ export const Input = styled.input`
   width: 100%;
   height: 100%;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--size-smallest);
   outline: unset;
   padding-left: 2rem;
   font-size: var(--font-size-small);
-  transition: all 0.2s;
 
   ::placeholder {
     color: var(--color-light-grey);

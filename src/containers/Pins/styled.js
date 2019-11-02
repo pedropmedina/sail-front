@@ -1,6 +1,8 @@
 import styled from 'styled-components/macro';
 
-export const PinsWrapper = styled.div``;
+export const PinsWrapper = styled.div`
+  overflow-y: auto;
+`;
 
 export const Panels = styled.article`
   display: flex;

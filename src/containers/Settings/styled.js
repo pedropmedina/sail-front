@@ -6,7 +6,7 @@ export const SettingsWrapper = styled.div`
 `;
 
 export const InnerWrapper = styled.div`
-  padding: 8rem 5rem;
+  padding: 5rem;
   margin: 0 auto;
   max-width: 120rem;
 `;

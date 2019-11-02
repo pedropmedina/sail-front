@@ -17,9 +17,9 @@ export default createGlobalStyle`
 
     --size-largest: 9rem;
     --size-large: 6rem;
-    --size-medium: 4rem;
-    --size-small: 2rem;
-    --size-smallest: 1rem;
+    --size-medium: 3rem;
+    --size-small: 1rem;
+    --size-smallest: 0.5rem;
 
     --font-size-large: 2rem;
     --font-size-medium: 1.6rem;
