@@ -1,18 +1,18 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { format } from 'date-fns';
-import { Marker } from 'react-map-gl';
 
 import * as Styled from './styled';
 
 import MapPreview from '../../components/MapPreview';
 import Chat from '../../components/Chat';
-import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
 
 import { GET_PLAN_QUERY } from '../../graphql/queries';
 import { CREATE_MESSAGE_MUTATION } from '../../graphql/mutations';
 import { MESSAGE_CREATED_SUBSCRIPTION } from '../../graphql/subscriptions';
+
+import { useLazyReverseGeocode } from '../../customHooks';
 
 const mapCss = `
   height: 25rem;
@@ -27,6 +27,17 @@ const PlanView = props => {
   const [createMessage] = useMutation(CREATE_MESSAGE_MUTATION, {
     ignoreResults: true
   });
+  const [
+    reverseGeocode,
+    { reversedGeocode, longitude, latitude }
+  ] = useLazyReverseGeocode();
+
+  useEffect(() => {
+    if (data && data.plan) {
+      const { plan: { location: { longitude, latitude } } } = data; //prettier-ignore
+      reverseGeocode(longitude, latitude);
+    }
+  }, [data]);
 
   const subscribeToNewMessages = conversationId => () => {
     subscribeToMore({
@@ -56,8 +67,6 @@ const PlanView = props => {
 
   if (!error && loading) return <div>Loading...</div>;
 
-  // console.log(plan);
-
   return (
     <Styled.PlanViewWrapper>
       <Styled.Panels>
@@ -66,29 +75,10 @@ const PlanView = props => {
           <Styled.MapPreview>
             <MapPreview
               css={mapCss}
-              longitude={plan.location.longitude}
-              latitude={plan.location.latitude}
-            >
-              <Marker
-                longitude={plan.location.longitude}
-                latitude={plan.location.latitude}
-              >
-                <PinIcon className="icon icon-small pin-icon" />
-              </Marker>
-              <Styled.Popup
-                longitude={plan.location.longitude}
-                latitude={plan.location.latitude}
-                offsetLeft={24}
-                offsetTop={12}
-                anchor="left"
-                closeButton={false}
-              >
-                <Styled.PopupImg
-                  src={plan.location.image}
-                  alt="plans's image"
-                />
-              </Styled.Popup>
-            </MapPreview>
+              longitude={longitude}
+              latitude={latitude}
+              reversedGeocode={reversedGeocode}
+            />
           </Styled.MapPreview>
           <Styled.Date>
             {format(parseInt(plan.date), 'EEEE, MMMM do, yyyy hh:mm aaaa')}

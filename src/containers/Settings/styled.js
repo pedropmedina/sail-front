@@ -25,24 +25,6 @@ export const AvatarBtns = styled.div`
   padding: 0 1rem;
 `;
 
-export const AvatarBtn = styled.button`
-  border: none;
-  width: 3.5rem;
-  height: 3.5rem;
-  background-color: var(--color-light-grey);
-  color: var(--color-almost-white);
-  border-radius: 50%;
-  margin: 0.2rem;
-  box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  outline: unset;
-
-  svg {
-    font-size: 1.6rem;
-    fill: currentColor;
-  }
-`;
-
 export const FormFields = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -54,6 +36,12 @@ export const FormField = styled.div`
   margin: 1rem;
   min-height: 6rem;
   position: relative;
+`;
+
+export const MapField = styled(FormField)`
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: var(--size-smallest);
 `;
 
 export const ButtonField = styled(FormField)`

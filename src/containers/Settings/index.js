@@ -7,14 +7,21 @@ import { ClipLoader } from 'react-spinners';
 
 import * as Styled from './styled';
 import { Form, Input, Label, Textarea } from '../../sharedStyles/forms';
-import { SaveButton, CancelButton } from '../../sharedStyles/buttons';
+import {
+  SaveButton,
+  CancelButton,
+  RoundButton
+} from '../../sharedStyles/buttons';
+
 import { ReactComponent as TrashIcon } from '../../assets/SVG/trash.svg';
 import { ReactComponent as EditIcon } from '../../assets/SVG/edit.svg';
+
 import GeocodingSearch from '../../components/GeocodingSearch';
-// import MapPreview from '../../components/MapPreview'
+import MapPreview from '../../components/MapPreview';
 
 import Context from '../../context';
 import { useProfileForm, useTextarea } from '../../customHooks';
+
 import { ME_QUERY } from '../../graphql/queries';
 import { UPDATE_USER_MUTATION } from '../../graphql/mutations';
 
@@ -109,7 +116,7 @@ const UserDetails = ({
   handleCancel,
   handleClickGeocodingResult
 }) => {
-  const css = {
+  const searchCss = {
     wrapper: `
       width: 100%;
       border-radius: 0.5rem;
@@ -132,24 +139,28 @@ const UserDetails = ({
   `
   };
 
+  const mapCss = `
+    height: 25rem;
+  `;
+
   return (
     <>
       {/* Avatar */}
       <Styled.AvatarWrapper>
         <Avatar
           name="Pedro Medina"
-          round={5}
           size="90"
+          round="5px"
           textSizeRatio={3}
           style={{ boxShadow: '0 .5rem 1rem .2rem rgba(0,0,0,.2)' }}
         />
         <Styled.AvatarBtns>
-          <Styled.AvatarBtn>
+          <RoundButton>
             <EditIcon />
-          </Styled.AvatarBtn>
-          <Styled.AvatarBtn>
+          </RoundButton>
+          <RoundButton>
             <TrashIcon />
-          </Styled.AvatarBtn>
+          </RoundButton>
         </Styled.AvatarBtns>
       </Styled.AvatarWrapper>
       <Form onSubmit={handleSubmit} noValidate>
@@ -200,13 +211,24 @@ const UserDetails = ({
         </Styled.FormFields>
         {/* Location */}
         <Styled.FormFields>
-          <Styled.FormField>
-            <GeocodingSearch
-              viewport={viewport}
-              onClickGeocodingResult={handleClickGeocodingResult}
-              css={css}
-            />
-          </Styled.FormField>
+          {inputs.address.reversedGeocode ? (
+            <Styled.MapField>
+              <MapPreview
+                longitude={inputs.address.longitude}
+                latitude={inputs.address.latitude}
+                reversedGeocode={inputs.address.reversedGeocode}
+                css={mapCss}
+              />
+            </Styled.MapField>
+          ) : (
+            <Styled.FormField>
+              <GeocodingSearch
+                viewport={viewport}
+                onClickGeocodingResult={handleClickGeocodingResult}
+                css={searchCss}
+              />
+            </Styled.FormField>
+          )}
         </Styled.FormFields>
         {/* Action buttons */}
         <Styled.FormFields>
@@ -236,7 +258,13 @@ const UserDetails = ({
 };
 
 const Settings = () => {
-  const { inputs, handleChange, handleSubmit, handleCancel } = useProfileForm();
+  const {
+    inputs,
+    handleChange,
+    handleSubmit,
+    handleCancel,
+    handleAddress
+  } = useProfileForm();
   const { rows, handleTextareaChange } = useTextarea();
   const { path, url } = useRouteMatch();
   const [updateUser, { loading: loadingUpdate }] = useMutation(
@@ -245,13 +273,16 @@ const Settings = () => {
   const { state } = useContext(Context);
   const { viewport } = state;
 
-  const handleClickGeocodingResult = () => {};
+  const handleClickGeocodingResult = result => handleAddress(result);
 
   const handleUpdateUser = async inputs => {
+    const { address, ...rest } = inputs;
+    const { longitude, latitude } = address;
     await updateUser({
       variables: {
         input: {
-          ...inputs
+          ...rest,
+          address: { longitude, latitude }
         }
       },
       update: (cache, { data: { updateUser } }) => {

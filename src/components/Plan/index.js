@@ -1,64 +1,33 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react';
-import { Marker } from 'react-map-gl';
+import React from 'react';
 import { format } from 'date-fns';
 
 import * as Styled from './styled';
-import { Popup } from '../../stylesShare';
 
 import { ReactComponent as CalendarIcon } from '../../assets/SVG/calendar.svg';
-import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
 
 import MapPreview from '../MapPreview';
 
-import { reverseGeocode } from '../../utils';
+import { useReverseGeocode } from '../../customHooks';
 
 const mapCss = `
   height: 25rem;
 `;
 
 const Plan = ({ _id, title, description, date, participants, location }) => {
-  const [address, setAddress] = useState('');
-  useEffect(() => {
-    let isSubscribed = true;
-
-    const { longitude, latitude } = location;
-    if (longitude && latitude) {
-      reverseGeocode(longitude, latitude).then(addr => {
-        if (isSubscribed) {
-          setAddress(addr);
-        }
-      });
-    }
-
-    return () => {
-      isSubscribed = false;
-    };
-  }, []);
+  const { longitude: lon, latitude: lat } = location;
+  const { reversedGeocode, longitude, latitude } = useReverseGeocode(lon, lat);
 
   return (
     <Styled.Plan>
       <Styled.PlanLink to={`/plan/${_id}`}>
         <Styled.Location>
           <MapPreview
-            longitude={location.longitude}
-            latitude={location.latitude}
+            longitude={longitude}
+            latitude={latitude}
+            reversedGeocode={reversedGeocode}
             css={mapCss}
-          >
-            <Marker longitude={location.longitude} latitude={location.latitude}>
-              <PinIcon className="icon icon-small pin-icon" />
-            </Marker>
-            <Popup
-              longitude={location.longitude}
-              latitude={location.latitude}
-              offsetLeft={24}
-              offsetTop={12}
-              anchor="left"
-              closeButton={false}
-            >
-              <p style={{ width: '15rem' }}>{address}</p>
-            </Popup>
-          </MapPreview>
+          />
         </Styled.Location>
         <Styled.Title>{title}</Styled.Title>
         <Styled.Description>{description}</Styled.Description>

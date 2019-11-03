@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 
 import { ME_QUERY } from './graphql/queries';
+import { reverseGeocode } from './utils';
 
 const TEXTAREA_DEFAULTS = {
   rows: 2,
@@ -13,7 +14,6 @@ const TEXTAREA_DEFAULTS = {
 const INPUTS_DEFAULTS = {
   firstName: '',
   lastName: '',
-  username: '',
   email: '',
   about: '',
   phone: '',
@@ -28,26 +28,22 @@ export const useProfileForm = () => {
 
   useEffect(() => {
     if (data && data.user) {
-      setupIntialValues(data);
+      setupIntialValues(data.user);
     }
   }, [data]);
 
-  const setupIntialValues = data => {
-    const {
-      firstName,
-      lastName,
-      username,
-      email,
-      about,
-      phone,
-      image,
-      address
-    } = data.user;
+  const setupIntialValues = async user => {
+    const { firstName, lastName, email, about, phone, image } = user;
+
+  // prepare address to be passed down to inputs
+    const { longitude, latitude } = user.address;
+    const reversedGeocode = await reverseGeocode(longitude, latitude);
+    const address = { reversedGeocode, longitude, latitude }
+    
     setInputs(prevState => ({
       ...prevState,
       firstName,
       lastName,
-      username,
       email,
       about,
       phone,
@@ -68,10 +64,19 @@ export const useProfileForm = () => {
   };
 
   const handleCancel = () => {
-    setupIntialValues(data);
+    setupIntialValues(data.user);
   };
 
-  return { inputs, handleChange, handleSubmit, handleCancel };
+  const handleAddress = data => {
+    const { place_name, center } = data;
+    const [longitude, latitude] = center;
+    setInputs(prevInputs => ({
+      ...prevInputs,
+      address: { reversedAddress: place_name, longitude, latitude }
+    }));
+  };
+
+  return { inputs, handleChange, handleSubmit, handleCancel, handleAddress };
 };
 
 // textarea row growth
@@ -97,4 +102,46 @@ export const useTextarea = () => {
   };
 
   return { rows, handleTextareaChange };
+};
+
+// reverse geocode
+export const useReverseGeocode = (longitude, latitude) => {
+  const [data, setData] = useState({
+    longitude,
+    latitude,
+    reversedGeocode: null
+  });
+
+  useEffect(() => {
+    if (longitude && latitude) {
+      reverseGeocode(longitude, latitude).then(reversedGeocode =>
+        setData(prevData => ({ ...prevData, reversedGeocode }))
+      );
+    }
+  }, []);
+
+  return { ...data };
+};
+
+export const useLazyReverseGeocode = () => {
+  const [data, setData] = useState({
+    longitude: 0,
+    latitude: 0,
+    reversedGeocode: null
+  });
+
+  const lazyFn = async (longitude, latitude) => {
+    if (longitude && latitude) {
+      reverseGeocode(longitude, latitude).then(reversedGeocode =>
+        setData(prevData => ({
+          ...prevData,
+          reversedGeocode,
+          longitude,
+          latitude
+        }))
+      );
+    }
+  };
+
+  return [lazyFn, { ...data }];
 };

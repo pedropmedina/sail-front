@@ -1,16 +1,21 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import styled from 'styled-components/macro'; // eslint-disable-line
-import { StaticMap } from 'react-map-gl';
+import { StaticMap, Marker } from 'react-map-gl';
 
 import * as Styled from './styled';
+import { Popup } from '../../sharedStyles/popup';
+
+import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
+import { ReactComponent as EditIcon } from '../../assets/SVG/edit.svg';
 
 const MapPreview = ({
   children,
   css = '',
   longitude = -122.4376,
   latitude = 37.7577,
-  zoom = 13
+  zoom = 13,
+  reversedGeocode
 }) => {
   return (
     <Styled.MapPreview css={css}>
@@ -23,6 +28,22 @@ const MapPreview = ({
         latitude={latitude}
         zoom={zoom}
       >
+        <Marker longitude={longitude} latitude={latitude}>
+          <PinIcon className="icon icon-small pin-icon" />
+        </Marker>
+        <Popup
+          longitude={longitude}
+          latitude={latitude}
+          offsetLeft={24}
+          offsetTop={12}
+          anchor="left"
+          closeButton={false}
+        >
+          <p style={{ width: '15rem' }}>{reversedGeocode}</p>
+        </Popup>
+        <Styled.MapButon>
+          <EditIcon />
+        </Styled.MapButon>
         {children}
       </StaticMap>
     </Styled.MapPreview>

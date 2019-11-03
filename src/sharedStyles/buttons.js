@@ -24,3 +24,22 @@ export const SaveButton = styled(Button)`
 export const CancelButton = styled(Button)`
   background-color: var(--color-light-grey);
 `;
+
+export const RoundButton = styled.button`
+  border: none;
+  width: ${({ width }) => (width ? `${width}rem` : '3.5rem')};
+  height: ${({ height }) => (height ? `${height}rem` : '3.5rem')};
+  background-color: ${({ bg }) => (bg ? `${bg}` : 'var(--color-light-grey)')};
+  color: ${({ fg }) => (fg ? `${fg}` : 'var(--color-almost-white)')};
+  border-radius: 50%;
+  margin: 0.2rem;
+  box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  outline: unset;
+
+  svg {
+    font-size: 1.6rem;
+    fill: currentColor;
+  }
+`;
+
