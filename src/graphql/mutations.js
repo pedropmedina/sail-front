@@ -17,8 +17,8 @@ export const SIGNUP_USER_MUTATION = gql`
     auth: signupUser(input: $input) {
       token
       user {
-      firstName
-      lastName
+        firstName
+        lastName
         username
         email
       }
@@ -49,7 +49,16 @@ export const UPDATE_USER_MUTATION = gql`
     }
   }
   ${userFragments.default}
-`
+`;
+
+export const UPDATE_USER_PRIVACY_MUTATION = gql`
+  mutation UpdateUserPrivacy($input: UpdateUserPrivacy!) {
+    updateUserPrivacy(input: $input) {
+      ...defaultUserFields
+    }
+  }
+  ${userFragments.default}
+`;
 
 // pin mutations
 export const CREATE_PIN_MUTATION = gql`

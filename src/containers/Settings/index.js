@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useApolloClient } from '@apollo/react-hooks';
 import Avatar from 'react-avatar';
 import { ClipLoader } from 'react-spinners';
 
@@ -19,11 +19,21 @@ import { ReactComponent as EditIcon } from '../../assets/SVG/edit.svg';
 import GeocodingSearch from '../../components/GeocodingSearch';
 import MapPreview from '../../components/MapPreview';
 
+import history from '../../history';
+import { deleteAccessToken } from '../../accessToken';
 import Context from '../../context';
-import { useProfileForm, useTextarea } from '../../customHooks';
+import {
+  useProfileForm,
+  useProfilePrivacy,
+  useTextarea
+} from '../../customHooks';
 
 import { ME_QUERY } from '../../graphql/queries';
-import { UPDATE_USER_MUTATION } from '../../graphql/mutations';
+import {
+  UPDATE_USER_MUTATION,
+  UPDATE_USER_PRIVACY_MUTATION,
+  LOGOUT_USER_MUTATION
+} from '../../graphql/mutations';
 
 const FormField = ({
   type,
@@ -61,10 +71,43 @@ const FormField = ({
   </Styled.FormField>
 );
 
-const Privacy = ({ handleSubmit, handleChange, inputs }) => {
+const renderFormButtons = ({ isLoadingUpdate, handleCancel }) => {
   return (
     <>
-      <Form onSubmit={handleSubmit()} noValidate>
+      <Styled.ButtonField>
+        <SaveButton disabled={isLoadingUpdate}>
+          {isLoadingUpdate ? (
+            <ClipLoader
+              sizeUnit={'rem'}
+              size={3}
+              color={'#fff'}
+              loading={isLoadingUpdate}
+            />
+          ) : (
+            'Save'
+          )}
+        </SaveButton>
+      </Styled.ButtonField>
+      <Styled.ButtonField>
+        <CancelButton type="button" onClick={handleCancel}>
+          Cancel
+        </CancelButton>
+      </Styled.ButtonField>
+    </>
+  );
+};
+
+const Privacy = ({
+  handleSubmit,
+  handleChange,
+  handleCancel,
+  handleUpdatePrivacy,
+  isLoadingUpdate,
+  inputs
+}) => {
+  return (
+    <>
+      <Form onSubmit={handleSubmit(handleUpdatePrivacy)} noValidate>
         {/* Username */}
         <Styled.FormFields>
           <FormField
@@ -78,14 +121,14 @@ const Privacy = ({ handleSubmit, handleChange, inputs }) => {
         {/* Password */}
         <Styled.FormFields>
           <FormField
-            type="text"
+            type="password"
             name="currentPassword"
             label="Current Password"
             inputs={inputs}
             handleChange={handleChange}
           />
           <FormField
-            type="text"
+            type="password"
             name="newPassword"
             label="New Password"
             inputs={inputs}
@@ -94,12 +137,7 @@ const Privacy = ({ handleSubmit, handleChange, inputs }) => {
         </Styled.FormFields>
         {/* Action buttons */}
         <Styled.FormFields>
-          <Styled.ButtonField>
-            <SaveButton>Save</SaveButton>
-          </Styled.ButtonField>
-          <Styled.ButtonField>
-            <CancelButton type="button">Cancel</CancelButton>
-          </Styled.ButtonField>
+          {renderFormButtons({ isLoadingUpdate, handleCancel })}
         </Styled.FormFields>
       </Form>
     </>
@@ -113,8 +151,12 @@ const UserDetails = ({
   isLoadingUpdate,
   handleSubmit,
   handleChange,
+  handleTextareaChange,
   handleCancel,
-  handleClickGeocodingResult
+  handleClickGeocodingResult,
+  handleUpdateUser,
+  editAddress,
+  onEditAddress
 }) => {
   const searchCss = {
     wrapper: `
@@ -163,7 +205,7 @@ const UserDetails = ({
           </RoundButton>
         </Styled.AvatarBtns>
       </Styled.AvatarWrapper>
-      <Form onSubmit={handleSubmit} noValidate>
+      <Form onSubmit={handleSubmit(handleUpdateUser)} noValidate>
         {/* Name info */}
         <Styled.FormFields>
           <FormField
@@ -171,14 +213,14 @@ const UserDetails = ({
             name="firstName"
             label="First Name"
             inputs={inputs}
-            handleChange={handleChange}
+            handleChange={handleChange()}
           />
           <FormField
             type="text"
             name="lastName"
             label="Last Name"
             inputs={inputs}
-            handleChange={handleChange}
+            handleChange={handleChange()}
           />
         </Styled.FormFields>
         {/* Contact information */}
@@ -188,14 +230,14 @@ const UserDetails = ({
             name="email"
             label="Email"
             inputs={inputs}
-            handleChange={handleChange}
+            handleChange={handleChange()}
           />
           <FormField
             type="text"
             name="phone"
             label="Phone#"
             inputs={inputs}
-            handleChange={handleChange}
+            handleChange={handleChange()}
           />
         </Styled.FormFields>
         {/* About section */}
@@ -205,13 +247,13 @@ const UserDetails = ({
             name="about"
             label="About"
             inputs={inputs}
-            handleChange={handleChange}
+            handleChange={handleChange(handleTextareaChange)}
             rows={rows}
           />
         </Styled.FormFields>
         {/* Location */}
         <Styled.FormFields>
-          {inputs.address.reversedGeocode ? (
+          {inputs.address.reversedGeocode && !editAddress ? (
             <Styled.MapField>
               <MapPreview
                 longitude={inputs.address.longitude}
@@ -219,6 +261,12 @@ const UserDetails = ({
                 reversedGeocode={inputs.address.reversedGeocode}
                 css={mapCss}
               />
+              <Styled.MapButon
+                type="button"
+                onClick={() => onEditAddress(true)}
+              >
+                <EditIcon />
+              </Styled.MapButon>
             </Styled.MapField>
           ) : (
             <Styled.FormField>
@@ -232,25 +280,7 @@ const UserDetails = ({
         </Styled.FormFields>
         {/* Action buttons */}
         <Styled.FormFields>
-          <Styled.ButtonField>
-            <SaveButton disabled={isLoadingUpdate}>
-              {isLoadingUpdate ? (
-                <ClipLoader
-                  sizeUnit={'rem'}
-                  size={3}
-                  color={'#fff'}
-                  loading={isLoadingUpdate}
-                />
-              ) : (
-                'Save'
-              )}
-            </SaveButton>
-          </Styled.ButtonField>
-          <Styled.ButtonField>
-            <CancelButton type="button" onClick={handleCancel}>
-              Cancel
-            </CancelButton>
-          </Styled.ButtonField>
+          {renderFormButtons({ isLoadingUpdate, handleCancel })}
         </Styled.FormFields>
       </Form>
     </>
@@ -258,22 +288,26 @@ const UserDetails = ({
 };
 
 const Settings = () => {
-  const {
-    inputs,
-    handleChange,
-    handleSubmit,
-    handleCancel,
-    handleAddress
-  } = useProfileForm();
-  const { rows, handleTextareaChange } = useTextarea();
+  const detailsHook = useProfileForm();
+  const privacyHook = useProfilePrivacy();
+  const textareaHook = useTextarea();
   const { path, url } = useRouteMatch();
-  const [updateUser, { loading: loadingUpdate }] = useMutation(
+  const [updateUser, { loading: loadingDetailsUpdate }] = useMutation(
     UPDATE_USER_MUTATION
   );
+  const [updateUserPrivacy, { loading: loadingPrivacyUpdate }] = useMutation(
+    UPDATE_USER_PRIVACY_MUTATION
+  );
+  const [logoutUser] = useMutation(LOGOUT_USER_MUTATION);
   const { state } = useContext(Context);
   const { viewport } = state;
+  const [editAddress, setEditAddress] = useState(false);
+  const client = useApolloClient();
 
-  const handleClickGeocodingResult = result => handleAddress(result);
+  const handleClickGeocodingResult = result => {
+    detailsHook.handleAddress(result);
+    handleEditAddress(false);
+  };
 
   const handleUpdateUser = async inputs => {
     const { address, ...rest } = inputs;
@@ -292,6 +326,40 @@ const Settings = () => {
         });
       }
     });
+  };
+
+  const handleUpdatePrivacy = async inputs => {
+    try {
+      const { currentPassword, newPassword } = inputs;
+
+      await updateUserPrivacy({
+        variables: { input: { ...inputs } },
+        update: (cache, { data: { updateUserPrivacy } }) => {
+          cache.writeQuery({
+            query: ME_QUERY,
+            data: { user: updateUserPrivacy }
+          });
+        }
+      });
+
+      // logout user if change of password performed
+      if (currentPassword && newPassword) {
+        handleLogout();
+      }
+    } catch (error) {
+      //
+    }
+  };
+
+  const handleEditAddress = bool => {
+    setEditAddress(bool);
+  };
+
+  const handleLogout = async () => {
+    await logoutUser();
+    await client.clearStore();
+    deleteAccessToken();
+    history.push('/');
   };
 
   return (
@@ -324,21 +392,21 @@ const Settings = () => {
         <Switch>
           <Route exact path={`${path}`}>
             <UserDetails
-              inputs={inputs}
-              rows={rows}
+              {...detailsHook}
+              {...textareaHook}
               viewport={viewport}
-              isLoadingUpdate={loadingUpdate}
-              handleChange={handleChange(handleTextareaChange)}
-              handleSubmit={handleSubmit(handleUpdateUser)}
-              handleCancel={handleCancel}
+              isLoadingUpdate={loadingDetailsUpdate}
+              handleUpdateUser={handleUpdateUser}
               handleClickGeocodingResult={handleClickGeocodingResult}
+              editAddress={editAddress}
+              onEditAddress={handleEditAddress}
             />
           </Route>
           <Route path={`${path}/privacy`}>
             <Privacy
-              inputs={inputs}
-              handleChange={handleChange()}
-              handleSubmit={handleSubmit}
+              {...privacyHook}
+              isLoadingUpdate={loadingPrivacyUpdate}
+              handleUpdatePrivacy={handleUpdatePrivacy}
             />
           </Route>
         </Switch>

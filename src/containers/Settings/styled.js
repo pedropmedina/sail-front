@@ -1,5 +1,6 @@
 import styled from 'styled-components/macro';
 import { NavLink as Link } from 'react-router-dom';
+import { RoundButton } from '../../sharedStyles/buttons'
 
 export const SettingsWrapper = styled.div`
   overflow-y: auto;
@@ -81,4 +82,10 @@ export const NavLink = styled(Link)`
   :hover {
     background-color: var(--color-less-white);
   }
+`;
+
+export const MapButon = styled(RoundButton)`
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
 `;

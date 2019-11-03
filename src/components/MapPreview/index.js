@@ -7,7 +7,6 @@ import * as Styled from './styled';
 import { Popup } from '../../sharedStyles/popup';
 
 import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
-import { ReactComponent as EditIcon } from '../../assets/SVG/edit.svg';
 
 const MapPreview = ({
   children,
@@ -41,9 +40,6 @@ const MapPreview = ({
         >
           <p style={{ width: '15rem' }}>{reversedGeocode}</p>
         </Popup>
-        <Styled.MapButon>
-          <EditIcon />
-        </Styled.MapButon>
         {children}
       </StaticMap>
     </Styled.MapPreview>
