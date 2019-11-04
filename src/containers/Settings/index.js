@@ -25,7 +25,8 @@ import Context from '../../context';
 import {
   useProfileForm,
   useProfilePrivacy,
-  useTextarea
+  useTextarea,
+  useFileUpload
 } from '../../customHooks';
 
 import { ME_QUERY } from '../../graphql/queries';
@@ -156,7 +157,10 @@ const UserDetails = ({
   handleClickGeocodingResult,
   handleUpdateUser,
   editAddress,
-  onEditAddress
+  onEditAddress,
+  file,
+  handleFileChange,
+  handleFileDelete
 }) => {
   const searchCss = {
     wrapper: `
@@ -190,19 +194,30 @@ const UserDetails = ({
       {/* Avatar */}
       <Styled.AvatarWrapper>
         <Avatar
+          className="avatar"
           name="Pedro Medina"
-          size="90"
+          size="90px"
           round="5px"
           textSizeRatio={3}
           style={{ boxShadow: '0 .5rem 1rem .2rem rgba(0,0,0,.2)' }}
+          src={
+            file
+              ? window.URL.createObjectURL(file)
+              : inputs.image
+              ? inputs.image
+              : ''
+          }
         />
         <Styled.AvatarBtns>
-          <RoundButton>
+          <Styled.AvatarFileLabel as="label">
+            <Styled.AvatarFileInput type="file" onChange={handleFileChange} />
             <EditIcon />
-          </RoundButton>
-          <RoundButton>
-            <TrashIcon />
-          </RoundButton>
+          </Styled.AvatarFileLabel>
+          {file && (
+            <RoundButton onClick={handleFileDelete}>
+              <TrashIcon />
+            </RoundButton>
+          )}
         </Styled.AvatarBtns>
       </Styled.AvatarWrapper>
       <Form onSubmit={handleSubmit(handleUpdateUser)} noValidate>
@@ -291,6 +306,7 @@ const Settings = () => {
   const detailsHook = useProfileForm();
   const privacyHook = useProfilePrivacy();
   const textareaHook = useTextarea();
+  const fileHook = useFileUpload();
   const { path, url } = useRouteMatch();
   const [updateUser, { loading: loadingDetailsUpdate }] = useMutation(
     UPDATE_USER_MUTATION
@@ -309,23 +325,36 @@ const Settings = () => {
     handleEditAddress(false);
   };
 
-  const handleUpdateUser = async inputs => {
-    const { address, ...rest } = inputs;
-    const { longitude, latitude } = address;
-    await updateUser({
-      variables: {
-        input: {
-          ...rest,
-          address: { longitude, latitude }
-        }
-      },
-      update: (cache, { data: { updateUser } }) => {
-        cache.writeQuery({
-          query: ME_QUERY,
-          data: { user: updateUser }
-        });
+  const handleUpdateUser = file => async inputs => {
+    try {
+      const { address, ...rest } = inputs;
+      const { longitude, latitude } = address;
+
+      // check if there's a new file before uploading to cloudinary
+      let image = '';
+      if (file) {
+        const { url } = await fileHook.handleFileUpload();
+        fileHook.handleFileDelete();
+        image = url;
       }
-    });
+      await updateUser({
+        variables: {
+          input: {
+            ...rest,
+            address: { longitude, latitude },
+            image
+          }
+        },
+        update: (cache, { data: { updateUser } }) => {
+          cache.writeQuery({
+            query: ME_QUERY,
+            data: { user: updateUser }
+          });
+        }
+      });
+    } catch (error) {
+      //
+    }
   };
 
   const handleUpdatePrivacy = async inputs => {
@@ -394,9 +423,10 @@ const Settings = () => {
             <UserDetails
               {...detailsHook}
               {...textareaHook}
+              {...fileHook}
               viewport={viewport}
               isLoadingUpdate={loadingDetailsUpdate}
-              handleUpdateUser={handleUpdateUser}
+              handleUpdateUser={handleUpdateUser(fileHook.file)}
               handleClickGeocodingResult={handleClickGeocodingResult}
               editAddress={editAddress}
               onEditAddress={handleEditAddress}

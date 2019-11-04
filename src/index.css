@@ -58,3 +58,8 @@
   transform: translateY(-0.2rem);
   cursor: grab;
 }
+
+.avatar {
+  object-fit: cover;
+  object-position: center;
+}

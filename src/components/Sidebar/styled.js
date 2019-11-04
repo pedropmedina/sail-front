@@ -31,6 +31,10 @@ export const Figure = styled.figure`
 
 export const Pic = styled.img`
   border-radius: 50%;
+  width: 7rem;
+  height: 7rem;
+  object-fit: cover;
+  object-position: center;
 `;
 
 export const Name = styled.figcaption`

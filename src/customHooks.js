@@ -200,3 +200,52 @@ export const useLazyReverseGeocode = () => {
 
   return [lazyFn, { ...data }];
 };
+
+// deal with uploading file to cloudinary
+export const useFileUpload = () => {
+  const [file, setFile] = useState('');
+
+  const validateFileType = file => {
+    const fileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    return fileTypes.some(type => type === file.type);
+  };
+
+  const handleFileChange = event => {
+    const file = event.target.files[0];
+    if (validateFileType(file)) {
+      setFile(file);
+    }
+  };
+
+  const handleFileDrop = file => {
+    if (validateFileType(file)) {
+      setFile(file);
+    }
+  };
+
+  const handleFileDelete = () => {
+    setFile('');
+  };
+
+  const handleFileUpload = async () => {
+    const cloudName = 'pedropmedina';
+    const uploadPreset = 'sailApp';
+    const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+
+    const data = new FormData();
+    data.append('file', file);
+    data.append('upload_preset', uploadPreset);
+    data.append('cloud_name', cloudName);
+
+    const res = await fetch(url, { method: 'POST', body: data });
+    return await res.json();
+  };
+
+  return {
+    file,
+    handleFileChange,
+    handleFileDelete,
+    handleFileDrop,
+    handleFileUpload
+  };
+};

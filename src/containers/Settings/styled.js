@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro';
 import { NavLink as Link } from 'react-router-dom';
-import { RoundButton } from '../../sharedStyles/buttons'
+import { RoundButton } from '../../sharedStyles/buttons';
 
 export const SettingsWrapper = styled.div`
   overflow-y: auto;
@@ -15,8 +15,6 @@ export const InnerWrapper = styled.div`
 export const ProfileImg = styled.img``;
 
 export const AvatarWrapper = styled.div`
-  width: 9rem;
-  height: 9rem;
   margin-bottom: 5rem;
   padding-left: 2rem;
   display: flex;
@@ -24,6 +22,12 @@ export const AvatarWrapper = styled.div`
 
 export const AvatarBtns = styled.div`
   padding: 0 1rem;
+`;
+
+export const AvatarFileLabel = styled(RoundButton)``;
+
+export const AvatarFileInput = styled.input`
+  display: none;
 `;
 
 export const FormFields = styled.div`

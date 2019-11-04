@@ -12,6 +12,7 @@ import {
   DELETE_DRAFT_PLAN
 } from '../../reducer';
 import { CREATE_PIN_MUTATION } from '../../graphql/mutations';
+import { useFileUpload } from '../../customHooks';
 
 import * as Styled from './styled';
 import { CloseBtn, PinWrapper } from '../../stylesShare';
@@ -24,84 +25,70 @@ const PinMutation = ({ style }) => {
   const [dragCounter, setDragCounter] = useState(0);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [image, setImage] = useState('');
   const [titleError, setTitleError] = useState('');
   const [contentError, setContentError] = useState('');
-  const [imageError, setImageError] = useState('');
   const [createPin] = useMutation(CREATE_PIN_MUTATION, { ignoreResults: true });
+  const {
+    file,
+    handleFileChange,
+    handleFileDelete,
+    handleFileDrop,
+    handleFileUpload
+  } = useFileUpload();
 
-  const handleDrag = e => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleDrag = event => {
+    event.preventDefault();
+    event.stopPropagation();
   };
 
-  const handleDragIn = e => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleDragIn = event => {
+    event.preventDefault();
+    event.stopPropagation();
     setDragCounter(dragCounter + 1);
-    if (e.dataTransfer && e.dataTransfer.items.length > 0) {
+    if (event.dataTransfer && event.dataTransfer.items.length > 0) {
       setDragging(true);
     }
   };
 
-  const handleDragOut = e => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleDragOut = event => {
+    event.preventDefault();
+    event.stopPropagation();
     setDragCounter(dragCounter - 1);
     if (dragCounter > 1) return;
     setDragging(false);
   };
 
-  const handleDrop = e => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleDrop = event => {
+    event.preventDefault();
+    event.stopPropagation();
     setDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      e.dataTransfer.clearData();
+    if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+      event.dataTransfer.clearData();
       setDragCounter(0);
-      if (!validateFileType(e.dataTransfer.files[0])) return;
-      setImage(e.dataTransfer.files[0]);
+
+      handleFileDrop(event.dataTransfer.files[0]);
     }
   };
 
-  const validateFileType = file => {
-    const fileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-    return fileTypes.some(type => type === file.type);
-  };
-
-  const handleFieldChange = e => {
-    const name = e.target.name;
-    const value = name === 'image' ? e.target.files[0] : e.target.value;
+  const handleFieldChange = event => {
+    const name = event.target.name;
+    const value = event.target.value;
     const keyedSetters = {
       title: setTitle,
-      content: setContent,
-      image: setImage
+      content: setContent
     };
     keyedSetters[name](value);
 
     // clear errors upon changing field's value
     const keyedErrors = {
       title: { message: titleError, setter: setTitleError },
-      content: { message: contentError, setter: setContentError },
-      image: { message: imageError, setter: setImageError }
+      content: { message: contentError, setter: setContentError }
     };
     if (keyedErrors[name]['message']) keyedErrors[name]['setter']('');
   };
 
-  const handleFileUpload = async () => {
-    const cloudName = 'pedropmedina';
-    const uploadPreset = 'sailApp';
-    const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
-    const data = new FormData();
-    data.append('file', image);
-    data.append('upload_preset', uploadPreset);
-    data.append('cloud_name', cloudName);
-    const res = await fetch(url, { method: 'POST', body: data });
-    return await res.json();
-  };
-
-  const handleSubmit = async e => {
-    e.preventDefault();
+  const handleSubmit = async event => {
+    event.preventDefault();
 
     // validated fields and return early if found errors
     const validatedFields = await validateForm();
@@ -120,20 +107,15 @@ const PinMutation = ({ style }) => {
     try {
       const schema = object().shape({
         title: string().required(),
-        content: string().required(),
-        image: string().required()
+        content: string().required()
       });
 
-      return await schema.validate(
-        { title, content, image },
-        { abortEarly: false }
-      );
+      return await schema.validate({ title, content }, { abortEarly: false });
     } catch (error) {
       const keyedErrors = keyBy(error.inner, 'path');
       const keyedSetters = {
         title: setTitleError,
-        content: setContentError,
-        image: setImageError
+        content: setContentError
       };
       for (let prop in keyedErrors) {
         if (keyedErrors.hasOwnProperty(prop)) {
@@ -176,9 +158,8 @@ const PinMutation = ({ style }) => {
             />
           </Styled.FieldLabel>
           {/* Image upload and preview */}
-          {!image ? (
+          {!file ? (
             <Styled.Upload
-              error={imageError}
               dragging={dragging}
               onDragOver={handleDrag}
               onDragEnter={handleDragIn}
@@ -194,23 +175,22 @@ const PinMutation = ({ style }) => {
                   name="image"
                   accept=".jpg, .jpeg, png"
                   placeholder="Add a photo of the location."
-                  onChange={handleFieldChange}
+                  onChange={handleFileChange}
                 />
               </Styled.FieldLabel>
             </Styled.Upload>
           ) : (
             <Styled.UploadPreview
-              error={imageError}
               dragging={dragging}
               onDragOver={handleDrag}
               onDragEnter={handleDragIn}
               onDragLeave={handleDragOut}
               onDrop={handleDrop}
             >
-              <CloseBtn type="button" onClick={() => setImage('')}>
+              <CloseBtn type="button" onClick={handleFileDelete}>
                 <XIcon className="icon icon-smallest" />
               </CloseBtn>
-              <Styled.PreviewImg src={window.URL.createObjectURL(image)} />
+              <Styled.PreviewImg src={window.URL.createObjectURL(file)} />
             </Styled.UploadPreview>
           )}
           <Styled.SaveBtn type="submit">Save</Styled.SaveBtn>
