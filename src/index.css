@@ -69,6 +69,10 @@
   color: #fff;
 }
 
-.UserAvatar--settings img {
+.UserAvatar--settings-round img {
   box-shadow: 0 0.5rem 1rem 0.2rem rgba(0, 0, 0, 0.2);
+}
+
+.UserAvatar--square * {
+  border-radius: 0.5rem !important;
 }

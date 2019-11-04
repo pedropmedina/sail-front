@@ -195,7 +195,7 @@ const UserDetails = ({
       {/* Avatar */}
       <Styled.AvatarWrapper>
         <Avatar
-          className="UserAvatar--settings"
+          className="UserAvatar--settings-round"
           size="90"
           name={inputs.firstName || 'Unkown'}
           src={

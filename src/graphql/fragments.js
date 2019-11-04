@@ -385,12 +385,14 @@ export const userFragments = {
           lastName
           username
           email
+          image
         }
         invites {
           firstName
           lastName
           username
           email
+          image
         }
         location {
           _id

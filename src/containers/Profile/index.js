@@ -109,7 +109,12 @@ const Profile = props => {
       <Styled.Profile>
         {/* Profile details  */}
         <Styled.ProfileDetails>
-          <Avatar size="200" name={profile.firstName} src={profile.image} />
+          <Avatar
+            size="200"
+            name={profile.firstName}
+            src={profile.image}
+            className="UserAvatar--square"
+          />
           <Styled.Name>{showNameOrUsername(profile)}</Styled.Name>
           <Styled.Stats>
             <Styled.Stat>

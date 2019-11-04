@@ -37,14 +37,17 @@ const Plan = ({ _id, title, description, date, participants, location }) => {
           {format(new Date(parseInt(date)), 'MMM do, yyyy')}
         </Styled.Date>
         <Styled.Participants>
-          {participants.map(participant => (
-            <Avatar
-              key={participant.email}
-              size="60"
-              name={participant.firstName}
-              src={participant.image}
-            />
-          ))}
+          {participants.map(
+            participant =>
+              (
+                <Avatar
+                  key={participant.email}
+                  size="60"
+                  name={participant.firstName}
+                  src={participant.image}
+                />
+              )
+          )}
         </Styled.Participants>
       </Styled.PlanLink>
     </Styled.Plan>

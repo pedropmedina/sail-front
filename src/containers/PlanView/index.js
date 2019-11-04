@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { format } from 'date-fns';
+import Avatar from 'react-user-avatar';
 
 import * as Styled from './styled';
 
@@ -65,12 +66,9 @@ const PlanView = props => {
           <Styled.Invites>
             <Styled.ListHeading>Pending Invitees</Styled.ListHeading>
             <Styled.List>
-              {plan.invites.map(({ username, image }) => (
-                <Styled.Item key={username}>
-                  <Styled.UserPic
-                    src={image ? image : 'https://via.placeholder.com/70'}
-                    alt="user image"
-                  />
+              {plan.invites.map(({ email, firstName, image }) => (
+                <Styled.Item key={email}>
+                  <Avatar size="70" name={firstName} src={image} className="UserAvatar--square"/>
                 </Styled.Item>
               ))}
             </Styled.List>
@@ -78,12 +76,9 @@ const PlanView = props => {
           <Styled.Participants>
             <Styled.ListHeading>Confirmed Participants</Styled.ListHeading>
             <Styled.List>
-              {plan.participants.map(({ username, image }) => (
-                <Styled.Item key={username}>
-                  <Styled.UserPic
-                    src={image ? image : 'https://via.placeholder.com/70'}
-                    alt="user image"
-                  />
+              {plan.participants.map(({ email, firstName, image }) => (
+                <Styled.Item key={email}>
+                  <Avatar size="70" name={firstName} src={image} className="UserAvatar--square" />
                 </Styled.Item>
               ))}
             </Styled.List>
