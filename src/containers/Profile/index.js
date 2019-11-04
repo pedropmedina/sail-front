@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
+import Avatar from 'react-user-avatar';
 
 import * as Styled from './styled';
 
@@ -75,7 +76,8 @@ const Profile = props => {
     return isSame || isFriend || haveISentReq || hasProfileSentReq;
   };
 
-  const showNameOrUsername = data => (data.firstName ? data.firstName : data.username);
+  const showNameOrUsername = data =>
+    data.firstName ? data.firstName : data.username;
 
   const hidePlans = user => plan =>
     plan.private
@@ -107,14 +109,7 @@ const Profile = props => {
       <Styled.Profile>
         {/* Profile details  */}
         <Styled.ProfileDetails>
-          <Styled.ProfileImg
-            src={
-              profile.image
-                ? profile.image
-                : 'https://via.placeholder.com/200X300'
-            }
-            alt="Profile image"
-          />
+          <Avatar size="200" name={profile.firstName} src={profile.image} />
           <Styled.Name>{showNameOrUsername(profile)}</Styled.Name>
           <Styled.Stats>
             <Styled.Stat>

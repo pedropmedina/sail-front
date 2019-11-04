@@ -27,14 +27,9 @@ export const Profile = styled.aside`
 
 export const Figure = styled.figure`
   text-align: center;
-`;
-
-export const Pic = styled.img`
-  border-radius: 50%;
-  width: 7rem;
-  height: 7rem;
-  object-fit: cover;
-  object-position: center;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 `;
 
 export const Name = styled.figcaption`

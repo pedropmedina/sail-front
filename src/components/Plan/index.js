@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { format } from 'date-fns';
+import Avatar from 'react-user-avatar';
 
 import * as Styled from './styled';
 
@@ -36,10 +37,12 @@ const Plan = ({ _id, title, description, date, participants, location }) => {
           {format(new Date(parseInt(date)), 'MMM do, yyyy')}
         </Styled.Date>
         <Styled.Participants>
-          {participants.map((participant, i) => (
-            <Styled.ParticipantImg
-              key={`${participant.email}-${i}`}
-              src="https://via.placeholder.com/60"
+          {participants.map(participant => (
+            <Avatar
+              key={participant.email}
+              size="60"
+              name={participant.firstName}
+              src={participant.image}
             />
           ))}
         </Styled.Participants>

@@ -70,8 +70,6 @@ export const MessageTime = styled.p`
   text-align: right;
 `;
 
-export const MessagePic = styled(UserImg)``;
-
 export const MessageName = styled(UserName)`
   font-size: 1rem;
   text-align: center;

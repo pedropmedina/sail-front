@@ -17,11 +17,6 @@ export const ProfileDetails = styled.article`
   color: var(--color-light-grey);
 `;
 
-export const ProfileImg = styled.img`
-  border-radius: 0.5rem;
-  margin-bottom: 1rem;
-`;
-
 export const Name = styled.h1`
   font-weight: 500;
   font-size: 1.6rem;

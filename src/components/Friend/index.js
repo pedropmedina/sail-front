@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
+import Avatar from 'react-user-avatar';
 
 import * as Styled from './styled';
 
 const Friend = ({
   firstName = '',
   username = '',
-  address = {},
   image = '',
   friendsQty = 0,
   plansQty = 0
@@ -14,14 +14,8 @@ const Friend = ({
   <Styled.Friend>
     {/* Details Row containing profile information such as name, about, etc... */}
     <Styled.DetailsRow>
-      <Styled.Img
-        src={image ? image : 'https://via.placeholder.com/80'}
-        alt="Profile image"
-      />
+      <Avatar size="80" name={firstName} src={image} />
       <Styled.Name>{firstName ? firstName : username}</Styled.Name>
-      <Styled.Address>
-        {address.longitude && address.latitude ? '' : 'Miami, FL'}
-      </Styled.Address>
     </Styled.DetailsRow>
     {/* Stats Row containing profile image and stats */}
     <Styled.StatsRow>

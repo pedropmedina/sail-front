@@ -112,16 +112,6 @@ export const ChatParticipantImg = styled.li`
   }
 `;
 
-export const ParticipantImg = styled.img`
-  width: 5rem;
-  height: 5rem;
-  object-fit: cover;
-  object-position: center;
-  border-radius: 50%;
-  border: 0.2rem solid var(--color-almost-white);
-  display: inline-block;
-`;
-
 export const ChatParticipantsNames = styled.ul`
   grid-column: 1 / span 1;
   list-style: none;

@@ -20,6 +20,7 @@ export const conversationFragments = {
           firstName
           lastName
           username
+          image
         }
       }
       unreadCount {

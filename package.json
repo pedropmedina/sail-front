@@ -70,9 +70,9 @@
     "js-cookie": "^2.2.1",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.15",
+    "pravatar": "^1.0.2",
     "react": "^16.8.6",
     "react-apollo": "^2.5.8",
-    "react-avatar": "^3.7.0",
     "react-content-loader": "^4.3.2",
     "react-cookie": "^4.0.1",
     "react-dom": "npm:@hot-loader/react-dom@^16.8.6",
@@ -81,6 +81,7 @@
     "react-select": "^3.0.4",
     "react-spinners": "^0.6.1",
     "react-spring": "^8.0.27",
+    "react-user-avatar": "^1.10.0",
     "styled-components": "^4.3.2",
     "subscriptions-transport-ws": "^0.9.16",
     "yup": "^0.27.0"

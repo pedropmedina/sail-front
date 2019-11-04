@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useRef } from 'react';
 import { formatDistanceToNow } from 'date-fns';
+import Avatar from 'react-user-avatar';
 
 import * as Styled from './styled';
 
@@ -28,8 +29,8 @@ const Chat = ({ data, onCreateNew, subscribeToNew }) => {
     ref.current.scrollIntoView({ block: 'start', behavior: 'smooth' });
   };
 
-  const displayName = ({ firstname, username }) =>
-    firstname ? firstname : username;
+  const displayName = ({ firstName, username }) =>
+    firstName ? firstName : username;
 
   const handleOnChange = event => {
     handleTextareaChange(event);
@@ -54,9 +55,10 @@ const Chat = ({ data, onCreateNew, subscribeToNew }) => {
                 ref={arr.length - 1 === index ? refEl : null}
               >
                 <Styled.MessageLeftSide>
-                  <Styled.MessagePic
-                    src={'https://via.placeholder.com/40'}
-                    alt="User Img"
+                  <Avatar
+                    size="40"
+                    name={displayName(message.author)}
+                    src={message.author.image}
                   />
                   <Styled.MessageName>
                     {displayName(message.author)}

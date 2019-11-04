@@ -67,15 +67,7 @@ export const Link = styled(L)`
 `;
 
 export const Name = styled.h4`
-  font-weight: 700;
+  font-weight: 500;
   text-transform: capitalize;
   color: var(--color-medium-grey);
-`;
-
-export const Address = styled.p`
-  font-size: 1.2rem;
-`;
-
-export const Img = styled.img`
-  border-radius: 0.5rem;
 `;

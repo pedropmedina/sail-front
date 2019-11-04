@@ -86,7 +86,18 @@ export const useProfileForm = () => {
     }));
   };
 
-  return { inputs, handleChange, handleSubmit, handleCancel, handleAddress };
+  const handleImageDelete = () => {
+    setInputs(prevInputs => ({ ...prevInputs, image: '' }));
+  };
+
+  return {
+    inputs,
+    handleChange,
+    handleSubmit,
+    handleCancel,
+    handleImageDelete,
+    handleAddress
+  };
 };
 
 // deal with profile privacy

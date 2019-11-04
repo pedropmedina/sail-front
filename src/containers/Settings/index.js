@@ -2,7 +2,7 @@
 import React, { useContext, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
-import Avatar from 'react-avatar';
+import Avatar from 'react-user-avatar';
 import { ClipLoader } from 'react-spinners';
 
 import * as Styled from './styled';
@@ -154,6 +154,7 @@ const UserDetails = ({
   handleChange,
   handleTextareaChange,
   handleCancel,
+  handleImageDelete,
   handleClickGeocodingResult,
   handleUpdateUser,
   editAddress,
@@ -194,12 +195,9 @@ const UserDetails = ({
       {/* Avatar */}
       <Styled.AvatarWrapper>
         <Avatar
-          className="avatar"
-          name="Pedro Medina"
-          size="90px"
-          round="5px"
-          textSizeRatio={3}
-          style={{ boxShadow: '0 .5rem 1rem .2rem rgba(0,0,0,.2)' }}
+          className="UserAvatar--settings"
+          size="90"
+          name={inputs.firstName || 'Unkown'}
           src={
             file
               ? window.URL.createObjectURL(file)
@@ -213,8 +211,8 @@ const UserDetails = ({
             <Styled.AvatarFileInput type="file" onChange={handleFileChange} />
             <EditIcon />
           </Styled.AvatarFileLabel>
-          {file && (
-            <RoundButton onClick={handleFileDelete}>
+          {!file && !inputs.image ? null : (
+            <RoundButton onClick={file ? handleFileDelete : handleImageDelete}>
               <TrashIcon />
             </RoundButton>
           )}

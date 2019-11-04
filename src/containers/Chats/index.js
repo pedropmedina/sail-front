@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { formatDistanceToNow } from 'date-fns';
 import ClipLoader from 'react-spinners/ClipLoader';
+import Avatar from 'react-user-avatar';
 
 import * as Styled from './styled';
 import { CreateBtn } from '../../stylesShare';
@@ -188,18 +189,14 @@ const Chats = () => {
                   <Styled.ChatPreviewLeft>
                     <Styled.ChatParticipantsImgs>
                       {prepareParticipantsData(chat, meData.user).map(
-                        participant => (
-                          <Styled.ChatParticipantImg key={participant.username}>
-                            <Styled.ParticipantImg
-                              src={
-                                participant.image
-                                  ? participant
-                                  : 'https://via.placeholder.com/70'
-                              }
-                              alt="participant image"
-                            />
-                          </Styled.ChatParticipantImg>
-                        )
+                        participant => {
+                          const { username, firstName, image } = participant;
+                          return (
+                            <Styled.ChatParticipantImg key={username}>
+                              <Avatar size="50" name={firstName} src={image} />
+                            </Styled.ChatParticipantImg>
+                          );
+                        }
                       )}
                     </Styled.ChatParticipantsImgs>
                   </Styled.ChatPreviewLeft>
@@ -212,16 +209,18 @@ const Chats = () => {
                     )}
                     <Styled.ChatParticipantsNames>
                       {prepareParticipantsData(chat, meData.user).map(
-                        (participant, i, arr) =>
-                          !(arr.length - 1 === i) ? (
-                            <Styled.ChatParticipantName key={participant.email}>
-                              {participant.username},&nbsp;
+                        (participant, i, arr) => {
+                          const { email, username, firstName } = participant;
+                          return !(arr.length - 1 === i) ? (
+                            <Styled.ChatParticipantName key={email}>
+                              {firstName ? firstName : username},&nbsp;
                             </Styled.ChatParticipantName>
                           ) : (
-                            <Styled.ChatParticipantName key={participant.email}>
-                              {participant.username}
+                            <Styled.ChatParticipantName key={email}>
+                              {firstName ? firstName : username}
                             </Styled.ChatParticipantName>
-                          )
+                          );
+                        }
                       )}
                     </Styled.ChatParticipantsNames>
                     <Styled.ChatDate>

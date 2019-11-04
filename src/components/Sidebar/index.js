@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useContext, useEffect } from 'react';
 import { useMutation, useApolloClient, useQuery } from '@apollo/react-hooks';
+import Avatar from 'react-user-avatar';
 
 import Context from '../../context';
 import history from '../../history';
@@ -50,10 +51,7 @@ const Profile = props => {
   return (
     <Styled.Profile>
       <Styled.Figure>
-        <Styled.Pic
-          src={image ? image : 'https://via.placeholder.com/70'}
-          alt="profile pic"
-        />
+        <Avatar size="70" name={firstName} src={image} />
         <Styled.Name>
           {firstName && lastName
             ? firstName + ' ' + lastName

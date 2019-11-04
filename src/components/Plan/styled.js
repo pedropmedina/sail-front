@@ -52,6 +52,10 @@ export const Participants = styled.div`
   display: flex;
   flex-direction: row-reverse;
   justify-content: flex-end;
+
+  > *:not(:last-child) {
+    margin-left: -4rem;
+  }
 `;
 
 export const ParticipantImg = styled.img`
