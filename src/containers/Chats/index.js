@@ -68,7 +68,10 @@ const Chats = () => {
 
   const setDefaultChat = index => {
     const conversation = data.chats[index];
-    getChat({ variables: { conversationId: conversation._id } });
+    // make sure there's at least a conversation for this user
+    if (conversation) {
+      getChat({ variables: { conversationId: conversation._id } });
+    }
   };
 
   const handleNewMessage = conversation => async content => {

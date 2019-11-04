@@ -43,17 +43,21 @@ export const useProfileForm = () => {
 
     // prepare address to be passed down to inputs
     const { longitude, latitude } = user.address;
-    const reversedGeocode = await reverseGeocode(longitude, latitude);
-    const address = { reversedGeocode, longitude, latitude };
+    let reversedGeocode = '';
+    let address = { reversedGeocode, longitude, latitude };
+    if (longitude && latitude) {
+      reversedGeocode = await reverseGeocode(longitude, latitude);
+      address = { reversedGeocode, longitude, latitude };
+    }
 
     setInputs(prevState => ({
       ...prevState,
-      firstName,
-      lastName,
-      email,
-      about,
-      phone,
-      image,
+      firstName: firstName ? firstName : '',
+      lastName: lastName ? lastName : '',
+      email: email ? email : '',
+      about: about ? about : '',
+      phone: phone ? phone : '',
+      image: image ? image : '',
       address
     }));
   };
@@ -152,15 +156,23 @@ export const useReverseGeocode = (longitude, latitude) => {
   const [data, setData] = useState({
     longitude,
     latitude,
-    reversedGeocode: null
+    reversedGeocode: ''
   });
 
   useEffect(() => {
+    let isSubscribed = true;
+
     if (longitude && latitude) {
-      reverseGeocode(longitude, latitude).then(reversedGeocode =>
-        setData(prevData => ({ ...prevData, reversedGeocode }))
-      );
+      reverseGeocode(longitude, latitude).then(reversedGeocode => {
+        if (isSubscribed) {
+          setData(prevData => ({ ...prevData, reversedGeocode }));
+        }
+      });
     }
+
+    return () => {
+      isSubscribed = false;
+    };
   }, []);
 
   return { ...data };
@@ -170,7 +182,7 @@ export const useLazyReverseGeocode = () => {
   const [data, setData] = useState({
     longitude: 0,
     latitude: 0,
-    reversedGeocode: null
+    reversedGeocode: ''
   });
 
   const lazyFn = async (longitude, latitude) => {

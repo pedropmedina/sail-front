@@ -24,7 +24,6 @@ export const conversationFragments = {
       }
       unreadCount {
         _id
-        username
         count
       }
       plan {

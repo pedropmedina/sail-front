@@ -22,6 +22,7 @@ export const Panel = styled.section`
 
 export const LeftPanel = styled(Panel)`
   overflow-y: auto;
+  min-width: 50%;
 `;
 
 export const RightPanel = styled(Panel)`

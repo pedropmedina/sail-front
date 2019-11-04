@@ -27,7 +27,7 @@ const Topbar = ({ children }) => {
   useEffect(() => {
     let timeout;
     let isSubscribed = true;
-    if (isSubscribed) {
+    if (isSubscribed && searchText) {
       timeout = searchOnTimeout(() => {
         conductSearch({ variables: { searchText } });
       }, 400);
@@ -40,13 +40,13 @@ const Topbar = ({ children }) => {
   }, [searchText]);
 
   useEffect(() => {
-    if (data && data.search && data.search.length > 0) {
+    if (searchText && data && data.search && data.search.length > 0) {
       setResults(data.search);
       setShowResults(true);
     } else {
       setResults([]);
     }
-  }, [data]);
+  }, [data, searchText]);
 
   const handleChange = event => {
     setSearchText(event.target.value);

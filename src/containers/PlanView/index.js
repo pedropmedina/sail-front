@@ -10,7 +10,6 @@ import Chat from '../../components/Chat';
 
 import { GET_PLAN_QUERY } from '../../graphql/queries';
 import { CREATE_MESSAGE_MUTATION } from '../../graphql/mutations';
-import { MESSAGE_CREATED_SUBSCRIPTION } from '../../graphql/subscriptions';
 
 import { useLazyReverseGeocode } from '../../customHooks';
 
@@ -19,7 +18,7 @@ const mapCss = `
 `;
 
 const PlanView = props => {
-  const { error, loading, data, subscribeToMore } = useQuery(GET_PLAN_QUERY, {
+  const { error, loading, data } = useQuery(GET_PLAN_QUERY, {
     variables: { planId: props.match.params.planId },
     fetchPolicy: 'cache-and-network'
   });
@@ -38,28 +37,6 @@ const PlanView = props => {
       reverseGeocode(longitude, latitude);
     }
   }, [data]);
-
-  const subscribeToNewMessages = conversationId => () => {
-    subscribeToMore({
-      document: MESSAGE_CREATED_SUBSCRIPTION,
-      variables: { conversationId },
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) return prev;
-        const { message } = subscriptionData.data;
-        const messages = prev.plan.chat.messages;
-        return {
-          ...prev,
-          plan: {
-            ...prev.plan,
-            chat: {
-              ...prev.plan.chat,
-              messages: [...messages, message]
-            }
-          }
-        };
-      }
-    });
-  };
 
   const handleCreateMessage = conversation => async content => {
     await createMessage({ variables: { input: { conversation, content } } });
@@ -118,7 +95,6 @@ const PlanView = props => {
             <Chat
               data={plan.chat.messages}
               onCreateNew={handleCreateMessage(plan.chat._id)}
-              subscribeToNew={subscribeToNewMessages(plan.chat._id)}
             />
           </Styled.Chat>
         </Styled.RightPanel>
