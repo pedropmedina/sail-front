@@ -6,6 +6,7 @@ import Avatar from 'react-user-avatar';
 import Context from '../../context';
 import history from '../../history';
 import { getAccessToken, deleteAccessToken } from '../../accessToken';
+import { useColors } from '../../customHooks';
 
 import { LOGOUT_USER_MUTATION } from '../../graphql/mutations';
 import {
@@ -47,11 +48,13 @@ const ITEMS = [
 
 const Profile = props => {
   const { data } = props;
-  const { username, firstName, lastName, image } = data;
+  const { username, firstName, lastName, image, address } = data;
+  const { colors } = useColors();
+
   return (
     <Styled.Profile>
       <Styled.Figure>
-        <Avatar size="70" name={firstName} src={image} />
+        <Avatar size="70" name={firstName} src={image} colors={colors} />
         <Styled.Name>
           {firstName && lastName
             ? firstName + ' ' + lastName
@@ -59,7 +62,11 @@ const Profile = props => {
             ? firstName
             : username}
         </Styled.Name>
-        <Styled.Location>Miami, FL</Styled.Location>
+        {address.longitude && address.latitude && (
+          <Styled.Location>
+            {address.place}, {address.region}
+          </Styled.Location>
+        )}
       </Styled.Figure>
       <Styled.ProfileMoreBtn>
         <MoreIcon className="icon icon-small" />

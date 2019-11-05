@@ -21,6 +21,7 @@ export const reverseGeocode = async (longitude, latitude) => {
       types: ['address']
     })
     .send();
+
   return body.features[0].place_name;
 };
 

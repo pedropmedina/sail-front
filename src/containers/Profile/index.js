@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import Avatar from 'react-user-avatar';
 
@@ -14,10 +14,9 @@ import Friend from '../../components/Friend';
 import { GET_PROFILE_QUERY, ME_QUERY } from '../../graphql/queries';
 import { CREATE_REQUEST_MUTATION } from '../../graphql/mutations';
 
-import { reverseGeocode } from '../../utils';
+import { useColors } from '../../customHooks';
 
 const Profile = props => {
-  const [address, setAddress] = useState('Unknown');
   const {
     error: profileError,
     loading: profileLoading,
@@ -34,25 +33,7 @@ const Profile = props => {
   const [createRequest] = useMutation(CREATE_REQUEST_MUTATION, {
     ignoreResults: true
   });
-
-  useEffect(() => {
-    (async () => {
-      if (profile && profile.address) {
-        const { longitude, latitude } = profile.address;
-        if ((longitude, latitude)) {
-          setAddress(await prepareUserAddress(profile.address));
-        }
-      }
-    })();
-  }, [profile]);
-
-  const prepareUserAddress = async coords => {
-    const { longitude, latitude } = coords;
-    if (longitude && latitude) {
-      return await reverseGeocode(longitude, latitude);
-    }
-    return 'Unknown';
-  };
+  const { colors } = useColors();
 
   const handleFriendRequest = async (username, reqType) => {
     const input = { to: username, reqType };
@@ -114,6 +95,7 @@ const Profile = props => {
             name={profile.firstName}
             src={profile.image}
             className="UserAvatar--square"
+            colors={colors}
           />
           <Styled.Name>{showNameOrUsername(profile)}</Styled.Name>
           <Styled.Stats>
@@ -127,7 +109,11 @@ const Profile = props => {
             </Styled.Stat>
           </Styled.Stats>
           <Styled.Email>{profile.email}</Styled.Email>
-          <Styled.Location>{address}</Styled.Location>
+          {profile.address.longitude && profile.address.latitude && (
+            <Styled.Location>
+              {profile.address.place}, {profile.address.region}
+            </Styled.Location>
+          )}
           <Styled.About>
             {profile.about ? profile.about : 'Tells about you!'}
           </Styled.About>

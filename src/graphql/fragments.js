@@ -133,6 +133,12 @@ export const authFragments = {
         address {
           longitude
           latitude
+          name
+          neighborhood
+          place
+          region
+          country
+          postcode
         }
         friends {
           email
@@ -266,6 +272,12 @@ export const userFragments = {
       address {
         longitude
         latitude
+        name
+        neighborhood
+        place
+        region
+        country
+        postcode
       }
       friends {
         email
@@ -332,6 +344,12 @@ export const userFragments = {
       address {
         longitude
         latitude
+        name
+        neighborhood
+        place
+        region
+        country
+        postcode
       }
       about
       inPlans {
@@ -346,6 +364,12 @@ export const userFragments = {
         address {
           longitude
           latitude
+          name
+          neighborhood
+          place
+          region
+          country
+          postcode
         }
         about
       }
@@ -362,6 +386,12 @@ export const userFragments = {
       address {
         longitude
         latitude
+        name
+        neighborhood
+        place
+        region
+        country
+        postcode
       }
       friends {
         email
@@ -372,6 +402,12 @@ export const userFragments = {
         address {
           longitude
           latitude
+          name
+          neighborhood
+          place
+          region
+          country
+          postcode
         }
       }
       inPlans {

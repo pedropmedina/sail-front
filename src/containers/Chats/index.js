@@ -4,14 +4,18 @@ import { formatDistanceToNow } from 'date-fns';
 import ClipLoader from 'react-spinners/ClipLoader';
 import Avatar from 'react-user-avatar';
 
+import { useColors } from '../../customHooks';
+
 import * as Styled from './styled';
 import { CreateBtn } from '../../stylesShare';
+
 import { ReactComponent as EditIcon } from '../../assets/SVG/edit.svg';
 import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
 import { ReactComponent as CalendarIcon } from '../../assets/SVG/calendar.svg';
-import ChatCreate from '../../components/ChatCreate';
 
+import ChatCreate from '../../components/ChatCreate';
 import Chat from '../../components/Chat';
+
 import {
   GET_CONVERSATIONS_QUERY,
   GET_CONVERSATION_QUERY,
@@ -40,6 +44,7 @@ const Chats = () => {
     UPDATE_CONVERSATION_UNREADCOUNT_MUTATION,
     { ignoreResults: true }
   );
+  const { colors } = useColors();
 
   useEffect(() => {
     if (data.chats && !chatData) {
@@ -193,7 +198,12 @@ const Chats = () => {
                           const { username, firstName, image } = participant;
                           return (
                             <Styled.ChatParticipantImg key={username}>
-                              <Avatar size="50" name={firstName} src={image} />
+                              <Avatar
+                                size="50"
+                                name={firstName}
+                                src={image}
+                                colors={colors}
+                              />
                             </Styled.ChatParticipantImg>
                           );
                         }

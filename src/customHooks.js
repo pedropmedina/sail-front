@@ -27,10 +27,13 @@ const USER_PRIVACY_INPUTS_DEFAULT = {
   newPassword: ''
 };
 
+const DEFAULT_COLORS = ['#E0BBE4', '#957DAD', '#D291BC', '#FEC8D8', '#FFDFD3'];
+
 // user profile details
 export const useProfileForm = () => {
   const [inputs, setInputs] = useState(USER_DETAIL_INPUTS_DEFAULT);
   const { data } = useQuery(ME_QUERY);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (data && data.user) {
@@ -39,16 +42,7 @@ export const useProfileForm = () => {
   }, [data]);
 
   const setupIntialValues = async user => {
-    const { firstName, lastName, email, about, phone, image } = user;
-
-    // prepare address to be passed down to inputs
-    const { longitude, latitude } = user.address;
-    let reversedGeocode = '';
-    let address = { reversedGeocode, longitude, latitude };
-    if (longitude && latitude) {
-      reversedGeocode = await reverseGeocode(longitude, latitude);
-      address = { reversedGeocode, longitude, latitude };
-    }
+    const { firstName, lastName, email, about, phone, image, address } = user;
 
     setInputs(prevState => ({
       ...prevState,
@@ -58,8 +52,10 @@ export const useProfileForm = () => {
       about: about ? about : '',
       phone: phone ? phone : '',
       image: image ? image : '',
-      address
+      address: address ? address : ''
     }));
+
+    setLoading(false);
   };
 
   const handleChange = cb => event => {
@@ -78,12 +74,17 @@ export const useProfileForm = () => {
   };
 
   const handleAddress = data => {
-    const { place_name, center } = data;
+    const { place_name, center, context } = data;
     const [longitude, latitude] = center;
-    setInputs(prevInputs => ({
-      ...prevInputs,
-      address: { reversedGeocode: place_name, longitude, latitude }
-    }));
+    const mappedData = context.reduce((acc, d) => {
+      const key = d.id.split('.')[0];
+      acc[key] = d.text;
+      return acc;
+    }, {});
+
+    const address = { ...mappedData, name: place_name, longitude, latitude };
+
+    setInputs(prevInputs => ({ ...prevInputs, address }));
   };
 
   const handleImageDelete = () => {
@@ -96,7 +97,8 @@ export const useProfileForm = () => {
     handleSubmit,
     handleCancel,
     handleImageDelete,
-    handleAddress
+    handleAddress,
+    loading
   };
 };
 
@@ -167,16 +169,16 @@ export const useReverseGeocode = (longitude, latitude) => {
   const [data, setData] = useState({
     longitude,
     latitude,
-    reversedGeocode: ''
+    name: ''
   });
 
   useEffect(() => {
     let isSubscribed = true;
 
     if (longitude && latitude) {
-      reverseGeocode(longitude, latitude).then(reversedGeocode => {
+      reverseGeocode(longitude, latitude).then(name => {
         if (isSubscribed) {
-          setData(prevData => ({ ...prevData, reversedGeocode }));
+          setData(prevData => ({ ...prevData, name }));
         }
       });
     }
@@ -193,15 +195,15 @@ export const useLazyReverseGeocode = () => {
   const [data, setData] = useState({
     longitude: 0,
     latitude: 0,
-    reversedGeocode: ''
+    name: ''
   });
 
   const lazyFn = async (longitude, latitude) => {
     if (longitude && latitude) {
-      reverseGeocode(longitude, latitude).then(reversedGeocode =>
+      reverseGeocode(longitude, latitude).then(name =>
         setData(prevData => ({
           ...prevData,
-          reversedGeocode,
+          name,
           longitude,
           latitude
         }))
@@ -239,17 +241,21 @@ export const useFileUpload = () => {
   };
 
   const handleFileUpload = async () => {
-    const cloudName = 'pedropmedina';
-    const uploadPreset = 'sailApp';
-    const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+    const CLOUD_NAME = 'pedropmedina';
+    const UPLOAD_PRESET = 'sailApp';
+    const URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
-    const data = new FormData();
-    data.append('file', file);
-    data.append('upload_preset', uploadPreset);
-    data.append('cloud_name', cloudName);
+    if (file) {
+      const data = new FormData();
+      data.append('file', file);
+      data.append('upload_preset', UPLOAD_PRESET);
+      data.append('cloud_name', CLOUD_NAME);
 
-    const res = await fetch(url, { method: 'POST', body: data });
-    return await res.json();
+      const res = await fetch(URL, { method: 'POST', body: data });
+      const { url } = await res.json();
+      return url;
+    }
+    return '';
   };
 
   return {
@@ -259,4 +265,22 @@ export const useFileUpload = () => {
     handleFileDrop,
     handleFileUpload
   };
+};
+
+export const useColors = (colorList = DEFAULT_COLORS) => {
+  const [colors, setColors] = useState(colorList);
+
+  const addColors = cl => {
+    setColors(prevColors => [...prevColors, ...cl]);
+  };
+
+  const removeColor = colorName => {
+    setColors(prevColors => prevColors.filter(color => color !== colorName));
+  };
+
+  const resetColors = () => {
+    setColors([]);
+  };
+
+  return { colors, addColors, resetColors, removeColor };
 };

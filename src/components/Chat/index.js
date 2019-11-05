@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import Avatar from 'react-user-avatar';
 
+import { useColors } from '../../customHooks';
+
 import * as Styled from './styled';
 
 import { ReactComponent as SendIcon } from '../../assets/SVG/send.svg';
@@ -12,6 +14,7 @@ const Chat = ({ data, onCreateNew, subscribeToNew }) => {
   const refEl = useRef(null);
   const [text, setText] = useState('');
   const { rows, handleTextareaChange } = useTextarea();
+  const { colors } = useColors();
 
   useEffect(() => {
     if (subscribeToNew && subscribeToNew instanceof Function) {
@@ -59,6 +62,7 @@ const Chat = ({ data, onCreateNew, subscribeToNew }) => {
                     size="40"
                     name={displayName(message.author)}
                     src={message.author.image}
+                    colors={colors}
                   />
                   <Styled.MessageName>
                     {displayName(message.author)}

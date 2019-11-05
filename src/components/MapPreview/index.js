@@ -14,7 +14,7 @@ const MapPreview = ({
   longitude = -122.4376,
   latitude = 37.7577,
   zoom = 13,
-  reversedGeocode
+  name
 }) => {
   return (
     <Styled.MapPreview css={css}>
@@ -38,7 +38,7 @@ const MapPreview = ({
           anchor="left"
           closeButton={false}
         >
-          <p style={{ width: '15rem' }}>{reversedGeocode}</p>
+          <p style={{ width: '15rem' }}>{name}</p>
         </Popup>
         {children}
       </StaticMap>

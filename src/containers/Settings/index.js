@@ -26,7 +26,8 @@ import {
   useProfileForm,
   useProfilePrivacy,
   useTextarea,
-  useFileUpload
+  useFileUpload,
+  useColors
 } from '../../customHooks';
 
 import { ME_QUERY } from '../../graphql/queries';
@@ -163,6 +164,8 @@ const UserDetails = ({
   handleFileChange,
   handleFileDelete
 }) => {
+  const { colors } = useColors();
+
   const searchCss = {
     wrapper: `
       width: 100%;
@@ -197,7 +200,7 @@ const UserDetails = ({
         <Avatar
           className="UserAvatar--settings-round"
           size="90"
-          name={inputs.firstName || 'Unkown'}
+          name={inputs.firstName || 'unknown'}
           src={
             file
               ? window.URL.createObjectURL(file)
@@ -205,6 +208,7 @@ const UserDetails = ({
               ? inputs.image
               : ''
           }
+          colors={colors}
         />
         <Styled.AvatarBtns>
           <Styled.AvatarFileLabel as="label">
@@ -266,12 +270,12 @@ const UserDetails = ({
         </Styled.FormFields>
         {/* Location */}
         <Styled.FormFields>
-          {inputs.address.reversedGeocode && !editAddress ? (
+          {inputs.address.name && !editAddress ? (
             <Styled.MapField>
               <MapPreview
                 longitude={inputs.address.longitude}
                 latitude={inputs.address.latitude}
-                reversedGeocode={inputs.address.reversedGeocode}
+                name={inputs.address.name}
                 css={mapCss}
               />
               <Styled.MapButon
@@ -301,10 +305,24 @@ const UserDetails = ({
 };
 
 const Settings = () => {
-  const detailsHook = useProfileForm();
+  const {
+    inputs,
+    handleChange,
+    handleSubmit,
+    handleCancel,
+    handleImageDelete,
+    handleAddress,
+    loading
+  } = useProfileForm();
+  const { rows, handleTextareaChange } = useTextarea();
+  const {
+    file,
+    handleFileChange,
+    handleFileDelete,
+    handleFileDrop,
+    handleFileUpload
+  } = useFileUpload();
   const privacyHook = useProfilePrivacy();
-  const textareaHook = useTextarea();
-  const fileHook = useFileUpload();
   const { path, url } = useRouteMatch();
   const [updateUser, { loading: loadingDetailsUpdate }] = useMutation(
     UPDATE_USER_MUTATION
@@ -318,31 +336,33 @@ const Settings = () => {
   const [editAddress, setEditAddress] = useState(false);
   const client = useApolloClient();
 
+  const spinnerCss = `
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
   const handleClickGeocodingResult = result => {
-    detailsHook.handleAddress(result);
+    handleAddress(result);
     handleEditAddress(false);
   };
 
-  const handleUpdateUser = file => async inputs => {
+  const handleUpdateUser = async inputs => {
     try {
-      const { address, ...rest } = inputs;
-      const { longitude, latitude } = address;
+      const { address } = inputs;
+      const { __typename, ...rest } = address; // eslint-disable-line
 
-      // check if there's a new file before uploading to cloudinary
-      let image = '';
-      if (file) {
-        const { url } = await fileHook.handleFileUpload();
-        fileHook.handleFileDelete();
-        image = url;
-      }
+      const image = await handleFileUpload();
+      handleFileDelete();
+
+      const input = image
+        ? { ...inputs, image, address: rest }
+        : { ...inputs, address: rest };
+
       await updateUser({
-        variables: {
-          input: {
-            ...rest,
-            address: { longitude, latitude },
-            image
-          }
-        },
+        variables: { input },
         update: (cache, { data: { updateUser } }) => {
           cache.writeQuery({
             query: ME_QUERY,
@@ -360,7 +380,7 @@ const Settings = () => {
       const { currentPassword, newPassword } = inputs;
 
       await updateUserPrivacy({
-        variables: { input: { ...inputs } },
+        variables: { input: inputs },
         update: (cache, { data: { updateUserPrivacy } }) => {
           cache.writeQuery({
             query: ME_QUERY,
@@ -388,6 +408,17 @@ const Settings = () => {
     deleteAccessToken();
     history.push('/');
   };
+
+  if (loading)
+    return (
+      <ClipLoader
+        sizeUnit={'px'}
+        size={70}
+        color={'#6C8C96'}
+        loading={loading}
+        css={spinnerCss}
+      />
+    );
 
   return (
     <Styled.SettingsWrapper>
@@ -419,12 +450,22 @@ const Settings = () => {
         <Switch>
           <Route exact path={`${path}`}>
             <UserDetails
-              {...detailsHook}
-              {...textareaHook}
-              {...fileHook}
+              inputs={inputs}
+              handleChange={handleChange}
+              handleSubmit={handleSubmit}
+              handleCancel={handleCancel}
+              handleImageDelete={handleImageDelete}
+              handleAddress={handleAddress}
+              rows={rows}
+              handleTextareaChange={handleTextareaChange}
+              file={file}
+              handleFileChange={handleFileChange}
+              handleFileDelete={handleFileDelete}
+              handleFileDrop={handleFileDrop}
+              handleFileUpload={handleFileUpload}
               viewport={viewport}
               isLoadingUpdate={loadingDetailsUpdate}
-              handleUpdateUser={handleUpdateUser(fileHook.file)}
+              handleUpdateUser={handleUpdateUser}
               handleClickGeocodingResult={handleClickGeocodingResult}
               editAddress={editAddress}
               onEditAddress={handleEditAddress}

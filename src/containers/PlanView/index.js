@@ -12,7 +12,7 @@ import Chat from '../../components/Chat';
 import { GET_PLAN_QUERY } from '../../graphql/queries';
 import { CREATE_MESSAGE_MUTATION } from '../../graphql/mutations';
 
-import { useLazyReverseGeocode } from '../../customHooks';
+import { useLazyReverseGeocode, useColors } from '../../customHooks';
 
 const mapCss = `
   height: 25rem;
@@ -29,8 +29,9 @@ const PlanView = props => {
   });
   const [
     reverseGeocode,
-    { reversedGeocode, longitude, latitude }
+    { name, longitude, latitude }
   ] = useLazyReverseGeocode();
+  const { colors } = useColors();
 
   useEffect(() => {
     if (data && data.plan) {
@@ -55,7 +56,7 @@ const PlanView = props => {
               css={mapCss}
               longitude={longitude}
               latitude={latitude}
-              reversedGeocode={reversedGeocode}
+              name={name}
             />
           </Styled.MapPreview>
           <Styled.Date>
@@ -68,7 +69,13 @@ const PlanView = props => {
             <Styled.List>
               {plan.invites.map(({ email, firstName, image }) => (
                 <Styled.Item key={email}>
-                  <Avatar size="70" name={firstName} src={image} className="UserAvatar--square"/>
+                  <Avatar
+                    size="70"
+                    name={firstName}
+                    src={image}
+                    className="UserAvatar--square"
+                    colors={colors}
+                  />
                 </Styled.Item>
               ))}
             </Styled.List>
@@ -78,7 +85,13 @@ const PlanView = props => {
             <Styled.List>
               {plan.participants.map(({ email, firstName, image }) => (
                 <Styled.Item key={email}>
-                  <Avatar size="70" name={firstName} src={image} className="UserAvatar--square" />
+                  <Avatar
+                    size="70"
+                    name={firstName}
+                    src={image}
+                    className="UserAvatar--square"
+                    colors={colors}
+                  />
                 </Styled.Item>
               ))}
             </Styled.List>
