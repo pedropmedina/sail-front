@@ -4,25 +4,10 @@ import React from 'react';
 import styled from 'styled-components/macro'; // eslint-disable-line
 
 import * as Styled from './styled';
-import { RoundButton } from '../../sharedStyles/buttons';
+import { EditButton } from '../../sharedStyles/buttons';
 
 import { ReactComponent as DownloadIcon } from '../../assets/SVG/download.svg';
-import { ReactComponent as EditIcon } from '../../assets/SVG/edit.svg';
-
-const overwrite = `
-  position: absolute;
-  top: 2.5rem;
-  right: 2.5rem;
-  z-index: 1;
-  background-color: #fff;
-  color: var(--color-light-grey);
-  box-shadow: 0 .3rem .7rem .2rem rgba(0,0,0,.2);
-
-  :hover {
-    background-color: var(--color-earth-red);
-    color: #fff;
-  }
-`;
+import { ReactComponent as EditIcon } from '../../assets/SVG/edit-3.svg';
 
 const Upload = ({
   file,
@@ -32,31 +17,36 @@ const Upload = ({
   handleDragIn,
   handleDragOut,
   handleDrop,
-  dragging
+  dragging,
+  image,
+  css = {}
 }) => {
   return (
-    <Styled.UploadWrapper>
+    <Styled.UploadWrapper dragging={dragging} css={css.upload || ''}>
       <Styled.Upload
-        dragging={dragging}
         onDragOver={handleDrag}
         onDragEnter={handleDragIn}
         onDragLeave={handleDragOut}
         onDrop={handleDrop}
       >
-        {file ? (
+        {file || image ? (
           <>
-            <RoundButton css={overwrite} onClick={handleFileDelete}>
-              <EditIcon />
-            </RoundButton>
-            <Styled.UploadPreview>
+            <Styled.EditWrapper css={css.edit || ''}>
+              <EditButton onClick={handleFileDelete}>
+                <EditIcon />
+              </EditButton>
+            </Styled.EditWrapper>
+            <Styled.UploadPreview dragging={dragging} css={css.preview || ''}>
               <Styled.PreviewImg
-                src={window.URL.createObjectURL(file)}
+                src={
+                  file ? window.URL.createObjectURL(file) : image ? image : ''
+                }
                 alt="preview image"
               />
             </Styled.UploadPreview>
           </>
         ) : (
-          <Styled.Label>
+          <Styled.Label css={css.area || ''}>
             <DownloadIcon />
             <Styled.Input
               fileType

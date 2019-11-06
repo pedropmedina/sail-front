@@ -2,7 +2,6 @@
 import React, { useContext, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
-import Avatar from 'react-user-avatar';
 import { ClipLoader } from 'react-spinners';
 
 import * as Styled from './styled';
@@ -20,11 +19,11 @@ import {
   RoundButton
 } from '../../sharedStyles/buttons';
 
-import { ReactComponent as TrashIcon } from '../../assets/SVG/trash.svg';
-import { ReactComponent as EditIcon } from '../../assets/SVG/edit.svg';
+import { ReactComponent as EditIcon } from '../../assets/SVG/edit-3.svg';
 
 import GeocodingSearch from '../../components/GeocodingSearch';
 import MapPreview from '../../components/MapPreview';
+import Upload from '../../components/Upload';
 
 import history from '../../history';
 import { deleteAccessToken } from '../../accessToken';
@@ -33,8 +32,7 @@ import {
   useProfileForm,
   useProfilePrivacy,
   useTextarea,
-  useFileUpload,
-  useColors
+  useFileUpload
 } from '../../customHooks';
 
 import { ME_QUERY } from '../../graphql/queries';
@@ -167,39 +165,59 @@ const UserDetails = ({
   onEditAddress,
   file,
   handleFileChange,
-  handleFileDelete
+  handleFileDelete,
+  handleDrag,
+  handleDragIn,
+  handleDragOut,
+  handleDrop,
+  dragging
 }) => {
-  const { colors } = useColors();
+  const overwrite = {
+    upload: `
+      width: var(--size-largest);
+      height: var(--size-largest);
+      border-radius: 50%;
+      box-shadow: 0 0.5rem 1rem 0.2rem rgba(0, 0, 0, 0.2);
+      padding: .5rem;
+    `,
+    area: `
+      border-radius: 50%;
+      font-size: 2.4rem;
+    `,
+    edit: `
+      top: -.3rem;
+      right: -.3rem;
+      box-shadow: none;
+    `,
+    preview: `
+      border-radius: 50%;
+      overflow: hidden;
+    `
+  };
 
   return (
     <>
       {/* Avatar */}
-      <Styled.AvatarWrapper>
-        <Avatar
-          className="UserAvatar--settings-round"
-          size="90"
-          name={inputs.firstName || 'unknown'}
-          src={
+      <Styled.Upload>
+        <Upload
+          file={file}
+          handleFileChange={handleFileChange}
+          handleFileDelete={
             file
-              ? window.URL.createObjectURL(file)
+              ? handleFileDelete
               : inputs.image
-              ? inputs.image
-              : ''
+              ? handleImageDelete
+              : handleFileDelete
           }
-          colors={colors}
+          handleDrag={handleDrag}
+          handleDragIn={handleDragIn}
+          handleDragOut={handleDragOut}
+          handleDrop={handleDrop}
+          dragging={dragging}
+          css={overwrite}
+          image={inputs.image}
         />
-        <Styled.AvatarBtns>
-          <Styled.AvatarFileLabel as="label">
-            <Styled.AvatarFileInput type="file" onChange={handleFileChange} />
-            <EditIcon />
-          </Styled.AvatarFileLabel>
-          {!file && !inputs.image ? null : (
-            <RoundButton onClick={file ? handleFileDelete : handleImageDelete}>
-              <TrashIcon />
-            </RoundButton>
-          )}
-        </Styled.AvatarBtns>
-      </Styled.AvatarWrapper>
+      </Styled.Upload>
       <Form onSubmit={handleSubmit(handleUpdateUser)} noValidate>
         {/* Name info */}
         <Fields>
@@ -294,7 +312,12 @@ const Settings = () => {
     file,
     handleFileChange,
     handleFileDelete,
-    handleFileUpload
+    handleFileUpload,
+    handleDrag,
+    handleDragIn,
+    handleDragOut,
+    handleDrop,
+    dragging
   } = useFileUpload();
   const privacyHook = useProfilePrivacy();
   const { path, url } = useRouteMatch();
@@ -436,6 +459,11 @@ const Settings = () => {
               handleFileChange={handleFileChange}
               handleFileDelete={handleFileDelete}
               handleFileUpload={handleFileUpload}
+              handleDrag={handleDrag}
+              handleDragIn={handleDragIn}
+              handleDragOut={handleDragOut}
+              handleDrop={handleDrop}
+              dragging={dragging}
               viewport={viewport}
               isLoadingUpdate={loadingDetailsUpdate}
               handleUpdateUser={handleUpdateUser}

@@ -3,6 +3,7 @@ import React, { useState, useContext } from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import { object, string } from 'yup';
 import keyBy from 'lodash/keyBy';
+import { ClipLoader } from 'react-spinners';
 
 import Context from '../../context';
 import {
@@ -34,7 +35,7 @@ const PinMutation = ({ style }) => {
   const [content, setContent] = useState('');
   const [titleError, setTitleError] = useState('');
   const [contentError, setContentError] = useState('');
-  const [createPin] = useMutation(CREATE_PIN_MUTATION, { ignoreResults: true });
+  const [createPin, { loading }] = useMutation(CREATE_PIN_MUTATION);
   const {
     file,
     handleFileChange,
@@ -158,7 +159,18 @@ const PinMutation = ({ style }) => {
           </Fields>
           <Fields>
             <Field>
-              <SaveButton>Save</SaveButton>
+              <SaveButton disabled={loading}>
+                {loading ? (
+                  <ClipLoader
+                    sizeUnit={'rem'}
+                    size={3}
+                    color={'#fff'}
+                    loading={loading}
+                  />
+                ) : (
+                  'Save'
+                )}
+              </SaveButton>
             </Field>
           </Fields>
         </Form>

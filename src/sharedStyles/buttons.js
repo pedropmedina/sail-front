@@ -45,3 +45,16 @@ export const RoundButton = styled.button`
     fill: currentColor;
   }
 `;
+
+export const EditButton = styled(RoundButton)`
+  background-color: #fff;
+  color: var(--color-light-grey);
+  /* box-shadow: 0 0.3rem 0.7rem 0.2rem rgba(0, 0, 0, 0.2); */
+  transition: all 0.2s;
+  margin: 0;
+
+  :hover {
+    background-color: var(--color-earth-red);
+    color: #fff;
+  }
+`;
