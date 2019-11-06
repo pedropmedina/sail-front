@@ -214,9 +214,30 @@ export const useLazyReverseGeocode = () => {
   return [lazyFn, { ...data }];
 };
 
-// deal with uploading file to cloudinary
+// set colors to be used accross the app
+export const useColors = (colorList = DEFAULT_COLORS) => {
+  const [colors, setColors] = useState(colorList);
+
+  const addColors = cl => {
+    setColors(prevColors => [...prevColors, ...cl]);
+  };
+
+  const removeColor = colorName => {
+    setColors(prevColors => prevColors.filter(color => color !== colorName));
+  };
+
+  const resetColors = () => {
+    setColors([]);
+  };
+
+  return { colors, addColors, resetColors, removeColor };
+};
+
+// handle file uploading by dragging and/or input file to cloudinary
 export const useFileUpload = () => {
   const [file, setFile] = useState('');
+  const [dragging, setDragging] = useState(false);
+  const [dragCounter, setDragCounter] = useState(0);
 
   const validateFileType = file => {
     const fileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -225,12 +246,6 @@ export const useFileUpload = () => {
 
   const handleFileChange = event => {
     const file = event.target.files[0];
-    if (validateFileType(file)) {
-      setFile(file);
-    }
-  };
-
-  const handleFileDrop = file => {
     if (validateFileType(file)) {
       setFile(file);
     }
@@ -258,29 +273,51 @@ export const useFileUpload = () => {
     return '';
   };
 
+  const handleDrag = event => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const handleDragIn = event => {
+    event.preventDefault();
+    event.stopPropagation();
+    setDragCounter(dragCounter + 1);
+    if (event.dataTransfer && event.dataTransfer.items.length > 0) {
+      setDragging(true);
+    }
+  };
+
+  const handleDragOut = event => {
+    event.preventDefault();
+    event.stopPropagation();
+    setDragCounter(dragCounter - 1);
+    if (dragCounter > 1) return;
+    setDragging(false);
+  };
+
+  const handleDrop = event => {
+    event.preventDefault();
+    event.stopPropagation();
+    setDragging(false);
+    if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+      event.dataTransfer.clearData();
+      setDragCounter(0);
+
+      if (validateFileType(event.dataTransfer.files[0])) {
+        setFile(event.dataTransfer.files[0]);
+      }
+    }
+  };
+
   return {
+    dragging,
+    handleDrag,
+    handleDragIn,
+    handleDragOut,
+    handleDrop,
     file,
     handleFileChange,
     handleFileDelete,
-    handleFileDrop,
     handleFileUpload
   };
-};
-
-export const useColors = (colorList = DEFAULT_COLORS) => {
-  const [colors, setColors] = useState(colorList);
-
-  const addColors = cl => {
-    setColors(prevColors => [...prevColors, ...cl]);
-  };
-
-  const removeColor = colorName => {
-    setColors(prevColors => prevColors.filter(color => color !== colorName));
-  };
-
-  const resetColors = () => {
-    setColors([]);
-  };
-
-  return { colors, addColors, resetColors, removeColor };
 };

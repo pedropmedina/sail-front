@@ -1,8 +1,9 @@
 import styled from 'styled-components/macro';
-import { RoundButton } from '../../sharedStyles/buttons'
+import { RoundButton } from '../../sharedStyles/buttons';
 
 export const MapPreview = styled.div`
   position: relative;
+  height: 25rem;
 `;
 
 export const MapButon = styled(RoundButton)`

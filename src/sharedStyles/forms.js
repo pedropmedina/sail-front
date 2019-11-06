@@ -4,6 +4,20 @@ export const Form = styled.form`
   width: 100%;
 `;
 
+export const Fields = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin: 1rem;
+`;
+
+export const Field = styled.div`
+  flex: 1 1 auto;
+  margin: 1rem;
+  min-height: 6rem;
+  position: relative;
+  border-radius: var(--size-smallest);
+`;
+
 export const Label = styled.label`
   position: absolute;
   bottom: 0;
@@ -22,6 +36,7 @@ export const Input = styled.input`
   outline: unset;
   padding-left: 2rem;
   font-size: var(--font-size-small);
+  background-color: #fff;
 
   ::placeholder {
     color: var(--color-light-grey);

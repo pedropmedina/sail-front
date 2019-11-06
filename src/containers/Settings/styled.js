@@ -12,8 +12,6 @@ export const InnerWrapper = styled.div`
   max-width: 120rem;
 `;
 
-export const ProfileImg = styled.img``;
-
 export const AvatarWrapper = styled.div`
   margin-bottom: 5rem;
   padding-left: 2rem;
@@ -28,29 +26,6 @@ export const AvatarFileLabel = styled(RoundButton)``;
 
 export const AvatarFileInput = styled.input`
   display: none;
-`;
-
-export const FormFields = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin: 1rem;
-`;
-
-export const FormField = styled.div`
-  flex: 1 1 auto;
-  margin: 1rem;
-  min-height: 6rem;
-  position: relative;
-`;
-
-export const MapField = styled(FormField)`
-  padding: 1rem;
-  background-color: #fff;
-  border-radius: var(--size-smallest);
-`;
-
-export const ButtonField = styled(FormField)`
-  flex: unset;
 `;
 
 export const SettingsNav = styled.div`
@@ -86,10 +61,4 @@ export const NavLink = styled(Link)`
   :hover {
     background-color: var(--color-less-white);
   }
-`;
-
-export const MapButon = styled(RoundButton)`
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
 `;

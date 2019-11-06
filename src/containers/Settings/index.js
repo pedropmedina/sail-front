@@ -6,7 +6,14 @@ import Avatar from 'react-user-avatar';
 import { ClipLoader } from 'react-spinners';
 
 import * as Styled from './styled';
-import { Form, Input, Label, Textarea } from '../../sharedStyles/forms';
+import {
+  Fields,
+  Field,
+  Form,
+  Input,
+  Label,
+  Textarea
+} from '../../sharedStyles/forms';
 import {
   SaveButton,
   CancelButton,
@@ -46,7 +53,7 @@ const FormField = ({
   handleChange,
   rows
 }) => (
-  <Styled.FormField>
+  <Field>
     {type === 'textarea' ? (
       <Textarea
         as="textarea"
@@ -70,13 +77,13 @@ const FormField = ({
       />
     )}
     <Label htmlFor={name}>{label}</Label>
-  </Styled.FormField>
+  </Field>
 );
 
 const renderFormButtons = ({ isLoadingUpdate, handleCancel }) => {
   return (
     <>
-      <Styled.ButtonField>
+      <Field style={{ flex: '0 1 25%' }}>
         <SaveButton disabled={isLoadingUpdate}>
           {isLoadingUpdate ? (
             <ClipLoader
@@ -89,12 +96,12 @@ const renderFormButtons = ({ isLoadingUpdate, handleCancel }) => {
             'Save'
           )}
         </SaveButton>
-      </Styled.ButtonField>
-      <Styled.ButtonField>
+      </Field>
+      <Field style={{ flex: '0 1 25%' }}>
         <CancelButton type="button" onClick={handleCancel}>
           Cancel
         </CancelButton>
-      </Styled.ButtonField>
+      </Field>
     </>
   );
 };
@@ -111,7 +118,7 @@ const Privacy = ({
     <>
       <Form onSubmit={handleSubmit(handleUpdatePrivacy)} noValidate>
         {/* Username */}
-        <Styled.FormFields>
+        <Fields>
           <FormField
             type="text"
             name="username"
@@ -119,9 +126,9 @@ const Privacy = ({
             inputs={inputs}
             handleChange={handleChange}
           />
-        </Styled.FormFields>
+        </Fields>
         {/* Password */}
-        <Styled.FormFields>
+        <Fields>
           <FormField
             type="password"
             name="currentPassword"
@@ -136,11 +143,9 @@ const Privacy = ({
             inputs={inputs}
             handleChange={handleChange}
           />
-        </Styled.FormFields>
+        </Fields>
         {/* Action buttons */}
-        <Styled.FormFields>
-          {renderFormButtons({ isLoadingUpdate, handleCancel })}
-        </Styled.FormFields>
+        <Fields>{renderFormButtons({ isLoadingUpdate, handleCancel })}</Fields>
       </Form>
     </>
   );
@@ -165,33 +170,6 @@ const UserDetails = ({
   handleFileDelete
 }) => {
   const { colors } = useColors();
-
-  const searchCss = {
-    wrapper: `
-      width: 100%;
-      border-radius: 0.5rem;
-      background-color: #fff;
-  `,
-    search: `
-      color: var(--color-light-grey);
-  `,
-    input: `
-      font-size: var(--font-size-small);
-  `,
-    results: `
-      background-color: #fff;
-  `,
-    item: `
-      &:hover {
-        background-color: var(--color-almost-white);
-        color: var(--color-light-grey);
-      }
-  `
-  };
-
-  const mapCss = `
-    height: 25rem;
-  `;
 
   return (
     <>
@@ -224,7 +202,7 @@ const UserDetails = ({
       </Styled.AvatarWrapper>
       <Form onSubmit={handleSubmit(handleUpdateUser)} noValidate>
         {/* Name info */}
-        <Styled.FormFields>
+        <Fields>
           <FormField
             type="text"
             name="firstName"
@@ -239,9 +217,9 @@ const UserDetails = ({
             inputs={inputs}
             handleChange={handleChange()}
           />
-        </Styled.FormFields>
+        </Fields>
         {/* Contact information */}
-        <Styled.FormFields>
+        <Fields>
           <FormField
             type="text"
             name="email"
@@ -256,9 +234,9 @@ const UserDetails = ({
             inputs={inputs}
             handleChange={handleChange()}
           />
-        </Styled.FormFields>
+        </Fields>
         {/* About section */}
-        <Styled.FormFields>
+        <Fields>
           <FormField
             type="textarea"
             name="about"
@@ -267,38 +245,35 @@ const UserDetails = ({
             handleChange={handleChange(handleTextareaChange)}
             rows={rows}
           />
-        </Styled.FormFields>
+        </Fields>
         {/* Location */}
-        <Styled.FormFields>
+        <Fields>
           {inputs.address.name && !editAddress ? (
-            <Styled.MapField>
+            <Field style={{ backgroundColor: '#fff', padding: '1rem' }}>
               <MapPreview
                 longitude={inputs.address.longitude}
                 latitude={inputs.address.latitude}
                 name={inputs.address.name}
-                css={mapCss}
               />
-              <Styled.MapButon
+              <RoundButton
+                style={{ position: 'absolute', top: '2rem', right: '2rem' }}
                 type="button"
                 onClick={() => onEditAddress(true)}
               >
                 <EditIcon />
-              </Styled.MapButon>
-            </Styled.MapField>
+              </RoundButton>
+            </Field>
           ) : (
-            <Styled.FormField>
+            <Field>
               <GeocodingSearch
                 viewport={viewport}
                 onClickGeocodingResult={handleClickGeocodingResult}
-                css={searchCss}
               />
-            </Styled.FormField>
+            </Field>
           )}
-        </Styled.FormFields>
+        </Fields>
         {/* Action buttons */}
-        <Styled.FormFields>
-          {renderFormButtons({ isLoadingUpdate, handleCancel })}
-        </Styled.FormFields>
+        <Fields>{renderFormButtons({ isLoadingUpdate, handleCancel })}</Fields>
       </Form>
     </>
   );
@@ -319,7 +294,6 @@ const Settings = () => {
     file,
     handleFileChange,
     handleFileDelete,
-    handleFileDrop,
     handleFileUpload
   } = useFileUpload();
   const privacyHook = useProfilePrivacy();
@@ -461,7 +435,6 @@ const Settings = () => {
               file={file}
               handleFileChange={handleFileChange}
               handleFileDelete={handleFileDelete}
-              handleFileDrop={handleFileDrop}
               handleFileUpload={handleFileUpload}
               viewport={viewport}
               isLoadingUpdate={loadingDetailsUpdate}

@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 
 export const Button = styled.button`
   height: 100%;
-  width: 21rem;
+  width: ${({ width }) => (width ? `${width}rem` : '100%')};
   border: none;
   border-radius: var(--size-smallest);
   background-color: var(--color-light-grey);
@@ -27,8 +27,8 @@ export const CancelButton = styled(Button)`
 
 export const RoundButton = styled.button`
   border: none;
-  width: ${({ width }) => (width ? `${width}rem` : '3.5rem')};
-  height: ${({ height }) => (height ? `${height}rem` : '3.5rem')};
+  width: ${({ width }) => (width ? `${width}rem` : 'var(--size-medium)')};
+  height: ${({ height }) => (height ? `${height}rem` : 'var(--size-medium)')};
   background-color: ${({ bg }) => (bg ? `${bg}` : 'var(--color-light-grey)')};
   color: ${({ fg }) => (fg ? `${fg}` : 'var(--color-almost-white)')};
   border-radius: 50%;
@@ -41,7 +41,7 @@ export const RoundButton = styled.button`
   justify-content: center;
 
   svg {
-    font-size: 1.6rem;
+    font-size: var(--font-size-medium);
     fill: currentColor;
   }
 `;
