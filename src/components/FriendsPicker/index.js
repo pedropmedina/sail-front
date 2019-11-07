@@ -1,22 +1,37 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/macro'; // eslint-disable-line
+import React, { useState, useEffect } from 'react';
+import { useQuery } from '@apollo/react-hooks';
+import Avatar from 'react-user-avatar';
 
 import * as Styled from './styled';
+import {
+  Select,
+  SelectSearch,
+  SelectSearchInput,
+  SelectResults,
+  SelectResultsList,
+  SelectResultsItem,
+  SelectPicksList,
+  SelectPicksItem,
+  SelectPickItemButton
+} from '../../sharedStyles/select';
 
 import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
+
 import ClickOutside from '../ClickOutside';
 
-const FriendsPicker = ({
-  css = {},
-  friends = [],
-  defaultInvites = [],
-  onHandleInvites = () => {}
-}) => {
+import { SEARCH_FRIENDS_QUERY } from '../../graphql/queries';
+
+import { useColors } from '../../customHooks';
+
+const FriendsPicker = ({ defaultInvites = [], onHandleInvites = () => {} }) => {
   const [searchText, setSearchText] = useState('');
   const [invites, setInvites] = useState(defaultInvites);
   const [showResults, setShowResults] = useState(false);
+  const { data } = useQuery(SEARCH_FRIENDS_QUERY);
+  const { colors } = useColors();
 
   useEffect(() => {
     onHandleInvites(invites);
@@ -32,7 +47,9 @@ const FriendsPicker = ({
   };
 
   const handleRemoveInvite = invite => {
-    setInvites(invites => invites.filter(name => name !== invite));
+    setInvites(invites =>
+      invites.filter(each => each.username !== invite.username)
+    );
   };
 
   const onClickOutside = () => {
@@ -43,38 +60,53 @@ const FriendsPicker = ({
     setShowResults(true);
   };
 
+  const handleKeyDown = event => {
+    if (event.key === 'Backspace' && invites.length > 0 && !searchText) {
+      setInvites(prevInvites => prevInvites.slice(0, prevInvites.length - 1));
+    }
+  };
+
   return (
     <ClickOutside onClickOutside={onClickOutside} onClickInside={onClickInside}>
-      <Styled.FriendsPickerWrapper css={css}>
-        <Styled.FriendsPicker>
-          {/* Search */}
-          <Styled.FriendsPickerSearch>
-            <Styled.PicksList>
-              {invites.map((f, i) => (
-                <Styled.PicksItem key={i}>
-                  <Styled.FriendImg src="https://via.placeholder.com/50" />
-                  {f}
-                  <Styled.RemoveFriendBtn onClick={() => handleRemoveInvite(f)}>
-                    <XIcon />
-                  </Styled.RemoveFriendBtn>
-                </Styled.PicksItem>
-              ))}
-            </Styled.PicksList>
-            <Styled.SearchLabel>
-              <FilterIcon className="icon icon-small" />
-              <Styled.SearchInput
-                type="text"
-                value={searchText}
-                placeholder="Search and add friend to plan."
-                onChange={handleChange}
-              />
-            </Styled.SearchLabel>
-          </Styled.FriendsPickerSearch>
-          {/* Results */}
-          <Styled.FriendsPickerResults showResults={showResults}>
-            <Styled.FriendsList>
-              {friends &&
-                friends
+      <Styled.FriendsPicker>
+        <Select>
+          <SelectPicksList>
+            {invites.map(invite => (
+              <SelectPicksItem key={invite.email}>
+                <Avatar
+                  size="50"
+                  name={invite.firstName ? invite.firstName : invite.username}
+                  src={invite.image}
+                  colors={colors}
+                  style={{ marginRight: '0.5rem' }}
+                />
+                {invite.username}
+                <SelectPickItemButton
+                  onClick={() => handleRemoveInvite(invite)}
+                >
+                  <XIcon />
+                </SelectPickItemButton>
+              </SelectPicksItem>
+            ))}
+            <SelectPicksItem>
+              <SelectSearch>
+                <FilterIcon />
+                <SelectSearchInput
+                  id="search"
+                  type="text"
+                  value={searchText}
+                  placeholder="Search and add friend to plan."
+                  onChange={handleChange}
+                  onKeyDown={handleKeyDown}
+                />
+              </SelectSearch>
+            </SelectPicksItem>
+          </SelectPicksList>
+          <SelectResults showResults={showResults}>
+            <SelectResultsList>
+              {data &&
+                data.friends &&
+                data.friends
                   .filter(f => {
                     const s = f.firstName
                       ? f.firstName + f.username + f.email
@@ -85,22 +117,25 @@ const FriendsPicker = ({
                           .includes(searchText.trim().toLowerCase())
                       : f;
                   })
-                  .map(({ firstName, username, image }, i) => (
-                    <Styled.Friend
-                      key={`${i}-${username}`}
-                      onClick={() => handleAddInvite(username)}
-                      disabled={invites.includes(username)}
+                  .map(friend => (
+                    <SelectResultsItem
+                      key={friend.username}
+                      onClick={() => handleAddInvite(friend)}
                     >
-                      <Styled.FriendImg
-                        src={image ? image : 'https://via.placeholder.com/50'}
+                      <Avatar
+                        size="30"
+                        name={
+                          friend.firstName ? friend.firstName : friend.username
+                        }
+                        src={friend.image}
+                        colors={colors}
                       />
-                      {firstName ? firstName : username}
-                    </Styled.Friend>
+                    </SelectResultsItem>
                   ))}
-            </Styled.FriendsList>
-          </Styled.FriendsPickerResults>
-        </Styled.FriendsPicker>
-      </Styled.FriendsPickerWrapper>
+            </SelectResultsList>
+          </SelectResults>
+        </Select>
+      </Styled.FriendsPicker>
     </ClickOutside>
   );
 };

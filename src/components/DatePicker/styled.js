@@ -3,14 +3,18 @@ import styled, { css } from 'styled-components/macro';
 import { Box } from '../../stylesShare';
 import { ReactComponent as Icon } from '../../assets/SVG/calendar.svg';
 
-export const DatePickerWrapper = styled.div``;
+export const DatePickerWrapper = styled.div`
+  width: 100%;
+  border-radius: var(--size-smallest);
+  background-color: #fff;
+  color: var(--color-light-grey);
+`;
 
 export const DatePicker = styled.article`
   position: relative;
   color: inherit;
   background-color: inherit;
   border-radius: inherit;
-  font-size: inherit;
 `;
 
 export const DatePickerSearch = styled.article`
@@ -19,7 +23,6 @@ export const DatePickerSearch = styled.article`
   color: inherit;
   background-color: inherit;
   border-radius: inherit;
-  font-size: inherit;
   position: relative;
 `;
 
@@ -28,11 +31,11 @@ export const DatePickerInput = styled.input`
   height: 100%;
   text-indent: 5rem;
   border: none;
-  color: var(--color-dark-grey);
-  background-color: inherit;
+  background-color: #fff;
+  color: var(--color-light-grey);
   outline: none;
   border-radius: inherit;
-  font-size: inherit;
+  font-size: var(--font-size-small);
 
   &::placeholder {
     color: var(--color-light-grey);
@@ -44,7 +47,7 @@ export const CalendarIcon = styled(Icon)`
   left: 1.5rem;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 2rem;
+  font-size: var(--font-size-large);
   fill: currentColor;
 `;
 

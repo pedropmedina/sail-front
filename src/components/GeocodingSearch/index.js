@@ -1,12 +1,23 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
-import styled from 'styled-components/macro'; // eslint-disable-line
 
 import * as Styled from './styled';
+import {
+  Select,
+  SelectSearch,
+  SelectSearchLabel,
+  SelectSearchInput,
+  SelectResults,
+  SelectResultsList,
+  SelectResultsItem
+} from '../../sharedStyles/select';
+
 import ClickOutside from '../../components/ClickOutside';
 
 import { searchOnTimeout } from '../../utils';
+
+import { ReactComponent as SearchIcon } from '../../assets/SVG/search.svg';
 
 // Initialize mapbox geocoding service
 const geocondingService = mbxGeocoding({
@@ -20,8 +31,7 @@ const DEFAULT_VIEWPORT = {
 
 const GeocodingSearch = ({
   viewport = DEFAULT_VIEWPORT,
-  onClickGeocodingResult,
-  css = {}
+  onClickGeocodingResult
 }) => {
   const [text, setText] = useState('');
   const [geocodingResults, setGeocodingResults] = useState([]);
@@ -77,32 +87,29 @@ const GeocodingSearch = ({
 
   return (
     <ClickOutside onClickOutside={onClickOutside} onClickInside={onClickInside}>
-      <Styled.GeocodingWrapper css={css.wrapper || ''}>
-        <Styled.Geocoding css={css.geocoding || ''}>
-          {/* Geocoding Search form */}
-          <Styled.GeocodingSearch
-            onSubmit={hanldeSubmit}
-            css={css.search || ''}
-          >
-            <Styled.GeocodingInput
-              css={css.input || ''}
+      <Styled.GeocodingSearch>
+        <Select>
+          <SelectSearch onSubmit={hanldeSubmit}>
+            <SelectSearchInput
+              id="search"
               type="text"
               value={text}
               placeholder="Search by location, category, city..."
               onChange={handleChange}
             />
-            <Styled.SearchIcon className="icon icon-small" />
-          </Styled.GeocodingSearch>
-          {/* Geocoding search results  */}
-          <Styled.GeocodingResults
-            css={css.results || ''}
+            <SelectSearchLabel htmlFor="search">
+              Search Location
+            </SelectSearchLabel>
+            <SearchIcon className="icon icon-small" />
+          </SelectSearch>
+
+          <SelectResults
             showResults={showResults && geocodingResults.length > 0}
           >
-            <Styled.ResultList css={css.list || ''}>
+            <SelectResultsList>
               {geocodingResults.map((result, index) => {
                 return (
-                  <Styled.ResultItem
-                    css={css.item || ''}
+                  <SelectResultsItem
                     key={index}
                     onClick={() => {
                       setShowResults(false);
@@ -110,13 +117,13 @@ const GeocodingSearch = ({
                     }}
                   >
                     {result.place_name}
-                  </Styled.ResultItem>
+                  </SelectResultsItem>
                 );
               })}
-            </Styled.ResultList>
-          </Styled.GeocodingResults>
-        </Styled.Geocoding>
-      </Styled.GeocodingWrapper>
+            </SelectResultsList>
+          </SelectResults>
+        </Select>
+      </Styled.GeocodingSearch>
     </ClickOutside>
   );
 };

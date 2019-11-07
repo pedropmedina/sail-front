@@ -4,18 +4,18 @@ import { Marker } from 'react-map-gl';
 import * as yup from 'yup';
 import {
   useMutation,
-  useLazyQuery,
   useApolloClient
 } from '@apollo/react-hooks';
 
 import * as Styled from './styled';
+import { SaveButton, CancelButton } from '../../sharedStyles/buttons';
+import { Fields, Field, Form, Input, Textarea } from '../../sharedStyles/forms';
+import { Popup } from '../../stylesShare';
 
-import { ReactComponent as PlusIcon } from '../../assets/SVG/plus.svg';
-import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
-import { ReactComponent as TrashIcon } from '../../assets/SVG/trash.svg';
 
 import Context from '../../context';
+import { useTextarea } from '../../customHooks';
 
 import GeocodingSearch from '../../components/GeocodingSearch';
 import DatePicker from '../../components/DatePicker';
@@ -34,7 +34,6 @@ import {
   UPDATE_DRAFT_PIN_POPUP
 } from '../../reducer';
 
-import { SEARCH_FRIENDS_QUERY } from '../../graphql/queries';
 import {
   CREATE_PLAN_MUTATION,
   CREATE_REQUEST_MUTATION
@@ -68,9 +67,8 @@ const PlanCreate = props => {
     ignoreResults: true
   });
   const client = useApolloClient();
-  const [queryFriends, { data: friendsData }] = useLazyQuery(
-    SEARCH_FRIENDS_QUERY
-  );
+
+  const { rows, handleTextareaChange } = useTextarea();
 
   useEffect(() => {
     // create draftPlan is none exists upon mounting component
@@ -136,6 +134,11 @@ const PlanCreate = props => {
   const handleChange = event => {
     const name = event.target.name;
     const value = event.target.value;
+
+    if (name === 'description') {
+      handleTextareaChange(event);
+    }
+
     const keyedSetters = {
       title: setTitle,
       description: setDescription
@@ -153,13 +156,13 @@ const PlanCreate = props => {
     props.history.push('/plans');
   };
 
-  const handleCancelLocation = () => {
-    dispatch({ type: DELETE_CURRENT_PIN });
-    dispatch({
-      type: UPDATE_DRAFT_PLAN,
-      payload: { location: '', placeName: '' }
-    });
-  };
+  // const handleCancelLocation = () => {
+  //   dispatch({ type: DELETE_CURRENT_PIN });
+  //   dispatch({
+  //     type: UPDATE_DRAFT_PLAN,
+  //     payload: { location: '', placeName: '' }
+  //   });
+  // };
 
   const handleCreateInviteReq = async (invites, plan) => {
     for (let invite of invites) {
@@ -229,95 +232,94 @@ const PlanCreate = props => {
   };
 
   return (
-    <Styled.PlanCreate>
-      <Styled.Fields>
-        <Styled.Field error={titleError}>
-          <Styled.Input
-            type="text"
-            name="title"
-            value={title}
-            placeholder="Title the plan"
-            onChange={handleChange}
-          />
-          {titleError && <Styled.FieldError>{titleError}</Styled.FieldError>}
-        </Styled.Field>
-        <Styled.Field error={descriptionError}>
-          <Styled.Input
-            type="text"
-            name="description"
-            value={description}
-            placeholder="Describe your plan to friends."
-            onChange={handleChange}
-          />
-          {descriptionError && (
-            <Styled.FieldError>{descriptionError}</Styled.FieldError>
-          )}
-        </Styled.Field>
-        <Styled.Field error={locationError}>
-          {draftPlan && draftPlan.location && currentPin ? (
-            <Styled.MapPreviewWrapper>
-              <MapPreview css={mapPreviewCss} {...viewport}>
-                <Marker
-                  longitude={currentPin.longitude}
-                  latitude={currentPin.latitude}
-                >
-                  <PinIcon className="icon icon-small pin-icon" />
-                </Marker>
-                <Styled.MapPreviewPopup
-                  longitude={currentPin.longitude}
-                  latitude={currentPin.latitude}
-                  offsetLeft={24}
-                  offsetTop={12}
-                  anchor="left"
-                  closeButton={false}
-                >
-                  <p style={{ width: '20rem' }}>{draftPlan.placeName}</p>
-                </Styled.MapPreviewPopup>
-              </MapPreview>
-              <Styled.CancelLocationBtn onClick={handleCancelLocation}>
-                <TrashIcon className="icon icon-small" />
-              </Styled.CancelLocationBtn>
-            </Styled.MapPreviewWrapper>
-          ) : (
-            <GeocodingSearch
-              viewport={viewport}
-              onClickGeocodingResult={handleClickGeocodingResult}
-            />
-          )}
-          {locationError && (
-            <Styled.FieldError>{locationError}</Styled.FieldError>
-          )}
-        </Styled.Field>
-        <Styled.Field error={dateError}>
-          <DatePicker
-            css={css}
-            defaultDate={draftPlan ? draftPlan.date : new Date()}
-            onSelectDate={handleOnSelect}
-          />
-          {dateError && <Styled.FieldError>{dateError}</Styled.FieldError>}
-        </Styled.Field>
-        <Styled.Field error={invitesError} onClick={queryFriends}>
-          <FriendsPicker
-            css={css}
-            friends={
-              friendsData && friendsData.friends ? friendsData.friends : []
-            }
-            defaultInvites={draftPlan ? draftPlan.invites : []}
-            onHandleInvites={handleInvites}
-          />
-          {invitesError && (
-            <Styled.FieldError>{invitesError}</Styled.FieldError>
-          )}
-        </Styled.Field>
-        <Styled.CreateBtn onClick={handleCreatePlan}>
-          <PlusIcon />
-          Create Plan
-        </Styled.CreateBtn>
-        <Styled.CancelBtn onClick={handleCancel}>
-          <XIcon />
-        </Styled.CancelBtn>
-      </Styled.Fields>
-    </Styled.PlanCreate>
+    <Styled.PlanCreateWrapper>
+      <Styled.PlanCreate>
+        <Form onSubmit={handleCreatePlan} noValidate>
+          <Fields>
+            <Field>
+              <Input
+                type="text"
+                name="title"
+                value={title}
+                placeholder="Title the plan"
+                onChange={handleChange}
+              />
+            </Field>
+          </Fields>
+          <Fields>
+            <Field>
+              <Textarea
+                rows={rows}
+                as="textarea"
+                name="description"
+                value={description}
+                placeholder="Describe your plan to friends"
+                onChange={handleChange}
+              />
+            </Field>
+          </Fields>
+          <Fields>
+            <Field>
+              {draftPlan && draftPlan.location && currentPin ? (
+                <Styled.MapPreviewWrapper>
+                  <MapPreview css={mapPreviewCss} {...viewport}>
+                    <Marker
+                      longitude={currentPin.longitude}
+                      latitude={currentPin.latitude}
+                    >
+                      <PinIcon className="icon icon-small pin-icon" />
+                    </Marker>
+                    <Popup
+                      longitude={currentPin.longitude}
+                      latitude={currentPin.latitude}
+                      offsetLeft={24}
+                      offsetTop={12}
+                      anchor="left"
+                      closeButton={false}
+                    >
+                      <p style={{ width: '20rem' }}>{draftPlan.placeName}</p>
+                    </Popup>
+                  </MapPreview>
+                </Styled.MapPreviewWrapper>
+              ) : (
+                <GeocodingSearch
+                  viewport={viewport}
+                  onClickGeocodingResult={handleClickGeocodingResult}
+                />
+              )}
+            </Field>
+          </Fields>
+          <Fields>
+            <Field>
+              <DatePicker
+                css={css}
+                defaultDate={draftPlan ? draftPlan.date : new Date()}
+                onSelectDate={handleOnSelect}
+              />
+            </Field>
+          </Fields>
+          <Fields>
+            <Field>
+              <FriendsPicker
+                css={css}
+                defaultInvites={draftPlan ? draftPlan.invites : []}
+                onHandleInvites={handleInvites}
+              />
+            </Field>
+          </Fields>
+          <Fields>
+            <Field style={{ flex: '0 1 25%' }}>
+              <SaveButton>Save</SaveButton>
+            </Field>
+            <Field style={{ flex: '0 1 25%' }}>
+              <CancelButton type="button" onClick={handleCancel}>
+                Cancel
+              </CancelButton>
+            </Field>
+          </Fields>
+        </Form>
+      </Styled.PlanCreate>
+    </Styled.PlanCreateWrapper>
   );
 };
 
