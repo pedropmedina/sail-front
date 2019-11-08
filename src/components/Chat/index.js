@@ -3,12 +3,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import Avatar from 'react-user-avatar';
 
-import { useColors } from '../../customHooks';
-
 import * as Styled from './styled';
 
 import { ReactComponent as SendIcon } from '../../assets/SVG/send.svg';
-import { useTextarea } from '../../customHooks';
+
+import { useTextarea, useColors } from '../../hooks';
 
 const Chat = ({ data, onCreateNew, subscribeToNew }) => {
   const refEl = useRef(null);

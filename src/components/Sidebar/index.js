@@ -6,7 +6,7 @@ import Avatar from 'react-user-avatar';
 import Context from '../../context';
 import history from '../../history';
 import { getAccessToken, deleteAccessToken } from '../../accessToken';
-import { useColors } from '../../customHooks';
+import { useColors } from '../../hooks';
 
 import { LOGOUT_USER_MUTATION } from '../../graphql/mutations';
 import {

@@ -24,7 +24,7 @@ import ClickOutside from '../ClickOutside';
 
 import { SEARCH_FRIENDS_QUERY } from '../../graphql/queries';
 
-import { useColors } from '../../customHooks';
+import { useColors } from '../../hooks';
 
 const FriendsPicker = ({ defaultInvites = [], onHandleInvites = () => {} }) => {
   const [searchText, setSearchText] = useState('');

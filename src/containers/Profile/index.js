@@ -14,7 +14,7 @@ import Friend from '../../components/Friend';
 import { GET_PROFILE_QUERY, ME_QUERY } from '../../graphql/queries';
 import { CREATE_REQUEST_MUTATION } from '../../graphql/mutations';
 
-import { useColors } from '../../customHooks';
+import { useColors } from '../../hooks';
 
 const Profile = props => {
   const {

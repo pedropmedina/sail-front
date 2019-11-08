@@ -12,7 +12,7 @@ import {
   DELETE_DRAFT_PLAN
 } from '../../reducer';
 import { CREATE_PIN_MUTATION } from '../../graphql/mutations';
-import { useFileUpload, useTextarea } from '../../customHooks';
+import { useFileUpload, useTextarea } from '../../hooks';
 
 import * as Styled from './styled';
 import { SaveButton } from '../../sharedStyles/buttons';

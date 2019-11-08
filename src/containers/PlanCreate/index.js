@@ -2,10 +2,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Marker } from 'react-map-gl';
 import * as yup from 'yup';
-import {
-  useMutation,
-  useApolloClient
-} from '@apollo/react-hooks';
+import { useMutation, useApolloClient } from '@apollo/react-hooks';
 
 import * as Styled from './styled';
 import { SaveButton, CancelButton } from '../../sharedStyles/buttons';
@@ -15,7 +12,7 @@ import { Popup } from '../../stylesShare';
 import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
 
 import Context from '../../context';
-import { useTextarea } from '../../customHooks';
+import { useTextarea } from '../../hooks';
 
 import GeocodingSearch from '../../components/GeocodingSearch';
 import DatePicker from '../../components/DatePicker';

@@ -6,7 +6,6 @@ import * as Styled from './styled';
 import {
   Select,
   SelectSearch,
-  SelectSearchLabel,
   SelectSearchInput,
   SelectResults,
   SelectResultsList,
@@ -97,9 +96,6 @@ const GeocodingSearch = ({
               placeholder="Search by location, category, city..."
               onChange={handleChange}
             />
-            <SelectSearchLabel htmlFor="search">
-              Search Location
-            </SelectSearchLabel>
             <SearchIcon className="icon icon-small" />
           </SelectSearch>
 

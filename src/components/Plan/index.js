@@ -9,7 +9,7 @@ import { ReactComponent as CalendarIcon } from '../../assets/SVG/calendar.svg';
 
 import MapPreview from '../MapPreview';
 
-import { useReverseGeocode, useColors } from '../../customHooks';
+import { useReverseGeocode, useColors } from '../../hooks';
 
 const mapCss = `
   height: 25rem;

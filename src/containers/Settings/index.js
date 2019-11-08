@@ -28,12 +28,13 @@ import Upload from '../../components/Upload';
 import history from '../../history';
 import { deleteAccessToken } from '../../accessToken';
 import Context from '../../context';
+
 import {
-  useProfileForm,
+  useProfileDetails,
   useProfilePrivacy,
   useTextarea,
   useFileUpload
-} from '../../customHooks';
+} from '../../hooks';
 
 import { ME_QUERY } from '../../graphql/queries';
 import {
@@ -306,7 +307,7 @@ const Settings = () => {
     handleImageDelete,
     handleAddress,
     loading
-  } = useProfileForm();
+  } = useProfileDetails();
   const { rows, handleTextareaChange } = useTextarea();
   const {
     file,

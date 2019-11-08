@@ -12,7 +12,7 @@ import Chat from '../../components/Chat';
 import { GET_PLAN_QUERY } from '../../graphql/queries';
 import { CREATE_MESSAGE_MUTATION } from '../../graphql/mutations';
 
-import { useLazyReverseGeocode, useColors } from '../../customHooks';
+import { useLazyReverseGeocode, useColors } from '../../hooks';
 
 const mapCss = `
   height: 25rem;

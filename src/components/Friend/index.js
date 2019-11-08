@@ -2,7 +2,7 @@
 import React from 'react';
 import Avatar from 'react-user-avatar';
 
-import { useColors } from '../../customHooks';
+import { useColors } from '../../hooks';
 
 import * as Styled from './styled';
 

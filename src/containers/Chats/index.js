@@ -4,7 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 import ClipLoader from 'react-spinners/ClipLoader';
 import Avatar from 'react-user-avatar';
 
-import { useColors } from '../../customHooks';
+import { useColors } from '../../hooks';
 
 import * as Styled from './styled';
 import { CreateBtn } from '../../stylesShare';
