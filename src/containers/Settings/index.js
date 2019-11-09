@@ -5,14 +5,7 @@ import { useMutation, useApolloClient } from '@apollo/react-hooks';
 import { ClipLoader } from 'react-spinners';
 
 import * as Styled from './styled';
-import {
-  Fields,
-  Field,
-  Form,
-  Input,
-  Label,
-  Textarea
-} from '../../sharedStyles/forms';
+import { Fields, Field, Form, Input, Textarea } from '../../sharedStyles/forms';
 import { SaveButton, CancelButton } from '../../sharedStyles/buttons';
 
 import GeocodingSearch from '../../components/GeocodingSearch';
@@ -69,7 +62,6 @@ const FormField = ({
         required
       />
     )}
-    <Label htmlFor={name}>{label}</Label>
   </Field>
 );
 

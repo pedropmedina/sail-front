@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import { object as yupObject, string as yupString } from 'yup';
 import keyBy from 'lodash/keyBy';
+import styled from 'styled-components/macro'; // eslint-disable-line
 
 import { setAccessToken } from '../../accessToken';
 import {
@@ -11,6 +12,8 @@ import {
 } from '../../graphql/mutations';
 
 import * as Styled from './styled';
+import { Form, Fields, Field, Input } from '../../sharedStyles/forms';
+import { SaveButton, Button } from '../../sharedStyles/buttons';
 
 const PASSWORD_FIELD = {
   label: 'Password',
@@ -57,7 +60,6 @@ const Side = ({
   onSubmit,
   onChangeInput,
   fields,
-  fieldsError,
   textData,
   back = false,
   front = false
@@ -65,7 +67,6 @@ const Side = ({
   const {
     text,
     altHint,
-    altMode,
     buttonText,
     fields: { username, password }
   } = textData;
@@ -79,43 +80,44 @@ const Side = ({
         </Styled.Subtitle>
       </Styled.Header>
       <Styled.Text>{text}</Styled.Text>
-      <Styled.AuthForm onSubmit={onSubmit}>
-        <Styled.AuthField
-          error={
-            (front && fieldsError['usernameError']) ||
-            (back && fieldsError['emailError'])
-          }
-        >
-          {username.label}
-          <input
-            type="text"
-            name={username.name}
-            value={fields[username.value]}
-            placeholder={username.placeholder}
-            onChange={onChangeInput}
-          />
-        </Styled.AuthField>
-        <Styled.AuthField
-          error={
-            (front && fieldsError['passwordError']) ||
-            (back && fieldsError['passwordError'])
-          }
-        >
-          {password.label}
-          <input
-            type="password"
-            name={password.name}
-            value={fields[password.value]}
-            placeholder={password.placeholder}
-            onChange={onChangeInput}
-          />
-        </Styled.AuthField>
-        <Styled.SubmitButton>{buttonText}</Styled.SubmitButton>
-      </Styled.AuthForm>
-      <Styled.AltMode>
-        <span>{altHint}</span>
-        <Styled.Button onClick={onChangeSignUpMode}>{altMode}</Styled.Button>
-      </Styled.AltMode>
+      <Form onSubmit={onSubmit} noValidate>
+        <Fields>
+          <Field>
+            <Input
+              type="text"
+              name={username.name}
+              value={fields[username.value]}
+              placeholder={username.placeholder}
+              onChange={onChangeInput}
+              required
+            />
+          </Field>
+        </Fields>
+        <Fields>
+          <Field>
+            <Input
+              type="password"
+              name={password.name}
+              value={fields[password.value]}
+              placeholder={password.placeholder}
+              onChange={onChangeInput}
+              required
+            />
+          </Field>
+        </Fields>
+        <Fields>
+          <Field>
+            <SaveButton>{buttonText}</SaveButton>
+          </Field>
+        </Fields>
+        <Fields>
+          <Field>
+            <Button onClick={onChangeSignUpMode} type="button">
+              {altHint}
+            </Button>
+          </Field>
+        </Fields>
+      </Form>
     </Styled.CardSide>
   );
 };

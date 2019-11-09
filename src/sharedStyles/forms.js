@@ -14,7 +14,6 @@ export const Field = styled.div`
   flex: 1 1 auto;
   margin: 1rem;
   min-height: 6rem;
-  position: relative;
   border-radius: var(--size-smallest);
 `;
 

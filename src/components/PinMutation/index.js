@@ -16,14 +16,7 @@ import { useFileUpload, useTextarea } from '../../hooks';
 
 import * as Styled from './styled';
 import { SaveButton } from '../../sharedStyles/buttons';
-import {
-  Form,
-  Fields,
-  Field,
-  Label,
-  Input,
-  Textarea
-} from '../../sharedStyles/forms';
+import { Form, Fields, Field, Input, Textarea } from '../../sharedStyles/forms';
 import { PinWrapper } from '../../stylesShare';
 import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 
@@ -126,8 +119,8 @@ const PinMutation = ({ style }) => {
                 id="title"
                 placeholder="Give the Pin a name"
                 onChange={handleFieldChange}
+                required
               />
-              <Label htmlFor="title">Title</Label>
             </Field>
           </Fields>
           <Fields>
@@ -139,8 +132,8 @@ const PinMutation = ({ style }) => {
                 id="content"
                 placeholder="Describe this location"
                 onChange={handleFieldChange}
+                required
               />
-              <Label htmlFor="content">Content</Label>
             </Field>
           </Fields>
           <Fields>

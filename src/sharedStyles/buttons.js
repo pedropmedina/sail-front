@@ -11,7 +11,6 @@ export const Button = styled.button`
   font-size: var(--font-size-small);
   outline: unset;
   cursor: pointer;
-  position: relative;
 `;
 
 export const SaveButton = styled(Button)`
