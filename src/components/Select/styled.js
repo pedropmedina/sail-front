@@ -7,25 +7,27 @@ export const Select = styled.div`
   background-color: #fff;
   color: var(--color-light-grey);
   position: relative;
+  padding-left: 2rem;
+  display: flex;
+  align-items: center;
+
+  > svg {
+    fill: var(--color-light-grey);
+    font-size: var(--font-size-large);
+    margin-right: 2rem;
+  }
 `;
 
 export const SelectSearch = styled.div`
   height: 6rem;
   position: relative;
-
-  svg {
-    position: absolute;
-    left: 1.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: var(--font-size-large);
-    fill: currentColor;
-  }
 `;
 
 export const SelectSearchLabel = styled(Label)``;
 
-export const SelectSearchInput = styled(Input)``;
+export const SelectSearchInput = styled(Input)`
+  padding: 0;
+`;
 
 export const SelectOptions = styled.div`
   display: none;
@@ -39,6 +41,8 @@ export const SelectOptions = styled.div`
   bottom: 0;
   transform: translateY(calc(100% + 2rem));
   z-index: 1;
+  max-height: 25rem;
+  overflow-y: auto;
 
   ${({ showOptions }) =>
     showOptions &&
@@ -64,6 +68,7 @@ export const SelectOptionsItem = styled.li`
 `;
 
 export const SelectPicksList = styled(SelectOptionsList)`
+  flex: 1;
   display: flex;
   flex-wrap: wrap;
 `;

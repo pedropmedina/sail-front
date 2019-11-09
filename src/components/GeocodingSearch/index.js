@@ -63,8 +63,8 @@ const GeocodingSearch = ({
         options={geocodingResults}
         onSelectChange={handleForwardGeocode()}
         onSelectOption={onClickGeocodingResult}
+        renderIcon={() => <SearchIcon />}
       />
-      <SearchIcon />
     </Styled.GeocodingSearch>
   );
 };

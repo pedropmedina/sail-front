@@ -23,6 +23,7 @@ const FriendsPicker = ({ defaultInvites, onHandleInvites }) => {
         showPicks={true}
         options={prepareOptions(data.friends)}
         onPicksChange={onHandleInvites}
+        label="Let friends be part of your plan"
       />
     </Styled.FriendsPicker>
   );

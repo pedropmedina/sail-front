@@ -22,7 +22,8 @@ const Select = ({
   onPicksChange,
   onSelectOption,
   renderOption,
-  renderPick
+  renderPick,
+  renderIcon
 }) => {
   const {
     selectSearch,
@@ -32,7 +33,8 @@ const Select = ({
     handleRemovePick,
     handleRemovePickOnKeyDown,
     handleShowOptions,
-    handleSelect
+    handleSelect,
+    handleAddPick
   } = useSelect(defaultPicks);
 
   useEffect(() => {
@@ -49,9 +51,23 @@ const Select = ({
     handleShowOptions(true);
   };
 
+  const showUnpickedOptions = (picks, options) =>
+    options.filter(
+      option => !picks.some(pick => pick.option === option.option)
+    );
+
+  const handleClickSelect = (fn, option) => {
+    handleSelect(fn)(option)
+    // only add to picks if showPicks
+    if (showPicks) {
+      handleAddPick(option)
+    }
+  }
+
   return (
     <ClickOutside onClickOutside={onClickOutside} onClickInside={onClickInside}>
       <Styled.Select css={css.select || ''}>
+        {renderIcon && typeof renderIcon === 'function' && renderIcon()}
         {/* Picks List */}
         <Styled.SelectPicksList css={css.picks || ''}>
           {showPicks &&
@@ -83,7 +99,7 @@ const Select = ({
                 id="search"
                 type="text"
                 value={selectSearch}
-                placeholder="Search and select option"
+                placeholder={label ? label : 'Search and select option'}
                 onChange={handleSelectSearch(onSelectChange)}
                 onKeyDown={handleRemovePickOnKeyDown}
               />
@@ -98,11 +114,11 @@ const Select = ({
         {/* Options list */}
         <Styled.SelectOptions showOptions={showOptions && options.length > 0}>
           <Styled.SelectOptionsList css={css.options || ''}>
-            {options.map(option =>
+            {showUnpickedOptions(picks, options).map(option =>
               renderOption && typeof renderOption === 'function' ? (
                 <Styled.SelectOptionsItem
                   key={uuidv4()}
-                  onClick={() => handleSelect(onSelectOption)(option)}
+                  onClick={() => handleClickSelect(onSelectOption, option)}
                   css={css.option || ''}
                 >
                   {renderOption(option.option)}
@@ -110,7 +126,7 @@ const Select = ({
               ) : (
                 <Styled.SelectOptionsItem
                   key={uuidv4()}
-                  onClick={() => handleSelect(onSelectOption)(option)}
+                  onClick={() => handleClickSelect(onSelectOption, option)}
                   css={css.option || ''}
                 >
                   {option.option}

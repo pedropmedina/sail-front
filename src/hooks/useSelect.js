@@ -32,7 +32,6 @@ export const useSelect = (defaultPicks = []) => {
   const handleShowOptions = bool => setShowOptions(bool);
 
   const handleSelect = fn => option => {
-    handleAddPick(option);
     if (fn && typeof fn === 'function') {
       fn(option);
     }
