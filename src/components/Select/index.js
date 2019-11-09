@@ -102,6 +102,7 @@ const Select = ({
                 placeholder={label ? label : 'Search and select option'}
                 onChange={handleSelectSearch(onSelectChange)}
                 onKeyDown={handleRemovePickOnKeyDown}
+                onFocus={() => handleShowOptions(true)}
               />
             </Styled.SelectSearch>
             {showLabel && (

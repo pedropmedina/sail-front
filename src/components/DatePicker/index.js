@@ -217,6 +217,7 @@ const DatePicker = ({ onSelectDate = () => {}, defaultDate = new Date() }) => {
         <Styled.DatePicker>
           {/* Search input */}
           <Styled.DatePickerSearch>
+            <Styled.CalendarIcon />
             <Styled.DatePickerInput
               placeholder="Pick/Type a day and time (e.g., next Monday at 11:30 AM, Friday, 12/12/2019, ...)"
               onFocus={handleFocus}
@@ -224,7 +225,6 @@ const DatePicker = ({ onSelectDate = () => {}, defaultDate = new Date() }) => {
               value={fieldValue}
               onChange={handleChange}
             />
-            <Styled.CalendarIcon />
           </Styled.DatePickerSearch>
           {/* DatePicker or TimePicker */}
           {!!showCalendar && (

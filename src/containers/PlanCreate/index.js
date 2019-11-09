@@ -3,6 +3,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Marker } from 'react-map-gl';
 import * as yup from 'yup';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
+import { ClipLoader } from 'react-spinners';
 
 import * as Styled from './styled';
 import { SaveButton, CancelButton } from '../../sharedStyles/buttons';
@@ -57,9 +58,7 @@ const PlanCreate = props => {
   const [locationError, setLocationError] = useState('');
   const [dateError, setDateError] = useState('');
   const [invitesError, setInvitesError] = useState('');
-  const [createPlan] = useMutation(CREATE_PLAN_MUTATION, {
-    ignoreResults: true
-  });
+  const [createPlan, { loading }] = useMutation(CREATE_PLAN_MUTATION);
   const [createInviteReq] = useMutation(CREATE_REQUEST_MUTATION, {
     ignoreResults: true
   });
@@ -316,7 +315,18 @@ const PlanCreate = props => {
           </Fields>
           <Fields>
             <Field style={{ flex: '0 1 25%' }}>
-              <SaveButton>Save</SaveButton>
+              <SaveButton disabled={loading}>
+                {loading ? (
+                  <ClipLoader
+                    sizeUnit={'rem'}
+                    size={3}
+                    color={'#fff'}
+                    loading={loading}
+                  />
+                ) : (
+                  'Save'
+                )}
+              </SaveButton>
             </Field>
             <Field style={{ flex: '0 1 25%' }}>
               <CancelButton type="button" onClick={handleCancel}>
