@@ -14,11 +14,7 @@ export const PlanCreate = styled.div`
 export const MapPreviewWrapper = styled.div`
   height: 30rem;
   padding: 2rem;
-  background-color: var(--color-less-white);
+  background-color: #fff;
   position: relative;
-
-  :hover button {
-    background-color: var(--color-earth-red);
-    color: var(--color-almost-white);
-  }
+  border-radius: var(--size-smallest);
 `;

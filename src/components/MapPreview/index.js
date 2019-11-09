@@ -5,8 +5,10 @@ import { StaticMap, Marker } from 'react-map-gl';
 
 import * as Styled from './styled';
 import { Popup } from '../../sharedStyles/popup';
+import { RoundButton } from '../../sharedStyles/buttons';
 
 import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
+import { ReactComponent as EditIcon } from '../../assets/SVG/edit-3.svg';
 
 const MapPreview = ({
   children,
@@ -14,10 +16,26 @@ const MapPreview = ({
   longitude = -122.4376,
   latitude = 37.7577,
   zoom = 13,
-  name
+  name,
+  showEditButton = false,
+  onEditMap
 }) => {
   return (
     <Styled.MapPreview css={css}>
+      {showEditButton && onEditMap && (
+        <RoundButton
+          style={{
+            position: 'absolute',
+            top: '2rem',
+            right: '2rem',
+            zIndex: 1
+          }}
+          type="button"
+          onClick={onEditMap}
+        >
+          <EditIcon />
+        </RoundButton>
+      )}
       <StaticMap
         mapboxApiAccessToken={process.env.MAPBOX_TOKEN}
         mapStyle="mapbox://styles/mapbox/light-v9"

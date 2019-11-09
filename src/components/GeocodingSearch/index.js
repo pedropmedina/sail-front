@@ -1,22 +1,13 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 
 import * as Styled from './styled';
-import {
-  Select,
-  SelectSearch,
-  SelectSearchInput,
-  SelectResults,
-  SelectResultsList,
-  SelectResultsItem
-} from '../../sharedStyles/select';
-
-import ClickOutside from '../../components/ClickOutside';
 
 import { searchOnTimeout } from '../../utils';
 
 import { ReactComponent as SearchIcon } from '../../assets/SVG/search.svg';
+import Select from '../Select';
 
 // Initialize mapbox geocoding service
 const geocondingService = mbxGeocoding({
@@ -32,95 +23,49 @@ const GeocodingSearch = ({
   viewport = DEFAULT_VIEWPORT,
   onClickGeocodingResult
 }) => {
-  const [text, setText] = useState('');
   const [geocodingResults, setGeocodingResults] = useState([]);
-  const [showResults, setShowResults] = useState(false);
 
-  // trigger http request to mapbox geocoding api on timeout to avoid excessive requests
-  useEffect(() => {
-    let timeout = undefined;
-    if (text) {
-      timeout = searchOnTimeout(() => {
-        handleForwardGeocode(text);
+  // keep timeout persistant by providing it in the closure and reassigning it on each change
+  const handleForwardGeocode = timeout => searchText => {
+    if (searchText) {
+      // clear existing timeout
+      clearTimeout(timeout);
+      // set new timeout
+      timeout = searchOnTimeout(async () => {
+        const { body } = await geocondingService
+          .forwardGeocode({
+            query: searchText,
+            limit: 5,
+            proximity: [viewport.longitude, viewport.latitude]
+          })
+          .send();
+
+        const results = body.features;
+        if (results.length > 0) {
+          const options = results.map(result => ({
+            ...result,
+            option: result.place_name
+          }));
+          setGeocodingResults(options);
+          return;
+        }
+        setGeocodingResults(body.features);
       }, 400);
     } else {
-      setGeocodingResults([]);
-      setShowResults(false);
-    }
-
-    // clear any timeout on unmount
-    return () => {
       clearTimeout(timeout);
-    };
-  }, [text]);
-
-  // toggle show results based on click in and out of element
-  const onClickOutside = () => {
-    setShowResults(false);
-  };
-
-  const onClickInside = () => {
-    setShowResults(true);
-  };
-
-  const handleChange = e => {
-    const value = e.target.value;
-    setText(value);
-  };
-
-  const handleForwardGeocode = async searchText => {
-    const { body } = await geocondingService
-      .forwardGeocode({
-        query: searchText,
-        limit: 5,
-        proximity: [viewport.longitude, viewport.latitude]
-      })
-      .send();
-    setGeocodingResults(body.features);
-    setShowResults(true);
-  };
-
-  const hanldeSubmit = e => {
-    e.preventDefault();
+      setGeocodingResults([]);
+    }
   };
 
   return (
-    <ClickOutside onClickOutside={onClickOutside} onClickInside={onClickInside}>
-      <Styled.GeocodingSearch>
-        <Select>
-          <SelectSearch onSubmit={hanldeSubmit}>
-            <SelectSearchInput
-              id="search"
-              type="text"
-              value={text}
-              placeholder="Search by location, category, city..."
-              onChange={handleChange}
-            />
-            <SearchIcon className="icon icon-small" />
-          </SelectSearch>
-
-          <SelectResults
-            showResults={showResults && geocodingResults.length > 0}
-          >
-            <SelectResultsList>
-              {geocodingResults.map((result, index) => {
-                return (
-                  <SelectResultsItem
-                    key={index}
-                    onClick={() => {
-                      setShowResults(false);
-                      onClickGeocodingResult(result);
-                    }}
-                  >
-                    {result.place_name}
-                  </SelectResultsItem>
-                );
-              })}
-            </SelectResultsList>
-          </SelectResults>
-        </Select>
-      </Styled.GeocodingSearch>
-    </ClickOutside>
+    <Styled.GeocodingSearch>
+      <Select
+        options={geocodingResults}
+        onSelectChange={handleForwardGeocode()}
+        onSelectOption={onClickGeocodingResult}
+      />
+      <SearchIcon />
+    </Styled.GeocodingSearch>
   );
 };
 

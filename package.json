@@ -84,6 +84,7 @@
     "react-user-avatar": "^1.10.0",
     "styled-components": "^4.3.2",
     "subscriptions-transport-ws": "^0.9.16",
+    "uuid": "^3.3.3",
     "yup": "^0.27.0"
   }
 }

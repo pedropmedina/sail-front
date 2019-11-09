@@ -124,7 +124,11 @@ const PlanCreate = props => {
   };
 
   const handleInvites = invites => {
-    dispatch({ type: UPDATE_DRAFT_PLAN, payload: { invites } });
+    const invitesUsername = invites.map(invite => invite.username);
+    dispatch({
+      type: UPDATE_DRAFT_PLAN,
+      payload: { invites: invitesUsername }
+    });
     if (invitesError) handleErrors('invites');
   };
 
@@ -153,13 +157,13 @@ const PlanCreate = props => {
     props.history.push('/plans');
   };
 
-  // const handleCancelLocation = () => {
-  //   dispatch({ type: DELETE_CURRENT_PIN });
-  //   dispatch({
-  //     type: UPDATE_DRAFT_PLAN,
-  //     payload: { location: '', placeName: '' }
-  //   });
-  // };
+  const handleCancelLocation = () => {
+    dispatch({ type: DELETE_CURRENT_PIN });
+    dispatch({
+      type: UPDATE_DRAFT_PLAN,
+      payload: { location: '', placeName: '' }
+    });
+  };
 
   const handleCreateInviteReq = async (invites, plan) => {
     for (let invite of invites) {
@@ -169,7 +173,8 @@ const PlanCreate = props => {
     }
   };
 
-  const handleCreatePlan = async () => {
+  const handleCreatePlan = async event => {
+    event.preventDefault();
     const validated = await validateFields(draftPlan);
     if (!validated) return;
 
@@ -259,7 +264,12 @@ const PlanCreate = props => {
             <Field>
               {draftPlan && draftPlan.location && currentPin ? (
                 <Styled.MapPreviewWrapper>
-                  <MapPreview css={mapPreviewCss} {...viewport}>
+                  <MapPreview
+                    css={mapPreviewCss}
+                    {...viewport}
+                    showEditButton={currentPin}
+                    onEditMap={handleCancelLocation}
+                  >
                     <Marker
                       longitude={currentPin.longitude}
                       latitude={currentPin.latitude}

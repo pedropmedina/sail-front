@@ -13,13 +13,7 @@ import {
   Label,
   Textarea
 } from '../../sharedStyles/forms';
-import {
-  SaveButton,
-  CancelButton,
-  RoundButton
-} from '../../sharedStyles/buttons';
-
-import { ReactComponent as EditIcon } from '../../assets/SVG/edit-3.svg';
+import { SaveButton, CancelButton } from '../../sharedStyles/buttons';
 
 import GeocodingSearch from '../../components/GeocodingSearch';
 import MapPreview from '../../components/MapPreview';
@@ -268,19 +262,14 @@ const UserDetails = ({
         {/* Location */}
         <Fields>
           {inputs.address.name && !editAddress ? (
-            <Field style={{ backgroundColor: '#fff', padding: '1rem' }}>
+            <Field style={{ backgroundColor: '#fff', padding: '2rem' }}>
               <MapPreview
                 longitude={inputs.address.longitude}
                 latitude={inputs.address.latitude}
                 name={inputs.address.name}
+                showEditButton={!editAddress}
+                onEditMap={onEditAddress}
               />
-              <RoundButton
-                style={{ position: 'absolute', top: '2rem', right: '2rem' }}
-                type="button"
-                onClick={() => onEditAddress(true)}
-              >
-                <EditIcon />
-              </RoundButton>
             </Field>
           ) : (
             <Field>
