@@ -86,7 +86,8 @@ export const CalendarHeading = styled.h4`
   align-items: center;
 `;
 
-export const HeadingBtn = styled.button`
+export const HeadingBtn = styled.span`
+  display: inline-block;
   border: none;
   background-color: transparent;
   color: var(--color-medium-grey);
@@ -133,7 +134,7 @@ export const HeadingDate = styled.span`
   }
 `;
 
-export const LeftArrow = styled.button`
+export const LeftArrow = styled.span`
   grid-column: 1 / span 1;
   grid-row: 1 / -1;
   border: none;
@@ -142,6 +143,10 @@ export const LeftArrow = styled.button`
   font-size: 2.4rem;
   cursor: pointer;
   outline: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   :hover {
     background-color: rgba(0, 0, 0, 0.1);
@@ -287,7 +292,8 @@ export const TimePeriods = styled(TimeSection)`
   grid-template-columns: 2rem repeat(2, 1fr);
 `;
 
-export const PeriodBtn = styled.button`
+export const PeriodBtn = styled.span`
+  display: inline-block;
   border: none;
   border-radius: 0.5rem;
   color: ${({ isSelected }) =>

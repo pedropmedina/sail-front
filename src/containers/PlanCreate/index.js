@@ -308,7 +308,7 @@ const PlanCreate = props => {
           </Fields>
           <Fields>
             <Field style={{ flex: '0 1 25%' }}>
-              <SaveButton disabled={loading}>
+              <SaveButton disabled={loading} type="submit">
                 {loading ? (
                   <ClipLoader
                     sizeUnit={'rem'}
