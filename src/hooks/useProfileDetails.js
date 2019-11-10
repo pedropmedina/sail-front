@@ -2,19 +2,18 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 
 import { ME_QUERY } from '../graphql/queries';
+import { useForm } from './useForm';
+import { useTextarea } from './useTextarea';
 
-const USER_DETAIL_INPUTS_DEFAULT = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  about: '',
-  phone: '',
-  image: '',
-  address: ''
-};
+export const useProfileDetails = (defaultInputs = {}) => {
+  const {
+    inputs,
+    handleSetInput,
+    handleChangeInputs,
+    handleSubmitForm: handleSubmit
+  } = useForm(defaultInputs);
+  const { rows, handleTextareaChange } = useTextarea();
 
-export const useProfileDetails = () => {
-  const [inputs, setInputs] = useState(USER_DETAIL_INPUTS_DEFAULT);
   const { data } = useQuery(ME_QUERY);
   const [loading, setLoading] = useState(true);
 
@@ -26,30 +25,22 @@ export const useProfileDetails = () => {
 
   const setupIntialValues = async user => {
     const { firstName, lastName, email, about, phone, image, address } = user;
-
-    setInputs(prevState => ({
-      ...prevState,
-      firstName: firstName ? firstName : '',
-      lastName: lastName ? lastName : '',
-      email: email ? email : '',
-      about: about ? about : '',
-      phone: phone ? phone : '',
-      image: image ? image : '',
-      address: address ? address : ''
-    }));
+    handleSetInput('firstName', firstName || '');
+    handleSetInput('lastName', lastName || '');
+    handleSetInput('email', email || '');
+    handleSetInput('about', about || '');
+    handleSetInput('phone', phone || '');
+    handleSetInput('image', image || '');
+    handleSetInput('address', address || '');
 
     setLoading(false);
   };
 
-  const handleChange = cb => event => {
-    const { name, value } = event.target;
-    setInputs(prevInputs => ({ ...prevInputs, [name]: value }));
-    if (cb && typeof cb === 'function') cb(event);
-  };
+  const handleChange = event => {
+    const { name } = event.target;
+    if (name === 'about') handleTextareaChange(event);
 
-  const handleSubmit = cb => event => {
-    event.preventDefault();
-    if (cb && typeof cb === 'function') cb(inputs);
+    handleChangeInputs(event);
   };
 
   const handleCancel = () => {
@@ -66,12 +57,11 @@ export const useProfileDetails = () => {
     }, {});
 
     const address = { ...mappedData, name: place_name, longitude, latitude };
-
-    setInputs(prevInputs => ({ ...prevInputs, address }));
+    handleSetInput('address', address);
   };
 
   const handleImageDelete = () => {
-    setInputs(prevInputs => ({ ...prevInputs, image: '' }));
+    handleSetInput('image', '');
   };
 
   return {
@@ -81,6 +71,7 @@ export const useProfileDetails = () => {
     handleCancel,
     handleImageDelete,
     handleAddress,
-    loading
+    loading,
+    rows
   };
 };

@@ -19,7 +19,6 @@ import Context from '../../context';
 import {
   useProfileDetails,
   useProfilePrivacy,
-  useTextarea,
   useFileUpload
 } from '../../hooks';
 
@@ -29,6 +28,22 @@ import {
   UPDATE_USER_PRIVACY_MUTATION,
   LOGOUT_USER_MUTATION
 } from '../../graphql/mutations';
+
+const USER_DETAIL_INPUTS_DEFAULT = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  about: '',
+  phone: '',
+  image: '',
+  address: ''
+};
+
+const USER_PRIVACY_INPUTS_DEFAULT = {
+  username: '',
+  currentPassword: '',
+  newPassword: ''
+};
 
 const FormField = ({
   type,
@@ -143,7 +158,6 @@ const UserDetails = ({
   isLoadingUpdate,
   handleSubmit,
   handleChange,
-  handleTextareaChange,
   handleCancel,
   handleImageDelete,
   handleClickGeocodingResult,
@@ -213,14 +227,14 @@ const UserDetails = ({
             name="firstName"
             label="First Name"
             inputs={inputs}
-            handleChange={handleChange()}
+            handleChange={handleChange}
           />
           <FormField
             type="text"
             name="lastName"
             label="Last Name"
             inputs={inputs}
-            handleChange={handleChange()}
+            handleChange={handleChange}
           />
         </Fields>
         {/* Contact information */}
@@ -230,14 +244,14 @@ const UserDetails = ({
             name="email"
             label="Email"
             inputs={inputs}
-            handleChange={handleChange()}
+            handleChange={handleChange}
           />
           <FormField
             type="text"
             name="phone"
             label="Phone#"
             inputs={inputs}
-            handleChange={handleChange()}
+            handleChange={handleChange}
           />
         </Fields>
         {/* About section */}
@@ -247,7 +261,7 @@ const UserDetails = ({
             name="about"
             label="About"
             inputs={inputs}
-            handleChange={handleChange(handleTextareaChange)}
+            handleChange={handleChange}
             rows={rows}
           />
         </Fields>
@@ -287,9 +301,9 @@ const Settings = () => {
     handleCancel,
     handleImageDelete,
     handleAddress,
-    loading
-  } = useProfileDetails();
-  const { rows, handleTextareaChange } = useTextarea();
+    loading,
+    rows
+  } = useProfileDetails(USER_DETAIL_INPUTS_DEFAULT);
   const {
     file,
     handleFileChange,
@@ -301,7 +315,7 @@ const Settings = () => {
     handleDrop,
     dragging
   } = useFileUpload();
-  const privacyHook = useProfilePrivacy();
+  const privacyHook = useProfilePrivacy(USER_PRIVACY_INPUTS_DEFAULT);
   const { path, url } = useRouteMatch();
   const [updateUser, { loading: loadingDetailsUpdate }] = useMutation(
     UPDATE_USER_MUTATION
@@ -436,7 +450,6 @@ const Settings = () => {
               handleImageDelete={handleImageDelete}
               handleAddress={handleAddress}
               rows={rows}
-              handleTextareaChange={handleTextareaChange}
               file={file}
               handleFileChange={handleFileChange}
               handleFileDelete={handleFileDelete}

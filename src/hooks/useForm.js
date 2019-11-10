@@ -15,8 +15,20 @@ export const useForm = (defaultInputs = {}) => {
   };
 
   const handleSetError = (name, value) => {
-    setErrors(prevErros => ({...prevErros, [name]: value }))
-  }
+    setErrors(prevErros => ({ ...prevErros, [name]: value }));
+  };
 
-  return { inputs, errors, handleChangeInputs, handleSetInput, handleSetError };
+  const handleSubmitForm = cb => event => {
+    event.preventDefault();
+    if (cb && typeof cb === 'function') cb(inputs);
+  };
+
+  return {
+    inputs,
+    errors,
+    handleChangeInputs,
+    handleSetInput,
+    handleSetError,
+    handleSubmitForm
+  };
 };

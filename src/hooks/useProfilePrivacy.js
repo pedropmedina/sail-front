@@ -1,16 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 
 import { ME_QUERY } from '../graphql/queries';
+import { useForm } from './useForm';
 
-const USER_PRIVACY_INPUTS_DEFAULT = {
-  username: '',
-  currentPassword: '',
-  newPassword: ''
-};
 
-export const useProfilePrivacy = () => {
-  const [inputs, setInputs] = useState(USER_PRIVACY_INPUTS_DEFAULT);
+export const useProfilePrivacy = (defaultInputs = {}) => {
+  const {
+    inputs,
+    handleSetInput,
+    handleChangeInputs,
+    handleSubmitForm: handleSubmit
+  } = useForm(defaultInputs);
   const { data } = useQuery(ME_QUERY);
 
   useEffect(() => {
@@ -21,21 +22,11 @@ export const useProfilePrivacy = () => {
 
   const setupIntialValues = async user => {
     const { username } = user;
-
-    setInputs(prevState => ({
-      ...prevState,
-      username
-    }));
+    handleSetInput('username', username);
   };
 
   const handleChange = event => {
-    const { name, value } = event.target;
-    setInputs(prevInputs => ({ ...prevInputs, [name]: value }));
-  };
-
-  const handleSubmit = cb => event => {
-    event.preventDefault();
-    if (cb && typeof cb === 'function') cb(inputs);
+    handleChangeInputs(event);
   };
 
   const handleCancel = () => {
