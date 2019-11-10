@@ -1,7 +1,7 @@
 import styled from 'styled-components/macro';
 
 export const Button = styled.button`
-  height: 100%;
+  height: 6rem;
   width: ${({ width }) => (width ? `${width}rem` : '100%')};
   border: none;
   border-radius: var(--size-smallest);

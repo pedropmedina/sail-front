@@ -13,7 +13,6 @@ export const Fields = styled.div`
 export const Field = styled.div`
   flex: 1 1 auto;
   margin: 1rem;
-  min-height: 6rem;
   border-radius: var(--size-smallest);
 `;
 
@@ -29,7 +28,7 @@ export const Label = styled.label`
 export const Input = styled.input`
   display: inline-block;
   width: 100%;
-  height: 100%;
+  height: 6rem;
   border: none;
   border-radius: var(--size-smallest);
   outline: unset;
@@ -52,4 +51,11 @@ export const Input = styled.input`
 export const Textarea = styled(Input)`
   padding-top: 2rem;
   resize: none;
+  height: unset;
+  min-height: 6rem;
+`;
+
+export const Error = styled.div`
+  font-size: var(--font-size-small);
+  color: red;
 `;

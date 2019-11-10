@@ -1,5 +1,5 @@
 /* eslint-disable no-console, react/prop-types */
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Marker } from 'react-map-gl';
 import * as yup from 'yup';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
@@ -7,13 +7,20 @@ import { ClipLoader } from 'react-spinners';
 
 import * as Styled from './styled';
 import { SaveButton, CancelButton } from '../../sharedStyles/buttons';
-import { Fields, Field, Form, Input, Textarea } from '../../sharedStyles/forms';
+import {
+  Fields,
+  Field,
+  Form,
+  Input,
+  Textarea,
+  Error
+} from '../../sharedStyles/forms';
 import { Popup } from '../../stylesShare';
 
 import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
 
 import Context from '../../context';
-import { useTextarea } from '../../hooks';
+import { useTextarea, useForm } from '../../hooks';
 
 import GeocodingSearch from '../../components/GeocodingSearch';
 import DatePicker from '../../components/DatePicker';
@@ -51,19 +58,23 @@ const mapPreviewCss = `
 const PlanCreate = props => {
   const { state, dispatch } = useContext(Context);
   const { draftPlan, viewport, currentPin } = state;
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [titleError, setTitleError] = useState('');
-  const [descriptionError, setDescriptionError] = useState('');
-  const [locationError, setLocationError] = useState('');
-  const [dateError, setDateError] = useState('');
-  const [invitesError, setInvitesError] = useState('');
+
   const [createPlan, { loading }] = useMutation(CREATE_PLAN_MUTATION);
   const [createInviteReq] = useMutation(CREATE_REQUEST_MUTATION, {
     ignoreResults: true
   });
   const client = useApolloClient();
 
+  const {
+    inputs,
+    errors,
+    handleChangeInputs,
+    handleSetInput,
+    handleSetError
+  } = useForm({
+    title: '',
+    description: ''
+  });
   const { rows, handleTextareaChange } = useTextarea();
 
   useEffect(() => {
@@ -71,15 +82,13 @@ const PlanCreate = props => {
     if (!draftPlan) {
       dispatch({ type: CREATE_DRAFT_PLAN });
     } else {
-      draftPlan.title && setTitle(draftPlan.title);
-      draftPlan.description && setDescription(draftPlan.description);
+      draftPlan.title && handleSetInput('title', draftPlan.title);
+      draftPlan.description &&
+        handleSetInput('description', draftPlan.description);
     }
   }, []);
 
   const handleClickGeocodingResult = async result => {
-    // resest error field if any
-    if (locationError) handleErrors('location');
-
     const [longitude, latitude] = result.center;
 
     // update current viewport
@@ -103,6 +112,7 @@ const PlanCreate = props => {
       });
       dispatch({ type: UPDATE_CURRENT_PIN, payload: data.pin });
     } else {
+      const { title, description } = inputs;
       dispatch({
         type: UPDATE_DRAFT_PLAN,
         payload: { title, description, placeName: result.place_name }
@@ -117,9 +127,8 @@ const PlanCreate = props => {
     }
   };
 
-  const handleOnSelect = date => {
+  const handleSelectDate = date => {
     dispatch({ type: UPDATE_DRAFT_PLAN, payload: { date } });
-    if (dateError) handleErrors('date');
   };
 
   const handleInvites = invites => {
@@ -128,26 +137,19 @@ const PlanCreate = props => {
       type: UPDATE_DRAFT_PLAN,
       payload: { invites: invitesUsername }
     });
-    if (invitesError) handleErrors('invites');
   };
 
   const handleChange = event => {
     const name = event.target.name;
     const value = event.target.value;
 
-    if (name === 'description') {
+    handleChangeInputs(event);
+
+    if (event.target.name === 'description') {
       handleTextareaChange(event);
     }
 
-    const keyedSetters = {
-      title: setTitle,
-      description: setDescription
-    };
-    keyedSetters[name](value);
     dispatch({ type: UPDATE_DRAFT_PLAN, payload: { [name]: value } });
-
-    if (name === 'title' && titleError) handleErrors(name);
-    if (name === 'description' && descriptionError) handleErrors(name);
   };
 
   const handleCancel = () => {
@@ -216,20 +218,9 @@ const PlanCreate = props => {
     } catch (error) {
       for (let e of error.inner) {
         const { message, path } = e;
-        handleErrors(path, message);
+        handleSetError(path, message);
       }
     }
-  };
-
-  const handleErrors = (errorName, errorValue = '') => {
-    const keyedErrorSetters = {
-      title: setTitleError,
-      description: setDescriptionError,
-      location: setLocationError,
-      date: setDateError,
-      invites: setInvitesError
-    };
-    keyedErrorSetters[errorName](errorValue);
   };
 
   return (
@@ -241,10 +232,11 @@ const PlanCreate = props => {
               <Input
                 type="text"
                 name="title"
-                value={title}
+                value={inputs.title}
                 placeholder="Title the plan"
                 onChange={handleChange}
               />
+              {errors.title && <Error>{errors.title}</Error>}
             </Field>
           </Fields>
           <Fields>
@@ -253,10 +245,11 @@ const PlanCreate = props => {
                 rows={rows}
                 as="textarea"
                 name="description"
-                value={description}
+                value={inputs.description}
                 placeholder="Describe your plan to friends"
                 onChange={handleChange}
               />
+              {errors.description && <Error>{errors.description}</Error>}
             </Field>
           </Fields>
           <Fields>
@@ -300,7 +293,7 @@ const PlanCreate = props => {
               <DatePicker
                 css={css}
                 defaultDate={draftPlan ? draftPlan.date : new Date()}
-                onSelectDate={handleOnSelect}
+                onSelectDate={handleSelectDate}
               />
             </Field>
           </Fields>
