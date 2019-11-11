@@ -34,6 +34,11 @@ export const useForm = (defaultInputs = {}) => {
     }
   };
 
+  const handleClearForm = () => {
+    setInputs(defaultInputs);
+    setErrors(defaultInputs);
+  };
+
   return {
     inputs,
     errors,
@@ -41,6 +46,7 @@ export const useForm = (defaultInputs = {}) => {
     handleSetInput,
     handleSetError,
     handleSubmitForm,
-    handleValidateFields
+    handleValidateFields,
+    handleClearForm
   };
 };

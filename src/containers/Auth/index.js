@@ -1,9 +1,7 @@
 /* eslint-disable no-console, react/prop-types */
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import { object as yupObject, string as yupString } from 'yup';
-import keyBy from 'lodash/keyBy';
-import styled from 'styled-components/macro'; // eslint-disable-line
+import * as yup from 'yup';
 
 import { setAccessToken } from '../../accessToken';
 import {
@@ -11,8 +9,10 @@ import {
   LOGIN_USER_MUTATION
 } from '../../graphql/mutations';
 
+import { useForm } from '../../hooks';
+
 import * as Styled from './styled';
-import { Form, Fields, Field, Input } from '../../sharedStyles/forms';
+import { Form, Fields, Field, Input, Error } from '../../sharedStyles/forms';
 import { SaveButton, Button } from '../../sharedStyles/buttons';
 
 const PASSWORD_FIELD = {
@@ -59,7 +59,8 @@ const Side = ({
   onChangeSignUpMode,
   onSubmit,
   onChangeInput,
-  fields,
+  inputs,
+  errors,
   textData,
   back = false,
   front = false
@@ -82,27 +83,29 @@ const Side = ({
       <Styled.Text>{text}</Styled.Text>
       <Form onSubmit={onSubmit} noValidate>
         <Fields>
-          <Field>
+          <Field error={errors[username.name]}>
             <Input
               type="text"
               name={username.name}
-              value={fields[username.value]}
+              value={inputs[username.value]}
               placeholder={username.placeholder}
               onChange={onChangeInput}
               required
             />
+            {errors[username.name] && <Error>{errors[username.name]}</Error>}
           </Field>
         </Fields>
         <Fields>
-          <Field>
+          <Field error={errors[password.name]}>
             <Input
               type="password"
               name={password.name}
-              value={fields[password.value]}
+              value={inputs[password.value]}
               placeholder={password.placeholder}
               onChange={onChangeInput}
               required
             />
+            {errors[password.name] && <Error>{errors[password.name]}</Error>}
           </Field>
         </Fields>
         <Fields>
@@ -123,12 +126,14 @@ const Side = ({
 };
 
 const Auth = ({ history }) => {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [usernameError, setUsernameError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+  const {
+    inputs,
+    errors,
+    handleChangeInputs,
+    handleSubmitForm,
+    handleValidateFields,
+    handleClearForm
+  } = useForm({ username: '', email: '', password: '' });
   const [signUpMode, setSignUpMode] = useState(false);
   const [signupUser] = useMutation(SIGNUP_USER_MUTATION, {
     ignoreResults: true
@@ -141,98 +146,67 @@ const Auth = ({ history }) => {
     setAccessToken(auth.token);
   };
 
-  const validateFields = async () => {
+  const signup = async ({ email, password }) => {
     try {
-      const schema = yupObject().shape({
-        [!signUpMode ? 'username' : 'email']: !signUpMode
-          ? yupString().required('username is required.')
-          : yupString()
-              .email()
-              .required('email is required.'),
-        password: yupString()
+      const schema = yup.object().shape({
+        email: yup
+          .string()
+          .email()
+          .required(),
+        password: yup
+          .string()
           .min(6)
-          .required('password is required')
+          .required()
       });
-      const validateObj = {
-        [!signUpMode ? 'username' : 'email']: !signUpMode ? username : email,
+      // stop execution when unvalidated fields
+      const validatedFields = await handleValidateFields(schema, {
+        email,
         password
-      };
-      return await schema.validate(validateObj, { abortEarly: false });
+      });
+      if (!validatedFields) return;
+
+      const authData = await signupUser({
+        variables: { input: { email, password } }
+      });
+
+      handleAuthData(authData);
+      history.push('/map');
     } catch (error) {
-      const errorsByPath = keyBy(error.inner, 'path');
-      const mappedErrorSetters = {
-        username: setUsernameError,
-        email: setEmailError,
-        password: setPasswordError
-      };
-      for (let prop in errorsByPath) {
-        if (errorsByPath.hasOwnProperty(prop)) {
-          const { path, message } = errorsByPath[prop];
-          mappedErrorSetters[path](message);
-        }
-      }
+      //
     }
   };
 
-  const handleSubmit = (mode = 'login') => {
-    return async e => {
-      e.preventDefault();
-
+  const login = async ({ username, password }) => {
+    try {
+      const schema = yup.object().shape({
+        username: yup.string().required(),
+        password: yup
+          .string()
+          .min(6)
+          .required()
+      });
       // stop execution when unvalidated fields
-      const validatedFields = await validateFields();
+      const validatedFields = await handleValidateFields(schema, {
+        username,
+        password
+      });
       if (!validatedFields) return;
 
-      try {
-        let authData;
-        mode === 'login'
-          ? (authData = await loginUser({
-              variables: {
-                input: { username: email ? email : username, password }
-              }
-            }))
-          : (authData = await signupUser({
-              variables: { input: { email, password } }
-            }));
-
-        setEmail('');
-        setUsername('');
-        setPassword('');
-        handleAuthData(authData);
-        history.push('/map');
-      } catch (error) {
-        console.error(error.message.split(':')[1]);
-      }
-    };
-  };
-
-  const handleInput = e => {
-    const name = e.target.name;
-    const value = e.target.value;
-    name === 'email'
-      ? setEmail(value)
-      : name === 'username'
-      ? setUsername(value)
-      : setPassword(value);
-
-    // reset field error message upon typing
-    const mappedError = {
-      username: { message: usernameError, setter: setUsernameError },
-      email: { message: emailError, setter: setEmailError },
-      password: { message: passwordError, setter: setPasswordError }
-    };
-    if (mappedError[name]['message']) {
-      mappedError[name]['setter']('');
+      const authData = await loginUser({
+        variables: {
+          input: { username, password }
+        }
+      });
+      handleAuthData(authData);
+      history.push('/map');
+    } catch (error) {
+      //
     }
   };
 
   const handleSetSignUpMode = () => {
     setSignUpMode(!signUpMode);
-    setEmail('');
-    setUsername('');
-    setPassword('');
-    setEmailError('');
-    setUsernameError('');
-    setPasswordError('');
+    handleClearForm();
   };
 
   return (
@@ -242,20 +216,20 @@ const Auth = ({ history }) => {
           textData={LOGIN_TEXT}
           signUpMode={signUpMode}
           onChangeSignUpMode={handleSetSignUpMode}
-          onChangeInput={handleInput}
-          onSubmit={handleSubmit()}
-          fields={{ username, password }}
-          fieldsError={{ usernameError, passwordError }}
+          onChangeInput={handleChangeInputs}
+          onSubmit={handleSubmitForm(login)}
+          inputs={inputs}
+          errors={errors}
           front
         />
         <Side
           textData={SIGNUP_TEXT}
           signUpMode={signUpMode}
           onChangeSignUpMode={handleSetSignUpMode}
-          onChangeInput={handleInput}
-          onSubmit={handleSubmit('signup')}
-          fields={{ email, password }}
-          fieldsError={{ emailError, passwordError }}
+          onChangeInput={handleChangeInputs}
+          onSubmit={handleSubmitForm(signup)}
+          inputs={inputs}
+          errors={errors}
           back
         />
       </Styled.Card>
