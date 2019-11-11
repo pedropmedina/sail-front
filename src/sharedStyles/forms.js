@@ -14,6 +14,10 @@ export const Field = styled.div`
   flex: 1 1 auto;
   margin: 1rem;
   border-radius: var(--size-smallest);
+
+  > :first-child {
+    border: ${({ error }) => error && '.1rem solid red'};
+  }
 `;
 
 export const Label = styled.label`
