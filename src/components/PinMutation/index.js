@@ -1,8 +1,8 @@
 /* eslint-disable no-console, react/prop-types */
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import { object, string } from 'yup';
-import keyBy from 'lodash/keyBy';
+import * as yup from 'yup';
+// import keyBy from 'lodash/keyBy';
 import { ClipLoader } from 'react-spinners';
 
 import Context from '../../context';
@@ -12,11 +12,18 @@ import {
   DELETE_DRAFT_PLAN
 } from '../../reducer';
 import { CREATE_PIN_MUTATION } from '../../graphql/mutations';
-import { useFileUpload, useTextarea } from '../../hooks';
+import { useFileUpload, useTextarea, useForm } from '../../hooks';
 
 import * as Styled from './styled';
 import { SaveButton } from '../../sharedStyles/buttons';
-import { Form, Fields, Field, Input, Textarea } from '../../sharedStyles/forms';
+import {
+  Form,
+  Fields,
+  Field,
+  Input,
+  Textarea,
+  Error
+} from '../../sharedStyles/forms';
 import { PinWrapper } from '../../stylesShare';
 import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 
@@ -24,10 +31,6 @@ import Upload from '../Upload';
 
 const PinMutation = ({ style }) => {
   const { state, dispatch } = useContext(Context);
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [titleError, setTitleError] = useState('');
-  const [contentError, setContentError] = useState('');
   const [createPin, { loading }] = useMutation(CREATE_PIN_MUTATION);
   const {
     file,
@@ -41,66 +44,57 @@ const PinMutation = ({ style }) => {
     dragging
   } = useFileUpload();
   const { rows, handleTextareaChange } = useTextarea();
+  const {
+    inputs,
+    errors,
+    handleSubmitForm,
+    handleChangeInputs,
+    handleValidateFields,
+    handleSetError
+  } = useForm({
+    title: '',
+    content: '',
+    image: ''
+  });
 
-  // TODO: create hook to deal with default forms and errors
-  const handleFieldChange = event => {
+  const handleChange = event => {
     const name = event.target.name;
-    const value = event.target.value;
-    const keyedSetters = {
-      title: setTitle,
-      content: setContent
-    };
-    keyedSetters[name](value);
 
+    handleChangeInputs(event);
     if (name === 'content') {
       handleTextareaChange(event);
     }
-
-    // clear errors upon changing field's value
-    const keyedErrors = {
-      title: { message: titleError, setter: setTitleError },
-      content: { message: contentError, setter: setContentError }
-    };
-    if (keyedErrors[name]['message']) keyedErrors[name]['setter']('');
+    // clear errors
+    if (errors[name]) {
+      handleSetError(name, '');
+    }
   };
 
-  const handleSubmit = async event => {
-    event.preventDefault();
-
-    // validated fields and return early if found errors
-    const validatedFields = await validateForm();
-    if (!validatedFields) return;
-
+  const handleCreatePin = async () => {
+    const { title, content } = inputs;
     const { longitude, latitude } = state.draftPin;
     const image = await handleFileUpload();
+
+    // validated fields and return early if found errors
+    const schema = yup.object().shape({
+      title: yup.string().required(),
+      content: yup.string().required(),
+      image: yup.string().required()
+    });
+
+    const validatedFields = await handleValidateFields(schema, {
+      title,
+      content,
+      image
+    });
+    if (!validatedFields) return;
+
     await createPin({
       variables: { input: { title, content, image, longitude, latitude } }
     });
+
     dispatch({ type: DELETE_DRAFT_PIN });
     dispatch({ type: SHOW_DRAFT_PIN_POPUP, payload: false });
-  };
-
-  const validateForm = async () => {
-    try {
-      const schema = object().shape({
-        title: string().required(),
-        content: string().required()
-      });
-
-      return await schema.validate({ title, content }, { abortEarly: false });
-    } catch (error) {
-      const keyedErrors = keyBy(error.inner, 'path');
-      const keyedSetters = {
-        title: setTitleError,
-        content: setContentError
-      };
-      for (let prop in keyedErrors) {
-        if (keyedErrors.hasOwnProperty(prop)) {
-          const { message } = keyedErrors[prop];
-          keyedSetters[prop](message);
-        }
-      }
-    }
   };
 
   const handleCancel = () => {
@@ -111,33 +105,35 @@ const PinMutation = ({ style }) => {
   return (
     <PinWrapper style={style}>
       <Styled.PinMutation>
-        <Form onSubmit={handleSubmit} noValidate>
+        <Form onSubmit={handleSubmitForm(handleCreatePin)} noValidate>
           <Fields>
-            <Field>
+            <Field error={errors.title}>
               <Input
                 name="title"
                 id="title"
                 placeholder="Give the Pin a name"
-                onChange={handleFieldChange}
+                onChange={handleChange}
                 required
               />
+              {errors.title && <Error>{errors.title}</Error>}
             </Field>
           </Fields>
           <Fields>
-            <Field>
+            <Field error={errors.content}>
               <Textarea
                 as="textarea"
                 rows={rows}
                 name="content"
                 id="content"
                 placeholder="Describe this location"
-                onChange={handleFieldChange}
+                onChange={handleChange}
                 required
               />
+              {errors.content && <Error>{errors.content}</Error>}
             </Field>
           </Fields>
           <Fields>
-            <Field>
+            <Field error={errors.image}>
               <Upload
                 file={file}
                 handleFileChange={handleFileChange}
@@ -148,6 +144,7 @@ const PinMutation = ({ style }) => {
                 handleDrop={handleDrop}
                 dragging={dragging}
               />
+              {errors.image && <Error>{errors.image}</Error>}
             </Field>
           </Fields>
           <Fields>

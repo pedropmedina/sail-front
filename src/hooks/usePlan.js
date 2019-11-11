@@ -40,7 +40,8 @@ export const usePlan = () => {
     errors,
     handleChangeInputs,
     handleSetInput,
-    handleSetError
+    handleSetError,
+    handleValidateFields
   } = useForm({
     title: '',
     description: ''
@@ -141,7 +142,18 @@ export const usePlan = () => {
 
   const handleCreatePlan = async event => {
     event.preventDefault();
-    const validated = await _validateFields(draftPlan);
+
+    // validate form before submisssion
+    const schema = yup.object().shape({
+      title: yup.string().required(),
+      description: yup.string().required(),
+      date: yup.date().required(),
+      invites: yup
+        .array()
+        .of(yup.string())
+        .required()
+    });
+    const validated = await handleValidateFields(schema, draftPlan);
     if (!validated) return;
 
     // destructure draft plan to get data needed for creating of plan
@@ -172,26 +184,6 @@ export const usePlan = () => {
       await createInviteReq({
         variables: { input: { to: invite, reqType: 'INVITE', plan: plan._id } }
       });
-    }
-  };
-
-  const _validateFields = async (fields = {}) => {
-    try {
-      const schema = yup.object().shape({
-        title: yup.string().required(),
-        description: yup.string().required(),
-        date: yup.date().required(),
-        invites: yup
-          .array()
-          .of(yup.string())
-          .required()
-      });
-      return await schema.validate(fields, { abortEarly: false });
-    } catch (error) {
-      for (let e of error.inner) {
-        const { message, path } = e;
-        handleSetError(path, message);
-      }
     }
   };
 

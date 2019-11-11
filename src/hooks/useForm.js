@@ -23,12 +23,24 @@ export const useForm = (defaultInputs = {}) => {
     if (cb && typeof cb === 'function') cb(inputs);
   };
 
+  const handleValidateFields = async (schema, fields = {}) => {
+    try {
+      return await schema.validate(fields, { abortEarly: false });
+    } catch (error) {
+      for (let e of error.inner) {
+        const { message, path } = e;
+        handleSetError(path, message);
+      }
+    }
+  };
+
   return {
     inputs,
     errors,
     handleChangeInputs,
     handleSetInput,
     handleSetError,
-    handleSubmitForm
+    handleSubmitForm,
+    handleValidateFields
   };
 };
