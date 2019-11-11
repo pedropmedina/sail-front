@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 
 export const Auth = styled.div`
   height: 100%;
@@ -7,6 +7,7 @@ export const Auth = styled.div`
   align-items: center;
   background-color: var(--color-almost-white);
   perspective: 100rem;
+  position: relative;
 `;
 
 export const Card = styled.div`
@@ -18,7 +19,7 @@ export const Card = styled.div`
   transform-style: preserve-3d;
   transform: ${({ signUpMode }) => (signUpMode ? 'rotateY(180deg)' : 'unset')};
   border-radius: var(--size-smallest);
-  
+
   display: flex;
   justify-content: center;
 `;
@@ -57,4 +58,41 @@ export const Subtitle = styled.h2`
 export const Text = styled.p`
   margin-bottom: 1.5rem;
   font-size: 1.6rem;
+`;
+
+export const ErrorBadge = styled.div`
+  width: 25rem;
+  padding: 1.5rem;
+  font-size: var(--font-size-small);
+  background-color: var(--color-danger);
+  border-radius: var(--size-smallest);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+  color: #fff;
+  position: absolute;
+  top: -10rem;
+  right: 4rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+
+  svg {
+    fill: currentColor;
+    height: 2rem;
+    width: 2rem;
+
+    :first-child {
+      margin-right: 1rem;
+    }
+
+    :last-child {
+      margin-left: auto;
+    }
+  }
+
+  ${({ error }) =>
+    error &&
+    css`
+      opacity: 1;
+      top: 3rem;
+    `}
 `;

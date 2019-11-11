@@ -15,6 +15,9 @@ import * as Styled from './styled';
 import { Form, Fields, Field, Input, Error } from '../../sharedStyles/forms';
 import { SaveButton, Button } from '../../sharedStyles/buttons';
 
+import { ReactComponent as AlertIcon } from '../../assets/SVG/alert-circle.svg';
+import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
+
 const PASSWORD_FIELD = {
   label: 'Password',
   name: 'password',
@@ -81,6 +84,7 @@ const Side = ({
         </Styled.Subtitle>
       </Styled.Header>
       <Styled.Text>{text}</Styled.Text>
+
       <Form onSubmit={onSubmit} noValidate>
         <Fields>
           <Field error={errors[username.name]}>
@@ -132,7 +136,8 @@ const Auth = ({ history }) => {
     handleChangeInputs,
     handleSubmitForm,
     handleValidateFields,
-    handleClearForm
+    handleClearForm,
+    handleSetError
   } = useForm({ username: '', email: '', password: '' });
   const [signUpMode, setSignUpMode] = useState(false);
   const [signupUser] = useMutation(SIGNUP_USER_MUTATION, {
@@ -172,7 +177,8 @@ const Auth = ({ history }) => {
       handleAuthData(authData);
       history.push('/map');
     } catch (error) {
-      //
+      const e = error.message.split(':')[1].trimStart();
+      handleSetError('credentials', e);
     }
   };
 
@@ -200,7 +206,8 @@ const Auth = ({ history }) => {
       handleAuthData(authData);
       history.push('/map');
     } catch (error) {
-      //
+      const e = error.message.split(':')[1].trimStart();
+      handleSetError('credentials', e);
     }
   };
 
@@ -209,14 +216,30 @@ const Auth = ({ history }) => {
     handleClearForm();
   };
 
+  const handleChange = event => {
+    const name = event.target.name;
+    handleChangeInputs(event);
+
+    if (errors[name]) {
+      handleSetError(name, '');
+    }
+  };
+
   return (
     <Styled.Auth>
+      {/* Credential's badge */}
+      <Styled.ErrorBadge error={errors.credentials}>
+        <AlertIcon />
+        {errors.credentials}
+        <XIcon onClick={() => handleSetError('credentials', '')} />
+      </Styled.ErrorBadge>
+
       <Styled.Card signUpMode={signUpMode}>
         <Side
           textData={LOGIN_TEXT}
           signUpMode={signUpMode}
           onChangeSignUpMode={handleSetSignUpMode}
-          onChangeInput={handleChangeInputs}
+          onChangeInput={handleChange}
           onSubmit={handleSubmitForm(login)}
           inputs={inputs}
           errors={errors}
@@ -226,7 +249,7 @@ const Auth = ({ history }) => {
           textData={SIGNUP_TEXT}
           signUpMode={signUpMode}
           onChangeSignUpMode={handleSetSignUpMode}
-          onChangeInput={handleChangeInputs}
+          onChangeInput={handleChange}
           onSubmit={handleSubmitForm(signup)}
           inputs={inputs}
           errors={errors}
