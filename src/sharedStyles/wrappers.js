@@ -1,0 +1,12 @@
+import styled from 'styled-components/macro';
+import { animated } from 'react-spring';
+
+export const PinWrapper = styled(animated.div)`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 40rem;
+  background-color: var(--color-less-white);
+  box-shadow: 0 1rem 1rem 1rem rgba(0, 0, 0, 0.1);
+`;

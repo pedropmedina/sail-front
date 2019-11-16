@@ -4,10 +4,11 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 import ContentLoader from 'react-content-loader';
 
 import * as Styled from './styled';
+import { TopbarButton } from '../../sharedStyles/buttons';
+
 import { ReactComponent as PlusIcon } from '../../assets/SVG/plus.svg';
 import { ReactComponent as HeartIcon } from '../../assets/SVG/heart.svg';
 import { ReactComponent as ExternalLinkIcon } from '../../assets/SVG/external-link.svg';
-import { CreateBtn } from '../../stylesShare';
 
 import Topbar from '../../components/Topbar';
 
@@ -30,20 +31,20 @@ const PinLoader = () => (
     height={120}
     width={500}
     speed={2}
-    primaryColor="#f3f3f3"
-    secondaryColor="#ecebeb"
+    primaryColor='#f3f3f3'
+    secondaryColor='#ecebeb'
   >
-    <rect x="39" y="17" rx="0" ry="0" width="0" height="0" />
-    <rect x="34" y="26" rx="0" ry="0" width="0" height="0" />
-    <rect x="38" y="48" rx="0" ry="0" width="0" height="0" />
-    <rect x="39" y="40" rx="0" ry="0" width="0" height="0" />
-    <rect x="39" y="40" rx="0" ry="0" width="0" height="0" />
-    <rect x="16" y="5" rx="0" ry="0" width="103" height="93" />
-    <rect x="143" y="17" rx="3" ry="3" width="350" height="6" />
-    <rect x="143" y="36" rx="3" ry="3" width="350" height="6" />
-    <rect x="142" y="57" rx="3" ry="3" width="350" height="6" />
-    <circle cx="193" cy="85" r="12" />
-    <circle cx="157" cy="85" r="12" />
+    <rect x='39' y='17' rx='0' ry='0' width='0' height='0' />
+    <rect x='34' y='26' rx='0' ry='0' width='0' height='0' />
+    <rect x='38' y='48' rx='0' ry='0' width='0' height='0' />
+    <rect x='39' y='40' rx='0' ry='0' width='0' height='0' />
+    <rect x='39' y='40' rx='0' ry='0' width='0' height='0' />
+    <rect x='16' y='5' rx='0' ry='0' width='103' height='93' />
+    <rect x='143' y='17' rx='3' ry='3' width='350' height='6' />
+    <rect x='143' y='36' rx='3' ry='3' width='350' height='6' />
+    <rect x='142' y='57' rx='3' ry='3' width='350' height='6' />
+    <circle cx='193' cy='85' r='12' />
+    <circle cx='157' cy='85' r='12' />
   </ContentLoader>
 );
 
@@ -64,7 +65,7 @@ const PinsList = ({
           ) : (
             <Styled.Pin>
               <Styled.PinLeft>
-                <Styled.PinImg src={pin.image} alt="Location image" />
+                <Styled.PinImg src={pin.image} alt='Location image' />
               </Styled.PinLeft>
               <Styled.PinRight>
                 <Styled.PinTitle>{pin.title}</Styled.PinTitle>
@@ -153,9 +154,9 @@ const Pins = ({ history }) => {
   return (
     <Styled.PinsWrapper>
       <Topbar>
-        <CreateBtn onClick={() => handleCreate(state.viewport)}>
-          <PlusIcon className="icon icon-small" />
-        </CreateBtn>
+        <TopbarButton onClick={() => handleCreate(state.viewport)}>
+          <PlusIcon className='icon icon-small' />
+        </TopbarButton>
       </Topbar>
       <Styled.Panels>
         {/* Left Panel displaying pins authored by current user */}
@@ -167,7 +168,7 @@ const Pins = ({ history }) => {
             addresses={addresses}
             handleUnlikePin={handleUnlikePin}
             hanldeVisitLink={hanldeVisitLink}
-            type="MINE"
+            type='MINE'
           />
         </Styled.LeftPanel>
         {/* Right Panel displaying pins liked by current user */}
@@ -179,7 +180,7 @@ const Pins = ({ history }) => {
             addresses={addresses}
             handleUnlikePin={handleUnlikePin}
             hanldeVisitLink={hanldeVisitLink}
-            type="LIKED"
+            type='LIKED'
           />
         </Styled.RightPanel>
       </Styled.Panels>

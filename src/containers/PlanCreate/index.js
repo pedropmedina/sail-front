@@ -13,7 +13,7 @@ import {
   Textarea,
   Error
 } from '../../sharedStyles/forms';
-import { Popup } from '../../stylesShare';
+import { Popup } from '../../sharedStyles/popup';
 
 import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
 
@@ -59,10 +59,10 @@ const PlanCreate = () => {
           <Fields>
             <Field error={errors.title}>
               <Input
-                type="text"
-                name="title"
+                type='text'
+                name='title'
                 value={inputs.title}
-                placeholder="Title the plan"
+                placeholder='Title the plan'
                 onChange={handleChange}
               />
               {errors.title && <Error>{errors.title}</Error>}
@@ -72,10 +72,10 @@ const PlanCreate = () => {
             <Field error={errors.description}>
               <Textarea
                 rows={descriptionRows}
-                as="textarea"
-                name="description"
+                as='textarea'
+                name='description'
                 value={inputs.description}
-                placeholder="Describe your plan to friends"
+                placeholder='Describe your plan to friends'
                 onChange={handleChange}
               />
               {errors.description && <Error>{errors.description}</Error>}
@@ -95,14 +95,14 @@ const PlanCreate = () => {
                       longitude={currentPin.longitude}
                       latitude={currentPin.latitude}
                     >
-                      <PinIcon className="icon icon-small pin-icon" />
+                      <PinIcon className='icon icon-small pin-icon' />
                     </Marker>
                     <Popup
                       longitude={currentPin.longitude}
                       latitude={currentPin.latitude}
                       offsetLeft={24}
                       offsetTop={12}
-                      anchor="left"
+                      anchor='left'
                       closeButton={false}
                     >
                       <p style={{ width: '20rem' }}>{draftPlan.placeName}</p>
@@ -140,7 +140,7 @@ const PlanCreate = () => {
           </Fields>
           <Fields>
             <Field style={{ flex: '0 1 25%' }}>
-              <SaveButton disabled={loading} type="submit">
+              <SaveButton disabled={loading} type='submit'>
                 {loading ? (
                   <ClipLoader
                     sizeUnit={'rem'}
@@ -154,7 +154,7 @@ const PlanCreate = () => {
               </SaveButton>
             </Field>
             <Field style={{ flex: '0 1 25%' }}>
-              <CancelButton type="button" onClick={handleCancelPlan}>
+              <CancelButton type='button' onClick={handleCancelPlan}>
                 Cancel
               </CancelButton>
             </Field>

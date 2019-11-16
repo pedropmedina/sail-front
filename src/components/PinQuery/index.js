@@ -3,7 +3,9 @@ import React, { useState, useContext, useEffect } from 'react';
 import { useMutation } from '@apollo/react-hooks';
 
 import * as Styled from './styled';
-import { PinWrapper } from '../../stylesShare';
+import { PinWrapper } from '../../sharedStyles/wrappers';
+import { PositionedButton } from '../../sharedStyles/buttons';
+
 import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 import { ReactComponent as HeartIcon } from '../../assets/SVG/heart.svg';
 import { ReactComponent as HeartContourIcon } from '../../assets/SVG/heart-o.svg';
@@ -97,7 +99,7 @@ const PinQuery = ({ style, me }) => {
             <HeartContourIcon onClick={() => handleLikePin(pinId)} />
           )}
           <Styled.BgImage>
-            <Styled.Image src={image} alt="current pin" />
+            <Styled.Image src={image} alt='current pin' />
             <Styled.Title>{title}</Styled.Title>
             <Styled.Address>{address}</Styled.Address>
             <Styled.Content>{content}</Styled.Content>
@@ -108,9 +110,9 @@ const PinQuery = ({ style, me }) => {
           <Chat data={comments} onCreateNew={handleCreateComment(pinId)} />
         </Styled.BottomPanel>
       </Styled.PinQuery>
-      <Styled.CancelBtn onClick={() => dispatch({ type: DELETE_CURRENT_PIN })}>
-        <XIcon className="icon icon-smallest" />
-      </Styled.CancelBtn>
+      <PositionedButton onClick={() => dispatch({ type: DELETE_CURRENT_PIN })}>
+        <XIcon className='icon icon-smallest' />
+      </PositionedButton>
     </PinWrapper>
   );
 };

@@ -1,7 +1,5 @@
 import styled from 'styled-components/macro';
 
-import { Popup as P } from '../../stylesShare';
-
 export const PlanViewWrapper = styled.div`
   padding: 2rem 5rem;
   color: var(--color-light-grey);
@@ -76,24 +74,6 @@ export const UserPic = styled.img`
   border-radius: 0.5rem;
   width: 7rem;
   height: 7rem;
-`;
-
-export const Popup = styled(P)`
-  .mapboxgl-popup-content {
-    box-shadow: none;
-    background-color: var(--color-less-white);
-  }
-
-  div.mapboxgl-popup-tip {
-    border-right-color: var(--color-less-white);
-    border-left-color: var(--color-less-white);
-  }
-`;
-
-export const PopupImg = styled.img`
-  width: 10rem;
-  height: 10rem;
-  object-fit: cover;
 `;
 
 export const Chat = styled.div`

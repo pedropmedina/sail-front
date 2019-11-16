@@ -2,7 +2,6 @@
 import React, { useContext } from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import * as yup from 'yup';
-// import keyBy from 'lodash/keyBy';
 import { ClipLoader } from 'react-spinners';
 
 import Context from '../../context';
@@ -15,7 +14,7 @@ import { CREATE_PIN_MUTATION } from '../../graphql/mutations';
 import { useFileUpload, useTextarea, useForm } from '../../hooks';
 
 import * as Styled from './styled';
-import { SaveButton } from '../../sharedStyles/buttons';
+import { SaveButton, PositionedButton } from '../../sharedStyles/buttons';
 import {
   Form,
   Fields,
@@ -24,7 +23,7 @@ import {
   Textarea,
   Error
 } from '../../sharedStyles/forms';
-import { PinWrapper } from '../../stylesShare';
+import { PinWrapper } from '../../sharedStyles/wrappers';
 import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 
 import Upload from '../Upload';
@@ -109,9 +108,9 @@ const PinMutation = ({ style }) => {
           <Fields>
             <Field error={errors.title}>
               <Input
-                name="title"
-                id="title"
-                placeholder="Give the Pin a name"
+                name='title'
+                id='title'
+                placeholder='Give the Pin a name'
                 onChange={handleChange}
                 required
               />
@@ -121,11 +120,11 @@ const PinMutation = ({ style }) => {
           <Fields>
             <Field error={errors.content}>
               <Textarea
-                as="textarea"
+                as='textarea'
                 rows={rows}
-                name="content"
-                id="content"
-                placeholder="Describe this location"
+                name='content'
+                id='content'
+                placeholder='Describe this location'
                 onChange={handleChange}
                 required
               />
@@ -165,9 +164,9 @@ const PinMutation = ({ style }) => {
           </Fields>
         </Form>
       </Styled.PinMutation>
-      <Styled.CancelBtn type="button" onClick={handleCancel}>
-        <XIcon className="icon icon-small" />
-      </Styled.CancelBtn>
+      <PositionedButton type='button' onClick={handleCancel}>
+        <XIcon className='icon icon-small' />
+      </PositionedButton>
     </PinWrapper>
   );
 };

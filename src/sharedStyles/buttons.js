@@ -57,3 +57,37 @@ export const EditButton = styled(RoundButton)`
     color: #fff;
   }
 `;
+
+export const PositionedButton = styled(RoundButton)`
+  width: 4rem;
+  height: 4rem;
+  position: absolute;
+  top: 1rem;
+  left: calc(100% + 1rem);
+  padding: 0;
+  cursor: pointer;
+`;
+
+export const TopbarButton = styled.button`
+  border: none;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  background-color: var(--color-less-white);
+  color: var(--color-light-grey);
+  font-size: 1.6rem;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &:hover {
+    background-color: #fff;
+  }
+
+  > svg {
+    font-size: 2.4rem;
+    fill: currentColor;
+  }
+`;

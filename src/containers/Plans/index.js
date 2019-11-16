@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { GET_PLANS_QUERY } from '../../graphql/queries';
 
 import * as Styled from './styled';
-import { CreateBtn } from '../../stylesShare';
+import { TopbarButton } from '../../sharedStyles/buttons';
 
 import { ReactComponent as PlusIcon } from '../../assets/SVG/plus.svg';
 
@@ -24,9 +24,9 @@ const Plans = ({ history }) => {
   return (
     <Styled.PlansWrapper>
       <Topbar>
-        <CreateBtn onClick={handleCreate}>
-          <PlusIcon className="icon icon-small" />
-        </CreateBtn>
+        <TopbarButton onClick={handleCreate}>
+          <PlusIcon className='icon icon-small' />
+        </TopbarButton>
       </Topbar>
       <Styled.Plans>
         {data &&

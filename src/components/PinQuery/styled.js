@@ -1,7 +1,5 @@
 import styled from 'styled-components/macro';
 
-import { CloseBtn } from '../../stylesShare';
-
 export const PinQuery = styled.article`
   height: 100%;
 
@@ -50,19 +48,4 @@ export const Content = styled.p`
 export const Address = styled(Content)`
   font-size: 1.4rem;
   color: var(--color-medium-grey);
-`;
-
-export const CancelBtn = styled(CloseBtn)`
-  right: -5rem;
-  top: 1rem;
-  width: 4rem;
-  height: 4rem;
-  background-color: var(--color-light-grey);
-  color: var(--color-almost-white);
-  opacity: 1;
-
-  &:hover {
-    background-color: var(--color-almost-white);
-    color: var(--color-light-grey);
-  }
 `;

@@ -7,7 +7,7 @@ import Avatar from 'react-user-avatar';
 import { useColors } from '../../hooks';
 
 import * as Styled from './styled';
-import { CreateBtn } from '../../stylesShare';
+import { TopbarButton } from '../../sharedStyles/buttons';
 
 import { ReactComponent as EditIcon } from '../../assets/SVG/edit.svg';
 import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
@@ -40,10 +40,11 @@ const Chats = () => {
     { error: chatError, loading: chatLoading, data: chatData }
   ] = useLazyQuery(GET_CONVERSATION_QUERY);
   const [createMessage] = useMutation(CREATE_MESSAGE_MUTATION);
-  const [updateConversationUnreadCount] = useMutation(
-    UPDATE_CONVERSATION_UNREADCOUNT_MUTATION,
-    { ignoreResults: true }
-  );
+  const [
+    updateConversationUnreadCount
+  ] = useMutation(UPDATE_CONVERSATION_UNREADCOUNT_MUTATION, {
+    ignoreResults: true
+  });
   const { colors } = useColors();
 
   useEffect(() => {
@@ -159,17 +160,17 @@ const Chats = () => {
     <Styled.ChatsWrapper>
       <Styled.Topbar>
         <Styled.TopbarLeft>
-          <CreateBtn onClick={handleClickNewChat}>
-            <EditIcon className="icon icon-small" />
-          </CreateBtn>
+          <TopbarButton onClick={handleClickNewChat}>
+            <EditIcon className='icon icon-small' />
+          </TopbarButton>
         </Styled.TopbarLeft>
         <Styled.TopbarRight>
           <Styled.FilterMessages onSubmit={handleSubmit}>
             <Styled.FilterBtn>
-              <FilterIcon className="icon icon-small" />
+              <FilterIcon className='icon icon-small' />
             </Styled.FilterBtn>
             <Styled.FilterMessagesInput
-              placeholder="filter through messages"
+              placeholder='filter through messages'
               value={searchText}
               onChange={handleChange}
             />
@@ -199,7 +200,7 @@ const Chats = () => {
                           return (
                             <Styled.ChatParticipantImg key={username}>
                               <Avatar
-                                size="50"
+                                size='50'
                                 name={firstName}
                                 src={image}
                                 colors={colors}
@@ -244,9 +245,9 @@ const Chats = () => {
                       </Styled.MsgContent>
                     </Styled.ChatMsg>
                     {chat.unreadCount.count > 0 &&
-                      (chatData &&
+                      chatData &&
                         chatData.chat &&
-                        chat._id !== chatData.chat._id) && (
+                        chat._id !== chatData.chat._id && (
                         <Styled.UnreadCountBadge>
                           {chat.unreadCount.count} new
                         </Styled.UnreadCountBadge>
