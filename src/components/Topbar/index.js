@@ -1,18 +1,21 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
-
-import { searchOnTimeout } from '../../utils';
-import history from '../../history';
+import Avatar from 'react-user-avatar';
 
 import { SEARCH_QUERY } from '../../graphql/queries';
 
+import * as Styled from './styled';
+
 import ClickOutside from '../ClickOutside';
 
-import * as Styled from './styled';
 import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
 import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
 import { ReactComponent as CalendarIcon } from '../../assets/SVG/calendar.svg';
+
+import { searchOnTimeout } from '../../utils';
+import history from '../../history';
+import { useColors } from '../../hooks';
 
 const onClickOutsideCss = `
   height: 100%;
@@ -23,6 +26,7 @@ const Topbar = ({ children }) => {
   const [searchText, setSearchText] = useState('');
   const [results, setResults] = useState([]);
   const [conductSearch, { data }] = useLazyQuery(SEARCH_QUERY);
+  const { colors } = useColors();
 
   useEffect(() => {
     let timeout;
@@ -77,14 +81,14 @@ const Topbar = ({ children }) => {
         >
           <Styled.Search onSubmit={event => event.preventDefault()}>
             <Styled.Input
-              type="text"
-              name="search"
-              placeholder="Search plans, pins, and friends (e.g., weekend at the park, Whole Foods, Joe)"
+              type='text'
+              name='search'
+              placeholder='Search plans, pins, and friends (e.g., weekend at the park, Whole Foods, Joe)'
               value={searchText}
               onChange={handleChange}
             />
             <Styled.SearchBtn>
-              <FilterIcon className="icon icon-small" />
+              <FilterIcon className='icon icon-small' />
             </Styled.SearchBtn>
           </Styled.Search>
           {results && results.length > 0 && showResults && (
@@ -98,7 +102,7 @@ const Topbar = ({ children }) => {
                           key={result._id}
                           onClick={() => handleClick(result)}
                         >
-                          <CalendarIcon className="icon icon-small" />
+                          <CalendarIcon className='icon icon-small' />
                           {result.title}
                         </Styled.Result>
                       );
@@ -108,7 +112,7 @@ const Topbar = ({ children }) => {
                           key={result._id}
                           onClick={() => handleClick(result)}
                         >
-                          <PinIcon className="icon icon-small" />
+                          <PinIcon className='icon icon-small' />
                           {result.title}
                         </Styled.Result>
                       );
@@ -118,13 +122,16 @@ const Topbar = ({ children }) => {
                           key={result.username}
                           onClick={() => handleClick(result)}
                         >
-                          <Styled.ProfileImg
-                            src={
-                              result.image
-                                ? result.image
-                                : 'https://via.placeholder.com/40'
+                          <Avatar
+                            size='40'
+                            style={{ marginRight: '1rem' }}
+                            name={
+                              result.firstName
+                                ? result.firstName
+                                : result.username
                             }
-                            alt="Profile image"
+                            src={result.image}
+                            colors={colors}
                           />
                           {result.username}
                         </Styled.Result>

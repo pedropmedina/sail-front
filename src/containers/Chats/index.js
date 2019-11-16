@@ -40,11 +40,12 @@ const Chats = () => {
     { error: chatError, loading: chatLoading, data: chatData }
   ] = useLazyQuery(GET_CONVERSATION_QUERY);
   const [createMessage] = useMutation(CREATE_MESSAGE_MUTATION);
-  const [
-    updateConversationUnreadCount
-  ] = useMutation(UPDATE_CONVERSATION_UNREADCOUNT_MUTATION, {
-    ignoreResults: true
-  });
+  const [updateConversationUnreadCount] = useMutation(
+    UPDATE_CONVERSATION_UNREADCOUNT_MUTATION,
+    {
+      ignoreResults: true
+    }
+  );
   const { colors } = useColors();
 
   useEffect(() => {
@@ -221,14 +222,14 @@ const Chats = () => {
                     <Styled.ChatParticipantsNames>
                       {prepareParticipantsData(chat, meData.user).map(
                         (participant, i, arr) => {
-                          const { email, username, firstName } = participant;
+                          const { email, fullName } = participant;
                           return !(arr.length - 1 === i) ? (
                             <Styled.ChatParticipantName key={email}>
-                              {firstName ? firstName : username},&nbsp;
+                              {fullName},&nbsp;
                             </Styled.ChatParticipantName>
                           ) : (
                             <Styled.ChatParticipantName key={email}>
-                              {firstName ? firstName : username}
+                              {fullName}
                             </Styled.ChatParticipantName>
                           );
                         }
@@ -246,8 +247,8 @@ const Chats = () => {
                     </Styled.ChatMsg>
                     {chat.unreadCount.count > 0 &&
                       chatData &&
-                        chatData.chat &&
-                        chat._id !== chatData.chat._id && (
+                      chatData.chat &&
+                      chat._id !== chatData.chat._id && (
                         <Styled.UnreadCountBadge>
                           {chat.unreadCount.count} new
                         </Styled.UnreadCountBadge>

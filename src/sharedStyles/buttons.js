@@ -40,7 +40,8 @@ export const RoundButton = styled.button`
   justify-content: center;
 
   svg {
-    font-size: var(--font-size-medium);
+    height: 1.5rem;
+    width: 1.5rem;
     fill: currentColor;
   }
 `;

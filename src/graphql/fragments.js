@@ -8,6 +8,7 @@ export const conversationFragments = {
       participants {
         firstName
         lastName
+        fullName
         username
         email
         image
@@ -19,6 +20,7 @@ export const conversationFragments = {
         author {
           firstName
           lastName
+          fullName
           username
           image
         }
@@ -35,6 +37,7 @@ export const conversationFragments = {
       author {
         firstName
         lastName
+        fullName
         username
         email
       }
@@ -54,6 +57,7 @@ export const planFragments = {
       invites {
         firstName
         lastName
+        fullName
         username
         email
         image
@@ -61,6 +65,7 @@ export const planFragments = {
       participants {
         firstName
         lastName
+        fullName
         username
         email
         image
@@ -80,6 +85,7 @@ export const planFragments = {
       author {
         firstName
         lastName
+        fullName
         username
         email
       }
@@ -110,6 +116,7 @@ export const pinFragments = {
           username
           firstName
           lastName
+          fullName
         }
         createdAt
       }
@@ -127,6 +134,7 @@ export const authFragments = {
         email
         username
         firstName
+        fullName
         lastName
         image
         about
@@ -145,6 +153,7 @@ export const authFragments = {
           username
           firstName
           lastName
+          fullName
           image
         }
         myPlans {
@@ -190,6 +199,7 @@ export const requestFragments = {
       to {
         firstName
         lastName
+        fullName
         username
         email
         image
@@ -199,6 +209,7 @@ export const requestFragments = {
       author {
         firstName
         lastName
+        fullName
         username
         email
         image
@@ -213,6 +224,7 @@ export const requestFragments = {
       to {
         firstName
         lastName
+        fullName
         username
         email
         image
@@ -227,6 +239,7 @@ export const requestFragments = {
       author {
         firstName
         lastName
+        fullName
         username
         email
         image
@@ -249,6 +262,7 @@ export const commentFragments = {
       author {
         firstName
         lastName
+        fullName
         username
         email
         image
@@ -265,6 +279,7 @@ export const userFragments = {
       firstName
       lastName
       username
+      fullName
       email
       phone
       image
@@ -284,6 +299,7 @@ export const userFragments = {
         username
         firstName
         lastName
+        fullName
         image
       }
       myPlans {
@@ -340,6 +356,7 @@ export const userFragments = {
       username
       firstName
       lastName
+      fullName
       image
       address {
         longitude
@@ -360,6 +377,7 @@ export const userFragments = {
         username
         firstName
         lastName
+        fullName
         image
         address {
           longitude
@@ -381,6 +399,7 @@ export const userFragments = {
       username
       firstName
       lastName
+      fullName
       image
       about
       address {
@@ -398,7 +417,18 @@ export const userFragments = {
         username
         firstName
         lastName
+        fullName
         image
+        inPlans {
+          _id
+        }
+        friends {
+          email
+          username
+          firstName
+          lastName
+          fullName
+        }
         address {
           longitude
           latitude
@@ -419,6 +449,7 @@ export const userFragments = {
         participants {
           firstName
           lastName
+          fullName
           username
           email
           image
@@ -426,6 +457,7 @@ export const userFragments = {
         invites {
           firstName
           lastName
+          fullName
           username
           email
           image
@@ -475,6 +507,7 @@ export const messageFragments = {
       author {
         firstName
         lastName
+        fullName
         username
         email
         image

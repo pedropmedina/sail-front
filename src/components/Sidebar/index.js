@@ -23,6 +23,7 @@ import {
 } from '../../graphql/subscriptions';
 
 import * as Styled from './styled';
+import { Link } from '../../sharedStyles/links';
 
 // SVG icons
 import { ReactComponent as MapIcon } from '../../assets/SVG/map.svg';
@@ -48,20 +49,14 @@ const ITEMS = [
 
 const Profile = props => {
   const { data } = props;
-  const { username, firstName, lastName, image, address } = data;
+  const { username, firstName, fullName, image, address } = data;
   const { colors } = useColors();
 
   return (
     <Styled.Profile>
       <Styled.Figure>
-        <Avatar size="70" name={firstName} src={image} colors={colors} />
-        <Styled.Name>
-          {firstName && lastName
-            ? firstName + ' ' + lastName
-            : firstName
-            ? firstName
-            : username}
-        </Styled.Name>
+        <Avatar size='70' name={firstName} src={image} colors={colors} />
+        <Styled.Name>{fullName}</Styled.Name>
         {address.longitude && address.latitude && (
           <Styled.Location>
             {address.place}, {address.region}
@@ -69,7 +64,9 @@ const Profile = props => {
         )}
       </Styled.Figure>
       <Styled.ProfileMoreBtn>
-        <MoreIcon className="icon icon-small" />
+        <Link to={`/profile/${username}`}>
+          <MoreIcon className='icon icon-small' />
+        </Link>
       </Styled.ProfileMoreBtn>
     </Styled.Profile>
   );
@@ -211,8 +208,8 @@ const Sidebar = () => {
               hasModifiedReqs(reqData.requests, meData.user)
             }
           >
-            <Styled.Link to={`/${text}`} activeClassName="selected-navLink">
-              <Icon fill="currentColor" className="icon icon-small" />
+            <Styled.Link to={`/${text}`} activeClassName='selected-navLink'>
+              <Icon fill='currentColor' className='icon icon-small' />
             </Styled.Link>
           </Styled.Item>
         ))}
@@ -220,9 +217,9 @@ const Sidebar = () => {
       <Styled.AuthWrapper>
         <Styled.AuthBtn>
           {isLoggedIn ? (
-            <LogoutIcon className="icon icon-small" onClick={handleLogout} />
+            <LogoutIcon className='icon icon-small' onClick={handleLogout} />
           ) : (
-            <LoginIcon className="icon icon-small" />
+            <LoginIcon className='icon icon-small' />
           )}
         </Styled.AuthBtn>
       </Styled.AuthWrapper>

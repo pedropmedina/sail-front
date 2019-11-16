@@ -18,7 +18,7 @@ const Friend = ({
     <Styled.Friend>
       {/* Details Row containing profile information such as name, about, etc... */}
       <Styled.DetailsRow>
-        <Avatar size="80" name={firstName} src={image} colors={colors} />
+        <Avatar size='80' name={firstName} src={image} colors={colors} />
         <Styled.Name>{firstName ? firstName : username}</Styled.Name>
       </Styled.DetailsRow>
       {/* Stats Row containing profile image and stats */}

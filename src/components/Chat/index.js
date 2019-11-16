@@ -58,7 +58,7 @@ const Chat = ({ data, onCreateNew, subscribeToNew }) => {
               >
                 <Styled.MessageLeftSide>
                   <Avatar
-                    size="40"
+                    size='40'
                     name={displayName(message.author)}
                     src={message.author.image}
                     colors={colors}
@@ -87,24 +87,15 @@ const Chat = ({ data, onCreateNew, subscribeToNew }) => {
             <Styled.MessageForm onSubmit={handleSubmit}>
               <Styled.MessageTextarea
                 rows={rows}
-                type="text"
-                placeholder="message"
+                type='text'
+                placeholder='message'
                 value={text}
                 onChange={handleOnChange}
               />
               <Styled.MessageBtn>
-                <SendIcon className="icon icon-smallest" />
+                <SendIcon className='icon icon-smallest' />
               </Styled.MessageBtn>
             </Styled.MessageForm>
-            {/* <Styled.Participants>
-              {data.participants.map(({ username, image }) => (
-                <Styled.Participant key={username}>
-                  <Styled.UserImg
-                    src={image ? image : 'https://via.placeholder.com/40'}
-                  />
-                </Styled.Participant>
-              ))}
-            </Styled.Participants> */}
           </Styled.MessageFormWrapper>
         </Styled.BottomPanel>
       </Styled.Chat>

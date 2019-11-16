@@ -2,6 +2,7 @@
 import React from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import Avatar from 'react-user-avatar';
+import { ClipLoader } from 'react-spinners';
 
 import * as Styled from './styled';
 
@@ -15,6 +16,14 @@ import { GET_PROFILE_QUERY, ME_QUERY } from '../../graphql/queries';
 import { CREATE_REQUEST_MUTATION } from '../../graphql/mutations';
 
 import { useColors } from '../../hooks';
+
+const spinnerCss = `
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
 
 const Profile = props => {
   const {
@@ -72,7 +81,15 @@ const Profile = props => {
     !meError &&
     (profileLoading || meLoading || (!profile && !user))
   ) {
-    return <div>Loading...</div>;
+    return (
+      <ClipLoader
+        sizeUnit={'px'}
+        size={70}
+        color={'#6C8C96'}
+        loading={profileLoading || meLoading}
+        css={spinnerCss}
+      />
+    );
   }
 
   return (
@@ -82,7 +99,7 @@ const Profile = props => {
           isVisible={!showSendRequestBtn(profile, user)}
           onClick={() => handleFriendRequest(profile.username, 'FRIEND')}
         >
-          <UserPlusIcon className="icon icon-small" />
+          <UserPlusIcon className='icon icon-small' />
           Send Friend Request
         </Styled.FriendRequestBtn>
       </Topbar>
@@ -91,10 +108,10 @@ const Profile = props => {
         {/* Profile details  */}
         <Styled.ProfileDetails>
           <Avatar
-            size="200"
+            size='200'
             name={profile.firstName}
             src={profile.image}
-            className="UserAvatar--square"
+            className='UserAvatar--square'
             colors={colors}
           />
           <Styled.Name>{showNameOrUsername(profile)}</Styled.Name>
@@ -147,7 +164,12 @@ const Profile = props => {
             {profile.friends.length > 0 ? (
               <Styled.List>
                 {profile.friends.map((friend, i) => (
-                  <Friend key={`${friend.username}-${i}`} {...friend} />
+                  <Friend
+                    key={`${friend.username}-${i}`}
+                    plansQty={friend.inPlans.length}
+                    friendsQty={friend.friends.length}
+                    {...friend}
+                  />
                 ))}
               </Styled.List>
             ) : (

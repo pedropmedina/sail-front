@@ -31,7 +31,7 @@ export const Pins = styled.ul``;
 export const PinsList = styled(Pins)`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(40rem, 1fr));
-  gap: 1.5rem;
+  gap: 2rem;
 
   list-style: none;
   font-size: 1.6rem;
@@ -40,24 +40,24 @@ export const PinsList = styled(Pins)`
 
 export const PinItem = styled.li`
   padding: 1rem;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.2rem 1rem 0.2rem rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: var(--size-smallest);
+  cursor: pointer;
 
-  > svg {
-    height: 10.5rem;
-    max-width: 100%;
+  :hover {
+    box-shadow: 0 0.2rem 1rem 0.2rem rgba(0, 0, 0, 0.2);
   }
 `;
 
 export const Pin = styled.div`
+  height: 9rem;
   display: flex;
-  align-items: center;
 `;
 
 export const PinLeft = styled.div`
   margin-right: 2rem;
-  height: 9rem;
-  width: 11rem;
-  min-width: 9rem;
+  position: relative;
 `;
 
 export const PinRight = styled.div`
@@ -67,9 +67,10 @@ export const PinRight = styled.div`
 export const PinImg = styled.img`
   display: inline-block;
   height: 100%;
-  width: 100%;
+  width: 11rem;
   object-fit: cover;
   object-position: center;
+  border-radius: var(--size-smallest);
 `;
 
 export const P = styled.p`
@@ -85,40 +86,3 @@ export const PinTitle = styled.h3`
 export const PinAddress = styled(P)``;
 
 export const PinContent = styled(P)``;
-
-export const PinBtns = styled.div`
-  display: flex;
-`;
-
-export const PinBtn = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: transparent;
-  border: none;
-  outline: unset;
-  height: 3rem;
-  width: 3rem;
-  border-radius: 50%;
-  cursor: pointer;
-  color: var(--color-medium-grey);
-
-  :hover {
-    background-color: var(--color-less-white);
-  }
-
-  svg {
-    font-size: 1.4rem;
-    fill: currentColor;
-  }
-`;
-
-export const UnlikeBtn = styled(PinBtn)`
-  margin-right: 0.1rem;
-
-  svg {
-    fill: var(--color-earth-red);
-  }
-`;
-
-export const VisitBtn = styled(PinBtn)``;

@@ -1,14 +1,14 @@
 /* eslint-disable react/prop-types */
+import styled from 'styled-components/macro'; // eslint-disable-line
 import React, { useEffect, useState, useContext } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import ContentLoader from 'react-content-loader';
 
 import * as Styled from './styled';
-import { TopbarButton } from '../../sharedStyles/buttons';
+import { TopbarButton, RoundButton } from '../../sharedStyles/buttons';
 
 import { ReactComponent as PlusIcon } from '../../assets/SVG/plus.svg';
 import { ReactComponent as HeartIcon } from '../../assets/SVG/heart.svg';
-import { ReactComponent as ExternalLinkIcon } from '../../assets/SVG/external-link.svg';
 
 import Topbar from '../../components/Topbar';
 
@@ -48,6 +48,14 @@ const PinLoader = () => (
   </ContentLoader>
 );
 
+const overwrite = `
+  position: absolute;
+  top: .5rem;
+  right: .5rem;
+  background-color: #fff;
+  color: var(--color-earth-red);
+`;
+
 const PinsList = ({
   isLoading,
   pins,
@@ -59,28 +67,29 @@ const PinsList = ({
   return (
     <Styled.PinsList>
       {pins.map(pin => (
-        <Styled.PinItem key={pin._id}>
+        <Styled.PinItem key={pin._id} onClick={() => hanldeVisitLink(pin)}>
           {isLoading ? (
             <PinLoader />
           ) : (
             <Styled.Pin>
               <Styled.PinLeft>
+                {type !== 'MINE' && (
+                  <RoundButton
+                    onClick={event => {
+                      event.stopPropagation();
+                      handleUnlikePin(pin._id);
+                    }}
+                    css={overwrite}
+                  >
+                    <HeartIcon />
+                  </RoundButton>
+                )}
                 <Styled.PinImg src={pin.image} alt='Location image' />
               </Styled.PinLeft>
               <Styled.PinRight>
                 <Styled.PinTitle>{pin.title}</Styled.PinTitle>
                 <Styled.PinAddress>{addresses[pin._id]}</Styled.PinAddress>
                 <Styled.PinContent>{pin.content}</Styled.PinContent>
-                <Styled.PinBtns>
-                  {type !== 'MINE' && (
-                    <Styled.UnlikeBtn onClick={() => handleUnlikePin(pin._id)}>
-                      <HeartIcon />
-                    </Styled.UnlikeBtn>
-                  )}
-                  <Styled.VisitBtn onClick={() => hanldeVisitLink(pin)}>
-                    <ExternalLinkIcon />
-                  </Styled.VisitBtn>
-                </Styled.PinBtns>
               </Styled.PinRight>
             </Styled.Pin>
           )}
