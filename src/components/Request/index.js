@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { formatDistance } from 'date-fns';
+import Avatar from 'react-user-avatar';
 
 import * as Styled from './styled';
 
@@ -10,6 +11,8 @@ import { ReactComponent as TrashIcon } from '../../assets/SVG/trash.svg';
 import { ReactComponent as ThumbsUpIcon } from '../../assets/SVG/thumbs-up.svg';
 import { ReactComponent as ThumbsDownIcon } from '../../assets/SVG/thumbs-down.svg';
 import { ReactComponent as LinkIcon } from '../../assets/SVG/external-link.svg';
+
+import { useColors } from '../../hooks';
 
 const isAuthor = (author, currentUser) => author.email === currentUser.email;
 
@@ -48,21 +51,21 @@ const RequestPopup = ({
       {isAuthor(request.author, currentUser) ? (
         <>
           <Styled.PopupBtn
-            action="cancel"
+            action='cancel'
             onClick={() => onDeleteRequest(request._id)}
           >
             {request.status === 'ACCEPTED' || request.status === 'DENIED'
               ? 'Remove'
               : 'Cancel'}
             {request.status === 'ACCEPTED' || request.status === 'DENIED' ? (
-              <TrashIcon className="icon icon-small" />
+              <TrashIcon className='icon icon-small' />
             ) : (
-              <XIcon className="icon icon-small" />
+              <XIcon className='icon icon-small' />
             )}
           </Styled.PopupBtn>
           <Styled.PopupBtn>
             Visit
-            <LinkIcon className="icon icon-small" />
+            <LinkIcon className='icon icon-small' />
           </Styled.PopupBtn>
         </>
       ) : (
@@ -70,28 +73,28 @@ const RequestPopup = ({
           {request.status === 'PENDING' && (
             <>
               <Styled.PopupBtn
-                action="accept"
+                action='accept'
                 onClick={() =>
                   onUpdateRequest({ reqId: request._id, status: 'ACCEPTED' })
                 }
               >
                 Accept
-                <ThumbsUpIcon className="icon icon-small" />
+                <ThumbsUpIcon className='icon icon-small' />
               </Styled.PopupBtn>
               <Styled.PopupBtn
-                action="deny"
+                action='deny'
                 onClick={() =>
                   onUpdateRequest({ reqId: request._id, status: 'DENIED' })
                 }
               >
                 Deny
-                <ThumbsDownIcon className="icon icon-small" />
+                <ThumbsDownIcon className='icon icon-small' />
               </Styled.PopupBtn>
             </>
           )}
           <Styled.PopupBtn>
             Visit
-            <LinkIcon className="icon icon-small" />
+            <LinkIcon className='icon icon-small' />
           </Styled.PopupBtn>
         </>
       )}
@@ -121,7 +124,7 @@ const InviteRequest = ({
       </Styled.RequestDate>
       <Styled.RequestStatus>{request.status}</Styled.RequestStatus>
       <Styled.RequestBtn onClick={onFocus}>
-        <MoreIcon className="icon icon-small" />
+        <MoreIcon className='icon icon-small' />
       </Styled.RequestBtn>
       <RequestPopup
         request={request}
@@ -140,18 +143,26 @@ const FriendRequest = ({
   onDeleteRequest,
   onFocus
 }) => {
+  const { colors } = useColors();
+
   return (
     <Styled.Request status={request.status}>
-      <Styled.RequestImg
-        src={
-          isAuthor(request.author, currentUser) && request.to.image
-            ? request.to.image
-            : request.author.image
-            ? request.author.iamge
-            : 'https://via.placeholder.com/30'
-        }
-        alt="Profile image"
-      />
+      <Styled.RequestAvatar>
+        <Avatar
+          size='30'
+          name={
+            isAuthor(request.author, currentUser)
+              ? request.to.fullName
+              : request.author.fullName
+          }
+          src={
+            isAuthor(request.author, currentUser)
+              ? request.to.image
+              : request.author.image
+          }
+          colors={colors}
+        />
+      </Styled.RequestAvatar>
       <Styled.RequestHeading>
         <b>{displayHeadingName(request, currentUser)}</b>
         {isAuthor(request.author, currentUser)
@@ -163,7 +174,7 @@ const FriendRequest = ({
       </Styled.RequestDate>
       <Styled.RequestStatus>{request.status}</Styled.RequestStatus>
       <Styled.RequestBtn onClick={onFocus}>
-        <MoreIcon className="icon icon-small" />
+        <MoreIcon className='icon icon-small' />
       </Styled.RequestBtn>
       <RequestPopup
         request={request}

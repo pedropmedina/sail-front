@@ -28,13 +28,10 @@ export const RequestHeading = styled.h4`
   }
 `;
 
-export const RequestImg = styled.img`
+export const RequestAvatar = styled.div`
   width: 3rem;
   height: 3rem;
-  display: inline-block;
-  border-radius: 50%;
-  border: 0.1rem solid var(--color-almost-white);
-  padding: 0.2rem;
+  margin-bottom: 0.5rem;
 `;
 
 export const RequestTitle = styled.h3`
