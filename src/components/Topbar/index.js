@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
 import Avatar from 'react-user-avatar';
 
@@ -16,6 +16,9 @@ import { ReactComponent as CalendarIcon } from '../../assets/SVG/calendar.svg';
 import { searchOnTimeout } from '../../utils';
 import history from '../../history';
 import { useColors } from '../../hooks';
+import Context from '../../context';
+
+import { UPDATE_CURRENT_PIN, UPDATE_VIEWPORT } from '../../reducer';
 
 const onClickOutsideCss = `
   height: 100%;
@@ -27,6 +30,7 @@ const Topbar = ({ children }) => {
   const [results, setResults] = useState([]);
   const [conductSearch, { data }] = useLazyQuery(SEARCH_QUERY);
   const { colors } = useColors();
+  const { dispatch } = useContext(Context);
 
   useEffect(() => {
     let timeout;
@@ -56,14 +60,25 @@ const Topbar = ({ children }) => {
     setSearchText(event.target.value);
   };
 
+  const handleClickPin = pin => {
+    dispatch({
+      type: UPDATE_VIEWPORT,
+      payload: { longitude: pin.longitude, latitude: pin.latitude, zoom: 13 }
+    });
+    dispatch({ type: UPDATE_CURRENT_PIN, payload: pin });
+    history.push('/map');
+  };
+
   const handleClick = result => {
     switch (result.__typename) {
       case 'User':
         history.push(`/profile/${result.username}`);
         break;
       case 'Plan':
+        history.push(`/plan/${result._id}`);
         break;
       case 'Pin':
+        handleClickPin(result);
         break;
       default:
         break;

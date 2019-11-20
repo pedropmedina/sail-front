@@ -7,19 +7,19 @@ import { useColors } from '../../hooks';
 import * as Styled from './styled';
 
 const Friend = ({
-  firstName = '',
   username = '',
   image = '',
   friendsQty = 0,
-  plansQty = 0
+  plansQty = 0,
+  fullName
 }) => {
   const { colors } = useColors();
   return (
     <Styled.Friend>
       {/* Details Row containing profile information such as name, about, etc... */}
       <Styled.DetailsRow>
-        <Avatar size='80' name={firstName} src={image} colors={colors} />
-        <Styled.Name>{firstName ? firstName : username}</Styled.Name>
+        <Avatar size='80' name={fullName} src={image} colors={colors} />
+        <Styled.Name>{fullName}</Styled.Name>
       </Styled.DetailsRow>
       {/* Stats Row containing profile image and stats */}
       <Styled.StatsRow>

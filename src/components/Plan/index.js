@@ -34,15 +34,15 @@ const Plan = ({ _id, title, description, date, participants, location }) => {
         <Styled.Title>{title}</Styled.Title>
         <Styled.Description>{description}</Styled.Description>
         <Styled.Date>
-          <CalendarIcon className="icon icon-smallest" />{' '}
+          <CalendarIcon className='icon icon-smallest' />{' '}
           {format(new Date(parseInt(date)), 'MMM do, yyyy')}
         </Styled.Date>
         <Styled.Participants>
           {participants.map(participant => (
             <Avatar
               key={participant.email}
-              size="60"
-              name={participant.firstName}
+              size='60'
+              name={participant.fullName}
               src={participant.image}
               colors={colors}
             />

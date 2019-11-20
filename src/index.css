@@ -15,8 +15,8 @@
 }
 
 .activeLink {
-  border-bottom: 0.3rem solid red !important;
-  color: red !important;
+  border-bottom: 0.3rem solid var(--color-earth-red) !important;
+  color: var(--color-earth-red) !important;
 }
 
 .icon {
@@ -67,6 +67,7 @@
 .UserAvatar--inner {
   font-size: 1.4rem;
   color: #fff;
+  margin: 0 auto;
 }
 
 .UserAvatar--settings-round img {

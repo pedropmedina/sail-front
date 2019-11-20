@@ -63,7 +63,7 @@ export const SearchResults = styled.div`
   border-radius: 0.5rem;
   padding: 2rem 0;
   box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.1);
-  z-index: 2;
+  z-index: 3;
 `;
 
 export const Results = styled.ul`

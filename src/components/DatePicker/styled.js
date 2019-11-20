@@ -293,7 +293,10 @@ export const TimePeriods = styled(TimeSection)`
 `;
 
 export const PeriodBtn = styled.span`
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   border: none;
   border-radius: 0.5rem;
   color: ${({ isSelected }) =>

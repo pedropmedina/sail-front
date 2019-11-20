@@ -109,7 +109,7 @@ const Profile = props => {
         <Styled.ProfileDetails>
           <Avatar
             size='200'
-            name={profile.firstName}
+            name={profile.fullName}
             src={profile.image}
             className='UserAvatar--square'
             colors={colors}

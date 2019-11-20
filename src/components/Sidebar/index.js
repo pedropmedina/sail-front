@@ -49,13 +49,13 @@ const ITEMS = [
 
 const Profile = props => {
   const { data } = props;
-  const { username, firstName, fullName, image, address } = data;
+  const { username, fullName, image, address } = data;
   const { colors } = useColors();
 
   return (
     <Styled.Profile>
       <Styled.Figure>
-        <Avatar size='70' name={firstName} src={image} colors={colors} />
+        <Avatar size='70' name={fullName} src={image} colors={colors} />
         <Styled.Name>{fullName}</Styled.Name>
         {address.longitude && address.latitude && (
           <Styled.Location>

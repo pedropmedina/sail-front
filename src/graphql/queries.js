@@ -74,8 +74,7 @@ export const SEARCH_QUERY = gql`
         title
       }
       ... on Pin {
-        _id
-        title
+        ...defaultPinFields
       }
       ... on User {
         username
@@ -83,6 +82,7 @@ export const SEARCH_QUERY = gql`
       }
     }
   }
+  ${pinFragments.default}
 `;
 
 export const SEARCH_PEOPLE_QUERY = gql`
@@ -131,9 +131,9 @@ export const GET_CONVERSATIONS_QUERY = gql`
 
 export const GET_CONVERSATION_QUERY = gql`
   query GetConversation($conversationId: ID!) {
-    chat:getConversation(conversationId: $conversationId) {
+    chat: getConversation(conversationId: $conversationId) {
       ...defaultConversationFields
     }
   }
   ${conversationFragments.default}
-`
+`;

@@ -197,12 +197,12 @@ const Chats = () => {
                     <Styled.ChatParticipantsImgs>
                       {prepareParticipantsData(chat, meData.user).map(
                         participant => {
-                          const { username, firstName, image } = participant;
+                          const { username, image, fullName } = participant;
                           return (
                             <Styled.ChatParticipantImg key={username}>
                               <Avatar
                                 size='50'
-                                name={firstName}
+                                name={fullName}
                                 src={image}
                                 colors={colors}
                               />
