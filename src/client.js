@@ -87,13 +87,13 @@ const subscriptionAuthMiddleware = {
 
 // http link handling queries and mutations
 const httpLink = new HttpLink({
-  uri: 'http://localhost:4000/graphql',
+  uri: 'https://secure-citadel-50946.herokuapp.com/graphql',
   credentials: 'include'
 });
 
 // websocket link handling subscriptions
 const wsLink = new WebSocketLink({
-  uri: 'ws://localhost:4000/graphql',
+  uri: 'ws://secure-citadel-50946.herokuapp.com/graphql',
   options: {
     reconnect: true,
     lazy: true

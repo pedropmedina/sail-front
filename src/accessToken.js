@@ -13,10 +13,13 @@ export const validateAccessToken = token => {
 };
 
 export const renewAccessToken = async () => {
-  const res = await fetch('http://localhost:4000/refresh_token', {
-    method: 'POST',
-    credentials: 'include'
-  });
+  const res = await fetch(
+    'https://secure-citadel-50946.herokuapp.com/refresh_token',
+    {
+      method: 'POST',
+      credentials: 'include'
+    }
+  );
   // response comes as {ok: boolean, acccesToken: token || ''}
   return await res.json();
 };

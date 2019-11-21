@@ -130,4 +130,10 @@ typings/
 # app and services configurations
 src/config.json
 
+# build 
+build
+dist
+
 # End of https://www.gitignore.io/api/macOS,VisualStudioCode,node
+# Local Netlify folder
+.netlify
