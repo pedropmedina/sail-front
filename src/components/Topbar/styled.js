@@ -1,10 +1,15 @@
 import styled from 'styled-components/macro';
 
 export const Topbar = styled.div`
-  display: flex;
   padding: 2rem 5rem;
-  justify-content: space-between;
   margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  > * {
+    margin-bottom: 1rem;
+  }
 `;
 
 export const LeftSide = styled.div``;

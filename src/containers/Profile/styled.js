@@ -106,7 +106,6 @@ export const FriendRequestBtn = styled.button`
   border-radius: 0.5rem;
   cursor: pointer;
   outline: none;
-  visibility: ${({ isVisible }) => (isVisible ? 'visible' : 'hidden')};
 
   display: flex;
   align-items: center;

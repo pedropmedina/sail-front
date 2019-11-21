@@ -95,13 +95,14 @@ const Profile = props => {
   return (
     <Styled.ProfileWrapper>
       <Topbar>
-        <Styled.FriendRequestBtn
-          isVisible={!showSendRequestBtn(profile, user)}
-          onClick={() => handleFriendRequest(profile.username, 'FRIEND')}
-        >
-          <UserPlusIcon className='icon icon-small' />
-          Send Friend Request
-        </Styled.FriendRequestBtn>
+        {!showSendRequestBtn(profile, user) && (
+          <Styled.FriendRequestBtn
+            onClick={() => handleFriendRequest(profile.username, 'FRIEND')}
+          >
+            <UserPlusIcon className='icon icon-small' />
+            Send Friend Request
+          </Styled.FriendRequestBtn>
+        )}
       </Topbar>
       {/* Wraps profile details and content */}
       <Styled.Profile>
