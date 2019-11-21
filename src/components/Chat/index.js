@@ -31,9 +31,6 @@ const Chat = ({ data, onCreateNew, subscribeToNew }) => {
     ref.current.scrollIntoView({ block: 'start', behavior: 'smooth' });
   };
 
-  const displayName = ({ firstName, username }) =>
-    firstName ? firstName : username;
-
   const handleOnChange = event => {
     handleTextareaChange(event);
     setText(event.target.value);
@@ -59,12 +56,12 @@ const Chat = ({ data, onCreateNew, subscribeToNew }) => {
                 <Styled.MessageLeftSide>
                   <Avatar
                     size='40'
-                    name={displayName(message.author)}
+                    name={message.author.fullName}
                     src={message.author.image}
                     colors={colors}
                   />
                   <Styled.MessageName>
-                    {displayName(message.author)}
+                    {message.author.fullName}
                   </Styled.MessageName>
                 </Styled.MessageLeftSide>
                 <Styled.MessageRightSide>

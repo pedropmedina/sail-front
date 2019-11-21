@@ -140,11 +140,7 @@ const Topbar = ({ children }) => {
                           <Avatar
                             size='40'
                             style={{ marginRight: '1rem' }}
-                            name={
-                              result.firstName
-                                ? result.firstName
-                                : result.username
-                            }
+                            name={result.fullName}
                             src={result.image}
                             colors={colors}
                           />

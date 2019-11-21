@@ -67,13 +67,13 @@ const PlanView = props => {
           <Styled.Invites>
             <Styled.ListHeading>Pending Invitees</Styled.ListHeading>
             <Styled.List>
-              {plan.invites.map(({ email, firstName, image }) => (
+              {plan.invites.map(({ email, fullName, image }) => (
                 <Styled.Item key={email}>
                   <Avatar
-                    size="70"
-                    name={firstName}
+                    size='70'
+                    name={fullName}
                     src={image}
-                    className="UserAvatar--square"
+                    className='UserAvatar--square'
                     colors={colors}
                   />
                 </Styled.Item>
@@ -86,10 +86,10 @@ const PlanView = props => {
               {plan.participants.map(({ email, firstName, image }) => (
                 <Styled.Item key={email}>
                   <Avatar
-                    size="70"
+                    size='70'
                     name={firstName}
                     src={image}
-                    className="UserAvatar--square"
+                    className='UserAvatar--square'
                     colors={colors}
                   />
                 </Styled.Item>
