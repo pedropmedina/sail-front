@@ -83,11 +83,11 @@ const PlanView = props => {
           <Styled.Participants>
             <Styled.ListHeading>Confirmed Participants</Styled.ListHeading>
             <Styled.List>
-              {plan.participants.map(({ email, firstName, image }) => (
+              {plan.participants.map(({ email, fullName, image }) => (
                 <Styled.Item key={email}>
                   <Avatar
                     size='70'
-                    name={firstName}
+                    name={fullName}
                     src={image}
                     className='UserAvatar--square'
                     colors={colors}
