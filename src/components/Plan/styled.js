@@ -11,7 +11,7 @@ export const Plan = styled.li`
   transition: all 0.2s;
 
   :hover {
-    background-color: var(--color-less-white);
+    box-shadow: 0 0.2rem 1rem 0.2rem rgba(0, 0, 0, 0.2);
   }
 
   > * {

@@ -79,6 +79,7 @@ export const SEARCH_QUERY = gql`
       ... on User {
         username
         email
+        fullName
       }
     }
   }

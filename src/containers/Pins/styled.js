@@ -40,10 +40,11 @@ export const PinsList = styled(Pins)`
 
 export const PinItem = styled.li`
   padding: 1rem;
-  box-shadow: 0 0.2rem 1rem 0.2rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.1);
   background-color: #fff;
   border-radius: var(--size-smallest);
   cursor: pointer;
+  transition: all 0.2s;
 
   :hover {
     box-shadow: 0 0.2rem 1rem 0.2rem rgba(0, 0, 0, 0.2);

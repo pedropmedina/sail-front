@@ -6,9 +6,10 @@ export const Friend = styled.li`
   color: var(--color-light-grey);
   padding: 1rem;
   margin: 1.5rem;
-  box-shadow: 0 0.2rem 1rem 0.2rem rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.1);
+  background-color: var(--color-almost-white);
   border-radius: var(--size-smallest);
+  transition: all 0.2s;
 
   display: grid;
   grid-template-columns: min-content 1fr;

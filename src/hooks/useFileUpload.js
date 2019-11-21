@@ -33,8 +33,8 @@ export const useFileUpload = () => {
       data.append('cloud_name', CLOUD_NAME);
 
       const res = await fetch(URL, { method: 'POST', body: data });
-      const { url } = await res.json();
-      return url;
+      const { secure_url } = await res.json();
+      return secure_url;
     }
     return '';
   };
