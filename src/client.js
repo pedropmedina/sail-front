@@ -93,7 +93,7 @@ const httpLink = new HttpLink({
 
 // websocket link handling subscriptions
 const wsLink = new WebSocketLink({
-  uri: 'ws://secure-citadel-50946.herokuapp.com/graphql',
+  uri: 'wss://secure-citadel-50946.herokuapp.com/graphql',
   options: {
     reconnect: true,
     lazy: true
