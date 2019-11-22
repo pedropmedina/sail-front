@@ -5,15 +5,19 @@ export const ProfileWrapper = styled.div`
 `;
 
 export const Profile = styled.div`
-  display: grid;
-  grid-template-columns: minmax(min-content, 1fr) max-content;
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  > * {
+    margin: 5rem;
+  }
 `;
 
 export const ProfileDetails = styled.article`
-  grid-column: 2 / -1;
-  grid-row: 1 / -1;
+  flex: 0 1 20rem;
 
-  padding: 0 4rem;
   color: var(--color-light-grey);
 `;
 
@@ -64,12 +68,13 @@ export const Email = styled.p`
 `;
 
 export const Content = styled.article`
-  grid-column: 1 / 2;
-  grid-row: 1 / -1;
+  flex: 1;
 `;
 
 export const Section = styled.section`
-  padding: 4rem;
+  :not(:first-child) {
+    padding: 4rem 0;
+  }
 `;
 
 export const ContentPlans = styled(Section)``;

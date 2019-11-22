@@ -287,6 +287,7 @@ const Chats = () => {
                 filterOutPlanChats(data.chats)
               )}
               onCreateMessage={handleNewMessage}
+              me={meData}
             />
           </Styled.RightPanel>
         )}

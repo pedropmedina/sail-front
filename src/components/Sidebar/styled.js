@@ -31,7 +31,7 @@ export const Figure = styled.figure`
   justify-content: center;
   flex-wrap: wrap;
 
-  > * {
+  > *:not(:first-child) {
     flex-basis: 100%;
   }
 `;

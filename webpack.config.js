@@ -70,7 +70,10 @@ module.exports = (env = { mode: 'production', presets: [] }) => {
             : 'https://secure-citadel-50946.herokuapp.com/graphql',
           WS_URI: devMode
             ? 'ws://localhost:4000/graphql'
-            : 'wss://secure-citadel-50946.herokuapp.com/graphql'
+            : 'wss://secure-citadel-50946.herokuapp.com/graphql',
+          REFRESH_TOKEN_URI: devMode
+            ? 'http://localhost:4000/refresh_token'
+            : 'https://secure-citadel-50946.herokuapp.com/refresh_token'
         }),
         new CleanWebpackPlugin()
       ]

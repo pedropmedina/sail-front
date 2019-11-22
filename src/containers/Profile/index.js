@@ -133,7 +133,7 @@ const Profile = props => {
             </Styled.Location>
           )}
           <Styled.About>
-            {profile.about ? profile.about : 'Tells about you!'}
+            {profile.about ? profile.about : 'Add your about'}
           </Styled.About>
         </Styled.ProfileDetails>
         {/* Content */}

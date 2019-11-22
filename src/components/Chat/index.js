@@ -61,7 +61,9 @@ const Chat = ({ data, onCreateNew, subscribeToNew }) => {
                     colors={colors}
                   />
                   <Styled.MessageName>
-                    {message.author.fullName}
+                    {message.author.firstName
+                      ? message.author.firstName
+                      : message.author.username}
                   </Styled.MessageName>
                 </Styled.MessageLeftSide>
                 <Styled.MessageRightSide>

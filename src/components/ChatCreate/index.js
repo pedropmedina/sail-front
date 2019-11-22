@@ -2,10 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { ClipLoader } from 'react-spinners';
+import Avatar from 'react-user-avatar';
 
 import { SEARCH_PEOPLE_QUERY } from '../../graphql/queries';
 import { CREATE_CONVERSATION_MUTATION } from '../../graphql/mutations';
 import { searchOnTimeout } from '../../utils';
+import { useColors } from '../../hooks/useColors';
 
 import * as Styled from './styled';
 
@@ -15,7 +17,8 @@ const ChatCreate = ({
   onCancelNewMessage,
   onCreateNewChat,
   findExistingChat,
-  onCreateMessage
+  onCreateMessage,
+  me
 }) => {
   const [participants, setParticipants] = useState([]);
   const [searchText, setSearchText] = useState('');
@@ -26,6 +29,7 @@ const ChatCreate = ({
   const [createChat] = useMutation(CREATE_CONVERSATION_MUTATION, {
     ignoreResults: true
   });
+  const { colors } = useColors();
 
   useEffect(() => {
     if (searchText) {
@@ -90,7 +94,7 @@ const ChatCreate = ({
               <Styled.ToItem key={i}>{to}</Styled.ToItem>
             ))}
             <Styled.ToItemInput>
-              <Styled.ToForm>
+              <Styled.ToForm onSubmit={event => event.preventDefault()}>
                 <Styled.ToInput
                   value={searchText}
                   onChange={handleChange}
@@ -113,21 +117,23 @@ const ChatCreate = ({
           </Styled.Loading>
         ) : data ? (
           <Styled.FriendsList>
-            {data.people.map((friend, i) => (
-              <Styled.FriendItem
-                key={`${friend.username}-${i}`}
-                onClick={() => handleClickFriend(friend)}
-              >
-                <Styled.FriendImg
-                  src={
-                    friend.image
-                      ? friend.image
-                      : 'https://via.placeholder.com/50'
-                  }
-                />{' '}
-                {friend.username}
-              </Styled.FriendItem>
-            ))}
+            {data.people
+              .filter(friend => friend.username !== me.user.username)
+              .map((friend, i) => (
+                <Styled.FriendItem
+                  key={`${friend.username}-${i}`}
+                  onClick={() => handleClickFriend(friend)}
+                >
+                  <Avatar
+                    size='50'
+                    name={friend.fullName}
+                    src={friend.image}
+                    colors={colors}
+                    style={{ marginRight: '1rem' }}
+                  />
+                  {friend.username}
+                </Styled.FriendItem>
+              ))}
           </Styled.FriendsList>
         ) : null}
       </Styled.FriendsContainer>

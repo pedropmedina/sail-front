@@ -133,15 +133,6 @@ export const FriendItem = styled.li`
   }
 `;
 
-export const FriendImg = styled.img`
-  height: 5rem;
-  width: 5rem;
-  display: inline-block;
-  border: none;
-  border-radius: 50%;
-  margin-right: 1rem;
-`;
-
 export const Loading = styled.div`
   height: 100%;
   display: flex;

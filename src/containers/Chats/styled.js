@@ -13,16 +13,18 @@ export const Panels = styled.article`
 `;
 
 export const Panel = styled.section`
-  height: 100%;
   flex: 1 1 30rem;
   padding: 1rem;
 `;
 
 export const LeftPanel = styled(Panel)`
   overflow-y: auto;
+  max-height: 100%;
 `;
 
-export const RightPanel = styled(Panel)``;
+export const RightPanel = styled(Panel)`
+  height: 100%;
+`;
 
 export const ChatsList = styled.ul`
   list-style: none;
