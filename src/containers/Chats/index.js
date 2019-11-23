@@ -8,10 +8,13 @@ import { useColors } from '../../hooks';
 
 import * as Styled from './styled';
 import { TopbarButton } from '../../sharedStyles/buttons';
+import { NoContentFull } from '../../sharedStyles/placeholder';
+import { Wrapper } from '../../sharedStyles/wrappers';
 
 import { ReactComponent as EditIcon } from '../../assets/SVG/edit.svg';
 import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
 import { ReactComponent as CalendarIcon } from '../../assets/SVG/calendar.svg';
+import { ReactComponent as FrownIcon } from '../../assets/SVG/frown.svg';
 
 import ChatCreate from '../../components/ChatCreate';
 import Chat from '../../components/Chat';
@@ -158,7 +161,7 @@ const Chats = () => {
     return <div>Loading...</div>;
 
   return (
-    <Styled.ChatsWrapper>
+    <Wrapper>
       <Styled.Topbar>
         <Styled.TopbarLeft>
           <TopbarButton onClick={handleClickNewChat}>
@@ -180,119 +183,127 @@ const Chats = () => {
       </Styled.Topbar>
       <Styled.Panels>
         {/* List of current Chats */}
-        <Styled.LeftPanel>
-          <Styled.ChatsList>
-            {filterChats(data.chats).map(chat => (
-              <Styled.ChatItem
-                key={chat._id}
-                onClick={() => handleClickChatItem(chat)}
-                isSelected={
-                  chatData && chatData.chat
-                    ? chat._id === chatData.chat._id
-                    : false
-                }
-              >
-                <Styled.ChatPreview>
-                  <Styled.ChatPreviewLeft>
-                    <Styled.ChatParticipantsImgs>
-                      {prepareParticipantsData(chat, meData.user).map(
-                        participant => {
-                          const { username, image, fullName } = participant;
-                          return (
-                            <Styled.ChatParticipantImg key={username}>
-                              <Avatar
-                                size='50'
-                                name={fullName}
-                                src={image}
-                                colors={colors}
-                              />
-                            </Styled.ChatParticipantImg>
-                          );
-                        }
-                      )}
-                    </Styled.ChatParticipantsImgs>
-                  </Styled.ChatPreviewLeft>
-                  <Styled.ChatPreviewRight>
-                    {chat.plan && (
-                      <Styled.ChatPlan>
-                        <CalendarIcon />
-                        {chat.plan.title}
-                      </Styled.ChatPlan>
-                    )}
-                    <Styled.ChatParticipantsNames>
-                      {prepareParticipantsData(chat, meData.user).map(
-                        (participant, i, arr) => {
-                          const { email, fullName } = participant;
-                          return !(arr.length - 1 === i) ? (
-                            <Styled.ChatParticipantName key={email}>
-                              {fullName},&nbsp;
-                            </Styled.ChatParticipantName>
-                          ) : (
-                            <Styled.ChatParticipantName key={email}>
-                              {fullName}
-                            </Styled.ChatParticipantName>
-                          );
-                        }
-                      )}
-                    </Styled.ChatParticipantsNames>
-                    <Styled.ChatDate>
-                      {formatDistanceToNow(parseInt(chat.createdAt), {
-                        addSuffix: true
-                      })}
-                    </Styled.ChatDate>
-                    <Styled.ChatMsg>
-                      <Styled.MsgContent>
-                        {chat.messages[chat.messages.length - 1].content}
-                      </Styled.MsgContent>
-                    </Styled.ChatMsg>
-                    {chat.unreadCount.count > 0 &&
-                      chatData &&
-                      chatData.chat &&
-                      chat._id !== chatData.chat._id && (
-                        <Styled.UnreadCountBadge>
-                          {chat.unreadCount.count} new
-                        </Styled.UnreadCountBadge>
-                      )}
-                  </Styled.ChatPreviewRight>
-                </Styled.ChatPreview>
-              </Styled.ChatItem>
-            ))}
-          </Styled.ChatsList>
-        </Styled.LeftPanel>
-        {/* Current Chat in view or ChatCreate component */}
-        {!showChatCreate ? (
-          <Styled.RightPanel>
-            {(!chatError && chatLoading) || !chatData ? (
-              <Styled.NoChatSelected>
-                <ClipLoader
-                  sizeUnit={'px'}
-                  size={60}
-                  color={'#6C8C96'}
-                  loading={chatLoading}
-                />
-              </Styled.NoChatSelected>
-            ) : (
-              <Chat
-                data={chatData.chat.messages}
-                onCreateNew={handleNewMessage(chatData.chat)}
-              />
-            )}
-          </Styled.RightPanel>
+        {data.chats.length === 0 ? (
+          <NoContentFull>
+            <FrownIcon />
+            You have no chats, create one
+          </NoContentFull>
         ) : (
-          <Styled.RightPanel>
-            <ChatCreate
-              onCancelNewMessage={handleCancelNewMessage}
-              onCreateNewChat={handleCreateNewChat}
-              findExistingChat={findExistingChat(
-                filterOutPlanChats(data.chats)
-              )}
-              onCreateMessage={handleNewMessage}
-              me={meData}
-            />
-          </Styled.RightPanel>
+          <>
+            <Styled.LeftPanel>
+              <Styled.ChatsList>
+                {filterChats(data.chats).map(chat => (
+                  <Styled.ChatItem
+                    key={chat._id}
+                    onClick={() => handleClickChatItem(chat)}
+                    isSelected={
+                      chatData && chatData.chat
+                        ? chat._id === chatData.chat._id
+                        : false
+                    }
+                  >
+                    <Styled.ChatPreview>
+                      <Styled.ChatPreviewLeft>
+                        <Styled.ChatParticipantsImgs>
+                          {prepareParticipantsData(chat, meData.user).map(
+                            participant => {
+                              const { username, image, fullName } = participant;
+                              return (
+                                <Styled.ChatParticipantImg key={username}>
+                                  <Avatar
+                                    size='50'
+                                    name={fullName}
+                                    src={image}
+                                    colors={colors}
+                                  />
+                                </Styled.ChatParticipantImg>
+                              );
+                            }
+                          )}
+                        </Styled.ChatParticipantsImgs>
+                      </Styled.ChatPreviewLeft>
+                      <Styled.ChatPreviewRight>
+                        {chat.plan && (
+                          <Styled.ChatPlan>
+                            <CalendarIcon />
+                            {chat.plan.title}
+                          </Styled.ChatPlan>
+                        )}
+                        <Styled.ChatParticipantsNames>
+                          {prepareParticipantsData(chat, meData.user).map(
+                            (participant, i, arr) => {
+                              const { email, fullName } = participant;
+                              return !(arr.length - 1 === i) ? (
+                                <Styled.ChatParticipantName key={email}>
+                                  {fullName},&nbsp;
+                                </Styled.ChatParticipantName>
+                              ) : (
+                                <Styled.ChatParticipantName key={email}>
+                                  {fullName}
+                                </Styled.ChatParticipantName>
+                              );
+                            }
+                          )}
+                        </Styled.ChatParticipantsNames>
+                        <Styled.ChatDate>
+                          {formatDistanceToNow(parseInt(chat.createdAt), {
+                            addSuffix: true
+                          })}
+                        </Styled.ChatDate>
+                        <Styled.ChatMsg>
+                          <Styled.MsgContent>
+                            {chat.messages[chat.messages.length - 1].content}
+                          </Styled.MsgContent>
+                        </Styled.ChatMsg>
+                        {chat.unreadCount.count > 0 &&
+                          chatData &&
+                          chatData.chat &&
+                          chat._id !== chatData.chat._id && (
+                            <Styled.UnreadCountBadge>
+                              {chat.unreadCount.count} new
+                            </Styled.UnreadCountBadge>
+                          )}
+                      </Styled.ChatPreviewRight>
+                    </Styled.ChatPreview>
+                  </Styled.ChatItem>
+                ))}
+              </Styled.ChatsList>
+            </Styled.LeftPanel>
+            {!showChatCreate ? (
+              <Styled.RightPanel>
+                {(!chatError && chatLoading) || !chatData ? (
+                  <Styled.NoChatSelected>
+                    <ClipLoader
+                      sizeUnit={'rem'}
+                      size={3}
+                      color={'#6C8C96'}
+                      loading={chatLoading}
+                    />
+                  </Styled.NoChatSelected>
+                ) : (
+                  <Chat
+                    data={chatData.chat.messages}
+                    onCreateNew={handleNewMessage(chatData.chat)}
+                  />
+                )}
+              </Styled.RightPanel>
+            ) : (
+              <Styled.RightPanel>
+                <ChatCreate
+                  onCancelNewMessage={handleCancelNewMessage}
+                  onCreateNewChat={handleCreateNewChat}
+                  findExistingChat={findExistingChat(
+                    filterOutPlanChats(data.chats)
+                  )}
+                  onCreateMessage={handleNewMessage}
+                  me={meData}
+                />
+              </Styled.RightPanel>
+            )}
+          </>
         )}
       </Styled.Panels>
-    </Styled.ChatsWrapper>
+    </Wrapper>
   );
 };
 

@@ -1,12 +1,7 @@
 import styled from 'styled-components/macro';
 import { NavLink as Link } from 'react-router-dom';
 
-export const SettingsWrapper = styled.div`
-  overflow-y: auto;
-`;
-
 export const InnerWrapper = styled.div`
-  padding: 5rem;
   margin: 0 auto;
   max-width: 120rem;
 `;

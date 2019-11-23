@@ -7,6 +7,8 @@ import { ClipLoader } from 'react-spinners';
 import * as Styled from './styled';
 import { Fields, Field, Form, Input, Textarea } from '../../sharedStyles/forms';
 import { SaveButton, CancelButton } from '../../sharedStyles/buttons';
+import { Wrapper } from '../../sharedStyles/wrappers';
+import { Spinner } from '../../sharedStyles/placeholder';
 
 import GeocodingSearch from '../../components/GeocodingSearch';
 import MapPreview from '../../components/MapPreview';
@@ -57,7 +59,7 @@ const FormField = ({
   <Field>
     {type === 'textarea' ? (
       <Textarea
-        as="textarea"
+        as='textarea'
         id={name}
         name={name}
         placeholder={placeholder ? placeholder : label}
@@ -98,7 +100,7 @@ const renderFormButtons = ({ isLoadingUpdate, handleCancel }) => {
         </SaveButton>
       </Field>
       <Field style={{ flex: '0 1 25%' }}>
-        <CancelButton type="button" onClick={handleCancel}>
+        <CancelButton type='button' onClick={handleCancel}>
           Cancel
         </CancelButton>
       </Field>
@@ -120,9 +122,9 @@ const Privacy = ({
         {/* Username */}
         <Fields>
           <FormField
-            type="text"
-            name="username"
-            label="Username"
+            type='text'
+            name='username'
+            label='Username'
             inputs={inputs}
             handleChange={handleChange}
           />
@@ -130,16 +132,16 @@ const Privacy = ({
         {/* Password */}
         <Fields>
           <FormField
-            type="password"
-            name="currentPassword"
-            label="Current Password"
+            type='password'
+            name='currentPassword'
+            label='Current Password'
             inputs={inputs}
             handleChange={handleChange}
           />
           <FormField
-            type="password"
-            name="newPassword"
-            label="New Password"
+            type='password'
+            name='newPassword'
+            label='New Password'
             inputs={inputs}
             handleChange={handleChange}
           />
@@ -223,16 +225,16 @@ const UserDetails = ({
         {/* Name info */}
         <Fields>
           <FormField
-            type="text"
-            name="firstName"
-            label="First Name"
+            type='text'
+            name='firstName'
+            label='First Name'
             inputs={inputs}
             handleChange={handleChange}
           />
           <FormField
-            type="text"
-            name="lastName"
-            label="Last Name"
+            type='text'
+            name='lastName'
+            label='Last Name'
             inputs={inputs}
             handleChange={handleChange}
           />
@@ -240,16 +242,16 @@ const UserDetails = ({
         {/* Contact information */}
         <Fields>
           <FormField
-            type="text"
-            name="email"
-            label="Email"
+            type='text'
+            name='email'
+            label='Email'
             inputs={inputs}
             handleChange={handleChange}
           />
           <FormField
-            type="text"
-            name="phone"
-            label="Phone#"
+            type='text'
+            name='phone'
+            label='Phone#'
             inputs={inputs}
             handleChange={handleChange}
           />
@@ -257,9 +259,9 @@ const UserDetails = ({
         {/* About section */}
         <Fields>
           <FormField
-            type="textarea"
-            name="about"
-            label="About"
+            type='textarea'
+            name='about'
+            label='About'
             inputs={inputs}
             handleChange={handleChange}
             rows={rows}
@@ -402,81 +404,82 @@ const Settings = () => {
     history.push('/');
   };
 
-  if (loading)
-    return (
-      <ClipLoader
-        sizeUnit={'px'}
-        size={70}
-        color={'#6C8C96'}
-        loading={loading}
-        css={spinnerCss}
-      />
-    );
-
   return (
-    <Styled.SettingsWrapper>
-      <Styled.InnerWrapper>
-        {/* Nav bar */}
-        <Styled.SettingsNav>
-          <Styled.Nav>
-            <Styled.NavList>
-              <Styled.NavItem>
-                <Styled.NavLink
-                  exact
-                  to={`${url}`}
-                  activeClassName="activeLink"
-                >
-                  User Details
-                </Styled.NavLink>
-              </Styled.NavItem>
-              <Styled.NavItem>
-                <Styled.NavLink
-                  to={`${url}/privacy`}
-                  activeClassName="activeLink"
-                >
-                  Privacy
-                </Styled.NavLink>
-              </Styled.NavItem>
-            </Styled.NavList>
-          </Styled.Nav>
-        </Styled.SettingsNav>
-        <Switch>
-          <Route exact path={`${path}`}>
-            <UserDetails
-              inputs={inputs}
-              handleChange={handleChange}
-              handleSubmit={handleSubmit}
-              handleCancel={handleCancel}
-              handleImageDelete={handleImageDelete}
-              handleAddress={handleAddress}
-              rows={rows}
-              file={file}
-              handleFileChange={handleFileChange}
-              handleFileDelete={handleFileDelete}
-              handleFileUpload={handleFileUpload}
-              handleDrag={handleDrag}
-              handleDragIn={handleDragIn}
-              handleDragOut={handleDragOut}
-              handleDrop={handleDrop}
-              dragging={dragging}
-              viewport={viewport}
-              isLoadingUpdate={loadingDetailsUpdate}
-              handleUpdateUser={handleUpdateUser}
-              handleClickGeocodingResult={handleClickGeocodingResult}
-              editAddress={editAddress}
-              onEditAddress={handleEditAddress}
-            />
-          </Route>
-          <Route path={`${path}/privacy`}>
-            <Privacy
-              {...privacyHook}
-              isLoadingUpdate={loadingPrivacyUpdate}
-              handleUpdatePrivacy={handleUpdatePrivacy}
-            />
-          </Route>
-        </Switch>
-      </Styled.InnerWrapper>
-    </Styled.SettingsWrapper>
+    <Wrapper>
+      {loading ? (
+        <Spinner>
+          <ClipLoader
+            sizeUnit={'rem'}
+            size={4}
+            color={'#6C8C96'}
+            loading={loading}
+            css={spinnerCss}
+          />
+        </Spinner>
+      ) : (
+        <Styled.InnerWrapper>
+          {/* Nav bar */}
+          <Styled.SettingsNav>
+            <Styled.Nav>
+              <Styled.NavList>
+                <Styled.NavItem>
+                  <Styled.NavLink
+                    exact
+                    to={`${url}`}
+                    activeClassName='activeLink'
+                  >
+                    User Details
+                  </Styled.NavLink>
+                </Styled.NavItem>
+                <Styled.NavItem>
+                  <Styled.NavLink
+                    to={`${url}/privacy`}
+                    activeClassName='activeLink'
+                  >
+                    Privacy
+                  </Styled.NavLink>
+                </Styled.NavItem>
+              </Styled.NavList>
+            </Styled.Nav>
+          </Styled.SettingsNav>
+          <Switch>
+            <Route exact path={`${path}`}>
+              <UserDetails
+                inputs={inputs}
+                handleChange={handleChange}
+                handleSubmit={handleSubmit}
+                handleCancel={handleCancel}
+                handleImageDelete={handleImageDelete}
+                handleAddress={handleAddress}
+                rows={rows}
+                file={file}
+                handleFileChange={handleFileChange}
+                handleFileDelete={handleFileDelete}
+                handleFileUpload={handleFileUpload}
+                handleDrag={handleDrag}
+                handleDragIn={handleDragIn}
+                handleDragOut={handleDragOut}
+                handleDrop={handleDrop}
+                dragging={dragging}
+                viewport={viewport}
+                isLoadingUpdate={loadingDetailsUpdate}
+                handleUpdateUser={handleUpdateUser}
+                handleClickGeocodingResult={handleClickGeocodingResult}
+                editAddress={editAddress}
+                onEditAddress={handleEditAddress}
+              />
+            </Route>
+            <Route path={`${path}/privacy`}>
+              <Privacy
+                {...privacyHook}
+                isLoadingUpdate={loadingPrivacyUpdate}
+                handleUpdatePrivacy={handleUpdatePrivacy}
+              />
+            </Route>
+          </Switch>
+        </Styled.InnerWrapper>
+      )}
+    </Wrapper>
   );
 };
 

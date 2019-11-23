@@ -1,7 +1,6 @@
 import styled from 'styled-components/macro';
 
 export const Topbar = styled.div`
-  padding: 2rem 5rem;
   margin-bottom: 2rem;
   display: flex;
   justify-content: space-between;

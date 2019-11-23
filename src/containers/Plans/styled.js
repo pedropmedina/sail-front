@@ -1,12 +1,11 @@
 import styled from 'styled-components/macro';
 
-export const PlansWrapper = styled.div`
-  overflow-y: auto;
+export const Plans = styled.div`
+  height: calc(100% - 15rem);
 `;
 
-export const Plans = styled.ul`
+export const PlansList = styled.ul`
   list-style: none;
-  padding: 2rem 5rem;
   display: flex;
   flex-wrap: wrap;
   max-width: 170rem;

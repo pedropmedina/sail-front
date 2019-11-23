@@ -1,13 +1,8 @@
 import styled from 'styled-components/macro';
 
-export const PinsWrapper = styled.div`
-  overflow-y: auto;
-`;
-
 export const Panels = styled.article`
   display: flex;
   flex-wrap: wrap;
-  padding: 3rem 5rem;
 `;
 
 export const Panel = styled.section`

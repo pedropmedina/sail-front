@@ -1,9 +1,14 @@
 import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
+import { ClipLoader } from 'react-spinners';
 
 import { SEARCH_FRIENDS_QUERY } from '../../graphql/queries';
 
 import * as Styled from './styled';
+import { Spinner, NoContentFull } from '../../sharedStyles/placeholder';
+import { Wrapper } from '../../sharedStyles/wrappers'
+
+import { ReactComponent as FrownIcon } from '../../assets/SVG/frown.svg';
 
 import Topbar from '../../components/Topbar';
 import Friend from '../../components/Friend';
@@ -16,25 +21,41 @@ const Friends = () => {
   if (!error && loading) return <div>Loading...</div>;
 
   return (
-    <Styled.FriendsWrapper>
+    <Wrapper>
       <Topbar />
       <Styled.Friends>
-        <Styled.FriendsList>
-          {friendsData &&
-            friendsData.friends &&
-            friendsData.friends.map((friend, i) => {
-              return (
-                <Friend
-                  key={`${friend.username}-${i}`}
-                  plansQty={friend.inPlans.length}
-                  friendsQty={friend.friends.length}
-                  {...friend}
-                />
-              );
-            })}
-        </Styled.FriendsList>
+        {loading && !friendsData ? (
+          <Spinner>
+            <ClipLoader
+              sizeUnit={'rem'}
+              size={4}
+              color={'#6C8C96'}
+              loading={loading && !friendsData}
+            />
+          </Spinner>
+        ) : friendsData.friends && friendsData.friends.length === 0 ? (
+          <NoContentFull>
+            <FrownIcon />
+            You have not friends
+          </NoContentFull>
+        ) : (
+          <Styled.FriendsList>
+            {friendsData &&
+              friendsData.friends &&
+              friendsData.friends.map((friend, i) => {
+                return (
+                  <Friend
+                    key={`${friend.username}-${i}`}
+                    plansQty={friend.inPlans.length}
+                    friendsQty={friend.friends.length}
+                    {...friend}
+                  />
+                );
+              })}
+          </Styled.FriendsList>
+        )}
       </Styled.Friends>
-    </Styled.FriendsWrapper>
+    </Wrapper>
   );
 };
 

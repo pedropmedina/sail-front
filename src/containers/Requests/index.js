@@ -1,11 +1,13 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { useMutation, useQuery} from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { compareAsc, compareDesc } from 'date-fns';
 
 import Request from '../../components/Request';
 
 import * as Styled from './styled';
+import { NoContent } from '../../sharedStyles/placeholder';
+import { Wrapper } from '../../sharedStyles/wrappers';
 
 import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
 import { ReactComponent as DownIcon } from '../../assets/SVG/chevron-down.svg';
@@ -129,8 +131,39 @@ const Requests = () => {
     return <div>Loading...</div>;
   }
 
+  const sentInviteReqs = filterReqs(
+    prepReqsByType(prepReqsBySent(reqData.requests, meData.user), 'INVITE'),
+    {
+      ...filters,
+      searchText
+    }
+  );
+
+  const receivedInviteReqs = filterReqs(
+    prepReqsByType(prepReqsByReceived(reqData.requests, meData.user), 'INVITE'),
+    {
+      ...filters,
+      searchText
+    }
+  );
+
+  const sentFriendReqs = filterReqs(
+    prepReqsByType(prepReqsBySent(reqData.requests, meData.user), 'FRIEND'),
+    {
+      ...filters,
+      searchText
+    }
+  );
+
+  const receivedFriendReqs = filterReqs(
+    prepReqsByType(prepReqsByReceived(reqData.requests, meData.user), 'FRIEND'),
+    {
+      ...filters,
+      searchText
+    }
+  );
   return (
-    <Styled.RequestsWrapper>
+    <Wrapper>
       {/* filter bar */}
       <Styled.Filterbar>
         {FILTER_SECTIONS.map((section, i) => {
@@ -145,11 +178,11 @@ const Requests = () => {
                         : section.filter
                     } --`}
                 <XIcon
-                  className="icon icon-smallest"
+                  className='icon icon-smallest'
                   onClick={() => handleClearFilter(section.filter)}
                 />{' '}
                 |
-                <DownIcon className="icon icon-small" />
+                <DownIcon className='icon icon-small' />
               </Styled.FilterBtn>
               <Styled.FilterList>
                 {section.list.map((option, i) => {
@@ -167,11 +200,11 @@ const Requests = () => {
           ) : (
             <Styled.FilterContainer key={`${section.filter}-${i}`}>
               <Styled.FilterSearch>
-                <FilterIcon className="icon icon-small" />
+                <FilterIcon className='icon icon-small' />
                 <Styled.SearchInput
-                  type="text"
+                  type='text'
                   value={searchText}
-                  placeholder="Filter by name, plan..."
+                  placeholder='Filter by name, plan...'
                   onChange={handleSearchText}
                 />
               </Styled.FilterSearch>
@@ -187,47 +220,37 @@ const Requests = () => {
           <Styled.LeftSide>
             <Styled.SideHeading>Sent Invites</Styled.SideHeading>
             <Styled.Requests>
-              {filterReqs(
-                prepReqsByType(
-                  prepReqsBySent(reqData.requests, meData.user),
-                  'INVITE'
-                ),
-                {
-                  ...filters,
-                  searchText
-                }
-              ).map(request => (
-                <Request
-                  key={request._id}
-                  request={request}
-                  currentUser={meData.user}
-                  onUpdateRequest={handleUpdateRequest}
-                  onDeleteRequest={handleDeleteRequest}
-                />
-              ))}
+              {sentInviteReqs.length === 0 ? (
+                <NoContent>No sent invites</NoContent>
+              ) : (
+                sentInviteReqs.map(request => (
+                  <Request
+                    key={request._id}
+                    request={request}
+                    currentUser={meData.user}
+                    onUpdateRequest={handleUpdateRequest}
+                    onDeleteRequest={handleDeleteRequest}
+                  />
+                ))
+              )}
             </Styled.Requests>
           </Styled.LeftSide>
           <Styled.RightSide>
             <Styled.SideHeading>Received Invites</Styled.SideHeading>
             <Styled.Requests>
-              {filterReqs(
-                prepReqsByType(
-                  prepReqsByReceived(reqData.requests, meData.user),
-                  'INVITE'
-                ),
-                {
-                  ...filters,
-                  searchText
-                }
-              ).map(request => (
-                <Request
-                  key={request._id}
-                  request={request}
-                  currentUser={meData.user}
-                  onUpdateRequest={handleUpdateRequest}
-                  onDeleteRequest={handleDeleteRequest}
-                />
-              ))}
+              {receivedInviteReqs.length === 0 ? (
+                <NoContent>No received invites</NoContent>
+              ) : (
+                receivedInviteReqs.map(request => (
+                  <Request
+                    key={request._id}
+                    request={request}
+                    currentUser={meData.user}
+                    onUpdateRequest={handleUpdateRequest}
+                    onDeleteRequest={handleDeleteRequest}
+                  />
+                ))
+              )}
             </Styled.Requests>
           </Styled.RightSide>
         </Styled.RequestType>
@@ -237,52 +260,42 @@ const Requests = () => {
           <Styled.LeftSide>
             <Styled.SideHeading>Sent Friend Request</Styled.SideHeading>
             <Styled.Requests>
-              {filterReqs(
-                prepReqsByType(
-                  prepReqsBySent(reqData.requests, meData.user),
-                  'FRIEND'
-                ),
-                {
-                  ...filters,
-                  searchText
-                }
-              ).map(request => (
-                <Request
-                  key={request._id}
-                  request={request}
-                  currentUser={meData.user}
-                  onUpdateRequest={handleUpdateRequest}
-                  onDeleteRequest={handleDeleteRequest}
-                />
-              ))}
+              {sentFriendReqs.length === 0 ? (
+                <NoContent>No sent friend requests</NoContent>
+              ) : (
+                sentFriendReqs.map(request => (
+                  <Request
+                    key={request._id}
+                    request={request}
+                    currentUser={meData.user}
+                    onUpdateRequest={handleUpdateRequest}
+                    onDeleteRequest={handleDeleteRequest}
+                  />
+                ))
+              )}
             </Styled.Requests>
           </Styled.LeftSide>
           <Styled.RightSide>
             <Styled.SideHeading>Received Friend Request</Styled.SideHeading>
             <Styled.Requests>
-              {filterReqs(
-                prepReqsByType(
-                  prepReqsByReceived(reqData.requests, meData.user),
-                  'FRIEND'
-                ),
-                {
-                  ...filters,
-                  searchText
-                }
-              ).map(request => (
-                <Request
-                  key={request._id}
-                  request={request}
-                  currentUser={meData.user}
-                  onUpdateRequest={handleUpdateRequest}
-                  onDeleteRequest={handleDeleteRequest}
-                />
-              ))}
+              {receivedFriendReqs.length === 0 ? (
+                <NoContent>No received friend requests</NoContent>
+              ) : (
+                receivedFriendReqs.map(request => (
+                  <Request
+                    key={request._id}
+                    request={request}
+                    currentUser={meData.user}
+                    onUpdateRequest={handleUpdateRequest}
+                    onDeleteRequest={handleDeleteRequest}
+                  />
+                ))
+              )}
             </Styled.Requests>
           </Styled.RightSide>
         </Styled.RequestType>
       </Styled.RequestTypes>
-    </Styled.RequestsWrapper>
+    </Wrapper>
   );
 };
 

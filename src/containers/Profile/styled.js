@@ -1,9 +1,5 @@
 import styled from 'styled-components/macro';
 
-export const ProfileWrapper = styled.div`
-  overflow-y: auto;
-`;
-
 export const Profile = styled.div`
   display: flex;
   flex-direction: row-reverse;
@@ -93,13 +89,6 @@ export const List = styled.ul`
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-`;
-
-export const NoContent = styled.div`
-  font-size: 1.6rem;
-  color: var(--color-light-grey);
-  background-color: var(--color-less-white);
-  padding: 2rem;
 `;
 
 export const FriendRequestBtn = styled.button`

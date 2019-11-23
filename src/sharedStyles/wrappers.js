@@ -10,3 +10,9 @@ export const PinWrapper = styled(animated.div)`
   background-color: var(--color-less-white);
   box-shadow: 0 1rem 1rem 1rem rgba(0, 0, 0, 0.1);
 `;
+
+export const Wrapper = styled.div`
+  overflow-y: auto;
+  position: relative;
+  padding: 2rem 5rem;
+`;

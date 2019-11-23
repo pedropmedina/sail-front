@@ -1,12 +1,8 @@
 import styled, { css } from 'styled-components/macro';
 
-export const ChatsWrapper = styled.div`
-  padding: 2rem 5rem;
-  overflow-y: auto;
-`;
-
 export const Panels = styled.article`
   height: calc(100% - 15rem);
+
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;

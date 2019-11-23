@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import Avatar from 'react-user-avatar';
 
 import * as Styled from './styled';
+import { Wrapper } from '../../sharedStyles/wrappers'
 
 import MapPreview from '../../components/MapPreview';
 import Chat from '../../components/Chat';
@@ -47,7 +48,7 @@ const PlanView = props => {
   if (!error && loading) return <div>Loading...</div>;
 
   return (
-    <Styled.PlanViewWrapper>
+    <Wrapper>
       <Styled.Panels>
         {/* Panel with plan's details */}
         <Styled.LeftPanel>
@@ -107,7 +108,7 @@ const PlanView = props => {
           </Styled.Chat>
         </Styled.RightPanel>
       </Styled.Panels>
-    </Styled.PlanViewWrapper>
+    </Wrapper>
   );
 };
 
