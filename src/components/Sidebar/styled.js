@@ -1,7 +1,10 @@
 import styled, { css } from 'styled-components/macro';
 import { NavLink } from 'react-router-dom';
 
+import { mediaQueries } from '../../sharedStyles/mediaQueries';
+
 export const Sidebar = styled.nav`
+  grid-row: row-1-start / row-2-end;
   grid-column: col-1-start / col-1-end;
   z-index: 2;
   background-color: var(--color-almost-white);
@@ -10,23 +13,59 @@ export const Sidebar = styled.nav`
       ? '0 1rem 1rem 1rem rgba(0, 0, 0, 0.1)'
       : 'unset'};
 
-  display: grid;
-  grid-template-rows: repeat(20, minmax(max-content, 5vh));
-  grid-template-columns: repeat(6, 16.6%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
   overflow-y: auto;
+
+  > * {
+    flex-basis: 100%;
+  }
+
+  ${mediaQueries.tablet`
+    grid-column: col-1-start / col-2-end;
+    grid-row: row-1-start / row-1-end;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow-y: hidden;
+    overflow-x: auto;
+    padding: 0 1.5rem;
+    box-shadow: 0 .2rem .8rem .2rem rgba(0, 0, 0, 0.1);
+
+    > * {
+      flex-basis: initial;
+    }
+  `}
+
+  ${mediaQueries.mobileM`
+    padding: 0 1rem;
+  `}
 `;
 
 export const Profile = styled.aside`
-  grid-column: 2 / 6;
-  grid-row: 3 / 6;
+  flex-basis: 12rem;
+  height: fit-content;
   color: var(--color-almost-white);
   background-color: var(--color-medium-grey);
   padding: 2rem 1rem;
   border-radius: 2rem;
+
+  ${mediaQueries.tablet`
+    background-color: transparent;
+    padding: 0;
+    margin-right: auto;
+  `}
+
+  ${mediaQueries.mobileM`
+    flex-basis: 6rem;
+  `}
 `;
 
 export const Figure = styled.figure`
   text-align: center;
+
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -34,16 +73,52 @@ export const Figure = styled.figure`
   > *:not(:first-child) {
     flex-basis: 100%;
   }
+
+  ${mediaQueries.tablet`
+    .sidebar-avatar {
+      width: 5rem !important;
+      height: 5rem !important;
+
+      img {
+        border: 0.1rem solid red;
+        width: 5rem !important;
+        height: 5rem !important;
+        border: 0.2rem solid #fff;
+      }
+    }
+  `}
+
+  ${mediaQueries.mobileM`
+    .sidebar-avatar {
+      width: 4rem !important;
+      height: 4rem !important;
+
+      img {
+        border: 0.1rem solid red;
+        width: 4rem !important;
+        height: 4rem !important;
+        border: 0.2rem solid #fff;
+      }
+    }
+  `}
 `;
 
 export const Name = styled.figcaption`
   margin-top: 1rem;
   font-size: 1.2rem;
   text-transform: capitalize;
+
+  ${mediaQueries.tablet`
+    display: none;
+  `}
 `;
 
 export const Location = styled.span`
   font-size: 1.2rem;
+
+  ${mediaQueries.tablet`
+    display: none;
+  `}
 `;
 
 export const ProfileMoreBtn = styled.button`
@@ -56,9 +131,14 @@ export const ProfileMoreBtn = styled.button`
   border-radius: 2rem;
   cursor: pointer;
 
-  > svg {
-    display: block;
-    margin: 0 auto;
+  svg {
+    fill: currentColor;
+    height: 2rem;
+    width: 2rem;
+
+    ${mediaQueries.tablet`
+    display: none;
+  `}
   }
 
   &:hover {
@@ -69,18 +149,27 @@ export const ProfileMoreBtn = styled.button`
 export const List = styled.ul`
   list-style: none;
   font-size: 1.2rem;
-  grid-column: 3 / 5;
-  grid-row: 7 / 15;
+
+  ${mediaQueries.tablet`
+      display: flex;
+      height: 100%;
+    }
+  `}
 `;
 
 export const Item = styled.li`
   display: flex;
   justify-content: center;
+  align-items: center;
   position: relative;
 
   :not(:last-child) {
     margin-bottom: 2rem;
   }
+
+  ${mediaQueries.tablet`
+    margin-bottom: 0 !important;
+  `}
 
   ${({ isDirtyMsg, isDirtyReq }) =>
     (isDirtyMsg || isDirtyReq) &&
@@ -105,11 +194,14 @@ export const Link = styled(NavLink)`
     height: 5rem;
     width: 5rem;
     border-radius: 50%;
-    font-size: 1.6rem;
     text-decoration: none;
     color: var(--color-light-grey);
     position: relative;
     transition: all 0.2s;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     &:hover {
       color: var(--color-almost-white);
@@ -117,16 +209,67 @@ export const Link = styled(NavLink)`
     }
   }
 
-  > svg {
-    display: block;
-    margin: 50% auto 0 auto;
-    transform: translateY(-50%);
+  svg {
+    width: 2.5rem;
+    height: 2.5rem;
+    fill: currentColor;
   }
+
+  ${mediaQueries.tablet`
+    &:link,
+    &:visited {
+      width: 4rem;
+      height: 100%;
+      border-radius: unset;
+      position: relative;
+
+      &::after {
+        content: " ";
+        display: block;
+        color: black;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: .4rem;
+        background-color: transparent;
+      }
+    }
+
+
+    &.selected-navLink {
+      background-color: var(--color-less-white);
+      color: var(--color-medium-grey) !important;
+
+      &::after {
+        background-color: var(--color-medium-grey);
+      }
+    }
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+  `}
+
+  ${mediaQueries.mobileM`
+    &:link,
+    &:visited {
+      width: 3rem;
+    }
+
+    svg {
+      width: 1.7rem;
+      height: 1.7rem;
+    }
+  `}
 `;
 
 export const AuthWrapper = styled.div`
-  grid-row: 19 / 20;
-  grid-column: 3 / 5;
+  ${mediaQueries.tablet`
+    margin-left: auto;
+    height: 100%;
+  `}
 `;
 
 export const AuthBtn = styled.button`
@@ -146,4 +289,32 @@ export const AuthBtn = styled.button`
     background-color: var(--color-light-grey);
     color: var(--color-almost-white);
   }
+
+  svg {
+    width: 2.5rem;
+    height: 2.5rem;
+    fill: currentColor;
+  }
+
+  ${mediaQueries.tablet`
+    width: 4rem !important;
+    height: 100%;
+    border-radius: unset;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+  `}
+
+  ${mediaQueries.mobileM`
+    width: 3rem !important;
+    height: 100%;
+    border-radius: unset;
+
+    svg {
+      width: 1.7rem;
+      height: 1.7rem;
+    }
+  `}
 `;

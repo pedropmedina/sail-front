@@ -55,7 +55,13 @@ const Profile = props => {
   return (
     <Styled.Profile>
       <Styled.Figure>
-        <Avatar size='70' name={fullName} src={image} colors={colors} />
+        <Avatar
+          size='70'
+          name={fullName}
+          src={image}
+          colors={colors}
+          className='sidebar-avatar'
+        />
         <Styled.Name>{fullName}</Styled.Name>
         {address.longitude && address.latitude && (
           <Styled.Location>
@@ -65,7 +71,7 @@ const Profile = props => {
       </Styled.Figure>
       <Styled.ProfileMoreBtn>
         <Link to={`/profile/${username}`}>
-          <MoreIcon className='icon icon-small' />
+          <MoreIcon />
         </Link>
       </Styled.ProfileMoreBtn>
     </Styled.Profile>
@@ -196,6 +202,7 @@ const Sidebar = () => {
     <Styled.Sidebar
       showingCurrentPin={state.currentPin}
       showingDraftPin={state.draftPin && !state.showDraftPinPopup}
+      isVisible={state.toggleSidebar}
     >
       <Profile data={meData.user} />
       <Styled.List>
@@ -209,18 +216,14 @@ const Sidebar = () => {
             }
           >
             <Styled.Link to={`/${text}`} activeClassName='selected-navLink'>
-              <Icon fill='currentColor' className='icon icon-small' />
+              <Icon />
             </Styled.Link>
           </Styled.Item>
         ))}
       </Styled.List>
       <Styled.AuthWrapper>
         <Styled.AuthBtn>
-          {isLoggedIn ? (
-            <LogoutIcon className='icon icon-small' onClick={handleLogout} />
-          ) : (
-            <LoginIcon className='icon icon-small' />
-          )}
+          {isLoggedIn ? <LogoutIcon onClick={handleLogout} /> : <LoginIcon />}
         </Styled.AuthBtn>
       </Styled.AuthWrapper>
     </Styled.Sidebar>

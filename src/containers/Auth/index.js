@@ -79,9 +79,6 @@ const Side = ({
     <Styled.CardSide signUpMode={signUpMode} front={front} back={back}>
       <Styled.Header>
         <Styled.Title>Sail</Styled.Title>
-        <Styled.Subtitle>
-          Make plans with friends and family smooth sailing.
-        </Styled.Subtitle>
       </Styled.Header>
       <Styled.Text>{text}</Styled.Text>
 
@@ -89,7 +86,7 @@ const Side = ({
         <Fields>
           <Field error={errors[username.name]}>
             <Input
-              type="text"
+              type='text'
               name={username.name}
               value={inputs[username.value]}
               placeholder={username.placeholder}
@@ -102,7 +99,7 @@ const Side = ({
         <Fields>
           <Field error={errors[password.name]}>
             <Input
-              type="password"
+              type='password'
               name={password.name}
               value={inputs[password.value]}
               placeholder={password.placeholder}
@@ -119,7 +116,7 @@ const Side = ({
         </Fields>
         <Fields>
           <Field>
-            <Button onClick={onChangeSignUpMode} type="button">
+            <Button onClick={onChangeSignUpMode} type='button'>
               {altHint}
             </Button>
           </Field>

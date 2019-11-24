@@ -14,6 +14,7 @@ import {
   Error
 } from '../../sharedStyles/forms';
 import { Popup } from '../../sharedStyles/popup';
+import { Wrapper } from '../../sharedStyles/wrappers';
 
 import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
 
@@ -53,7 +54,7 @@ const PlanCreate = () => {
   } = usePlan();
 
   return (
-    <Styled.PlanCreateWrapper>
+    <Wrapper>
       <Styled.PlanCreate>
         <Form onSubmit={handleCreatePlan} noValidate>
           <Fields>
@@ -161,7 +162,7 @@ const PlanCreate = () => {
           </Fields>
         </Form>
       </Styled.PlanCreate>
-    </Styled.PlanCreateWrapper>
+    </Wrapper>
   );
 };
 

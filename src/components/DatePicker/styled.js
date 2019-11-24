@@ -72,7 +72,7 @@ export const CalendarHeader = styled.header`
   grid-row: 1 / 2;
 
   display: grid;
-  grid-template-columns: 5rem 1fr 5rem;
+  grid-template-columns: min-content minmax(min-content, 1fr) min-content;
   column-gap: 3rem;
 `;
 
@@ -81,6 +81,7 @@ export const CalendarHeading = styled.h4`
   font-size: 2.4rem;
   font-weight: normal;
   padding: 1rem 0;
+
   display: flex;
   justify-content: space-between;
   align-items: center;

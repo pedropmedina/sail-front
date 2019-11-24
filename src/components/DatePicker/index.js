@@ -219,7 +219,7 @@ const DatePicker = ({ onSelectDate = () => {}, defaultDate = new Date() }) => {
           <Styled.DatePickerSearch>
             <Styled.CalendarIcon />
             <Styled.DatePickerInput
-              placeholder="Pick/Type a day and time (e.g., next Monday at 11:30 AM, Friday, 12/12/2019, ...)"
+              placeholder='Pick/Type a day and time (e.g., next Monday at 11:30 AM, Friday, 12/12/2019, ...)'
               onFocus={handleFocus}
               onBlur={handleBlur}
               value={fieldValue}
@@ -236,7 +236,7 @@ const DatePicker = ({ onSelectDate = () => {}, defaultDate = new Date() }) => {
                     Today
                   </Styled.TodayBtn>
                   <Styled.TimeBtn onClick={handleTimePicker}>
-                    Set Time <ClockIcon className="icon icon-smallest" />
+                    Set Time <ClockIcon className='icon icon-smallest' />
                   </Styled.TimeBtn>
                   <Styled.HeadingDate>
                     <b>{format(date, 'MMMM')}</b>

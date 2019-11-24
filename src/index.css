@@ -15,8 +15,8 @@
 }
 
 .activeLink {
-  border-bottom: 0.3rem solid var(--color-earth-red) !important;
-  color: var(--color-earth-red) !important;
+  border-bottom: 0.3rem solid var(--color-medium-grey) !important;
+  color: var(--color-medium-grey) !important;
 }
 
 .icon {

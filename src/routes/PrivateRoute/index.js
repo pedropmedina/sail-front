@@ -2,11 +2,11 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
-import { getAccessToken } from '../../accessToken';
-
 import * as Styled from './styled';
 
 import Sidebar from '../../components/Sidebar';
+
+import { getAccessToken } from '../../accessToken';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const isLoggedIn = getAccessToken();
@@ -16,13 +16,13 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
       {...rest}
       render={props => (
         <Styled.Container>
-          {!rest.path.includes('create') && <Sidebar />}
+          <Sidebar isVisible={!rest.path.includes('create')} />
           <Component {...props} />
         </Styled.Container>
       )}
     />
   ) : (
-    <Redirect to="/" />
+    <Redirect to='/' />
   );
 };
 
