@@ -65,8 +65,7 @@ const Side = ({
   inputs,
   errors,
   textData,
-  back = false,
-  front = false
+  sideComponent: CardSide
 }) => {
   const {
     text,
@@ -76,7 +75,7 @@ const Side = ({
   } = textData;
 
   return (
-    <Styled.CardSide signUpMode={signUpMode} front={front} back={back}>
+    <CardSide signUpMode={signUpMode}>
       <Styled.Header>
         <Styled.Title>Sail</Styled.Title>
       </Styled.Header>
@@ -122,7 +121,7 @@ const Side = ({
           </Field>
         </Fields>
       </Form>
-    </Styled.CardSide>
+    </CardSide>
   );
 };
 
@@ -240,7 +239,7 @@ const Auth = ({ history }) => {
           onSubmit={handleSubmitForm(login)}
           inputs={inputs}
           errors={errors}
-          front
+          sideComponent={Styled.FrontSide}
         />
         <Side
           textData={SIGNUP_TEXT}
@@ -250,7 +249,7 @@ const Auth = ({ history }) => {
           onSubmit={handleSubmitForm(signup)}
           inputs={inputs}
           errors={errors}
-          back
+          sideComponent={Styled.BackSide}
         />
       </Styled.Card>
     </Styled.Auth>

@@ -14,19 +14,18 @@ export const Auth = styled.div`
 `;
 
 export const Card = styled.div`
-  height: 75vh;
   width: 100%;
   max-width: 45rem;
-  color: #aaa;
-  transition: all 0.2s ease-in-out;
+  border-radius: var(--size-smallest);
   box-shadow: 0 2rem 7rem rgba(0, 0, 0, 0.3);
   transform-style: preserve-3d;
   transform: ${({ signUpMode }) => (signUpMode ? 'rotateY(180deg)' : 'unset')};
-  border-radius: var(--size-smallest);
+  color: #aaa;
+  transition: all 0.2s ease-in-out;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: max-content;
 
   ${mediaQueries.mobileL`
     height: 100vh;
@@ -34,12 +33,22 @@ export const Card = styled.div`
 `;
 
 export const CardSide = styled.div`
-  position: absolute;
-  width: 90%;
   background-color: var(--color-almost-whie);
   border-radius: var(--size-smallest);
   backface-visibility: hidden;
-  transform: ${({ back }) => (back ? 'rotateY(180deg)' : 'rotateY(0deg)')};
+  padding: 5rem 2rem;
+`;
+
+export const BackSide = styled(CardSide)`
+  grid-row: 1 / -1;
+  grid-column: 1 / -1;
+  transform: rotateY(180deg);
+`;
+
+export const FrontSide = styled(CardSide)`
+  grid-row: 1 / -1;
+  grid-column: 1 / -1;
+  transform: rotateY(0deg);
 `;
 
 export const Header = styled.header`
