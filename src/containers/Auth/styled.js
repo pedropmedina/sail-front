@@ -39,7 +39,7 @@ export const CardSide = styled.div`
   background-color: var(--color-almost-whie);
   border-radius: var(--size-smallest);
   backface-visibility: hidden;
-  transform: ${({ back }) => (back ? 'rotateY(180deg)' : 'unset')};
+  transform: ${({ back }) => (back ? 'rotateY(180deg)' : 'rotateY(0deg)')};
 `;
 
 export const Header = styled.header`
