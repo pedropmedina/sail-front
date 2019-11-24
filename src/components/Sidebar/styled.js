@@ -79,8 +79,8 @@ export const Figure = styled.figure`
       width: 5rem !important;
       height: 5rem !important;
 
-      img {
-        border: 0.1rem solid red;
+      img, div {
+        line-height: 4.5rem !important;
         width: 5rem !important;
         height: 5rem !important;
         border: 0.2rem solid #fff;
@@ -170,22 +170,6 @@ export const Item = styled.li`
   ${mediaQueries.tablet`
     margin-bottom: 0 !important;
   `}
-
-  ${({ isDirtyMsg, isDirtyReq }) =>
-    (isDirtyMsg || isDirtyReq) &&
-    css`
-      ::after {
-        content: '';
-        display: inline-block;
-        position: absolute;
-        top: 0.3rem;
-        right: 0.5rem;
-        width: 1.5rem;
-        height: 1.5rem;
-        border-radius: 50%;
-        background-color: var(--color-earth-red);
-      }
-    `}
 `;
 
 export const Link = styled(NavLink)`
@@ -197,7 +181,6 @@ export const Link = styled(NavLink)`
     text-decoration: none;
     color: var(--color-light-grey);
     position: relative;
-    transition: all 0.2s;
 
     display: flex;
     justify-content: center;
@@ -263,6 +246,22 @@ export const Link = styled(NavLink)`
       height: 1.7rem;
     }
   `}
+
+  ${({ isDirtyMsg, isDirtyReq }) =>
+    (isDirtyMsg || isDirtyReq) &&
+    css`
+      ::before {
+        content: '';
+        display: inline-block;
+        position: absolute;
+        top: 0rem;
+        right: 0.1rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 50%;
+        background-color: var(--color-earth-red);
+      }
+    `}
 `;
 
 export const AuthWrapper = styled.div`

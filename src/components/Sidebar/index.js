@@ -207,15 +207,16 @@ const Sidebar = () => {
       <Profile data={meData.user} />
       <Styled.List>
         {ITEMS.map(({ text, icon: Icon }, i) => (
-          <Styled.Item
-            key={i}
-            isDirtyMsg={text === 'chats' && hasUnreadMsg(data.chats)}
-            isDirtyReq={
-              text === 'requests' &&
-              hasModifiedReqs(reqData.requests, meData.user)
-            }
-          >
-            <Styled.Link to={`/${text}`} activeClassName='selected-navLink'>
+          <Styled.Item key={i}>
+            <Styled.Link
+              to={`/${text}`}
+              activeClassName='selected-navLink'
+              isDirtyMsg={text === 'chats' && hasUnreadMsg(data.chats)}
+              isDirtyReq={
+                text === 'requests' &&
+                hasModifiedReqs(reqData.requests, meData.user)
+              }
+            >
               <Icon />
             </Styled.Link>
           </Styled.Item>
