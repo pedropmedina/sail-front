@@ -6,6 +6,8 @@ import { useColors } from '../../hooks';
 
 import * as Styled from './styled';
 
+import { ReactComponent as ArrowUpRightIcon } from '../../assets/SVG/arrow-up-right.svg';
+
 const Friend = ({
   username = '',
   image = '',
@@ -32,7 +34,9 @@ const Friend = ({
             <Styled.StatHeading>Friends</Styled.StatHeading>
             <Styled.StatData>{friendsQty}</Styled.StatData>
           </Styled.Stat>
-          <Styled.Link to={`/profile/${username}`}>View Profile</Styled.Link>
+          <Styled.Link to={`/profile/${username}`}>
+            View Profile <ArrowUpRightIcon />
+          </Styled.Link>
         </Styled.Stats>
       </Styled.StatsRow>
     </Styled.Friend>

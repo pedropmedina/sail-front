@@ -1,5 +1,4 @@
 import styled from 'styled-components/macro';
-import { Link } from 'react-router-dom';
 import { RoundButton } from '../../sharedStyles/buttons';
 
 export const Plan = styled.li`
@@ -22,30 +21,6 @@ export const Plan = styled.li`
   }
 `;
 
-export const PlanLink = styled(Link)`
-  :link,
-  :visited,
-  :active {
-    color: var(--color-medium-grey);
-    display: flex;
-    align-items: center;
-  }
-
-  :hover {
-    color: var(--color-dark-grey);
-
-    h3 {
-      color: inherit;
-    }
-  }
-
-  svg {
-    fill: currentColor;
-    width: 2rem;
-    height: 2rem;
-  }
-`;
-
 export const Title = styled.h3`
   font-size: 2rem;
   font-weight: normal;
@@ -56,6 +31,9 @@ export const Title = styled.h3`
 export const Description = styled.p`
   font-size: 1.4rem;
   color: var(--color-light-grey);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 export const Date = styled(Description)`

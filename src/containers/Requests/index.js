@@ -34,9 +34,11 @@ const Requests = () => {
   });
   const [searchText, setSearchText] = useState('');
 
-  const { error: reqError, loading: reqLoading, data: reqData } = useQuery(
-    GET_REQUESTS_QUERY
-  );
+  const {
+    error: reqError,
+    loading: reqLoading,
+    data: reqData
+  } = useQuery(GET_REQUESTS_QUERY, { fetchPolicy: 'cache-and-network' });
   const { error: meError, loading: meLoading, data: meData } = useQuery(
     ME_QUERY
   );

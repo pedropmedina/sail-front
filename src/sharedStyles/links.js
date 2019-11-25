@@ -11,18 +11,32 @@ export const Link = styled(L)`
   }
 `;
 
-// export const Link = styled(DefaultLink)`
-//   :link,
-//   :visited,
-//   :active {
-//     flex-basis: 70%;
-//     padding: 0.5rem 2rem;
-//     font-size: 1.2rem;
-//     background-color: var(--color-medium-grey);
-//     transition: all 0.2s;
-//   }
+export const DefaultLink = styled(L)`
+  :link,
+  :visited,
+  :active {
+    color: var(--color-medium-grey);
+    display: flex;
+    align-items: center;
+  }
 
-//   :hover {
-//     background-color: var(--color-dark-grey);
-//   }
-// `;
+  :hover {
+    color: var(--color-dark-grey);
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p {
+      color: inherit;
+    }
+  }
+
+  svg {
+    fill: currentColor;
+    width: 2rem;
+    height: 2rem;
+  }
+`;

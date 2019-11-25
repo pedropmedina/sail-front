@@ -5,6 +5,7 @@ import Avatar from 'react-user-avatar';
 import { useMutation } from '@apollo/react-hooks';
 
 import * as Styled from './styled';
+import { DefaultLink } from '../../sharedStyles/links';
 
 import { ReactComponent as CalendarIcon } from '../../assets/SVG/calendar.svg';
 import { ReactComponent as TrashIcon } from '../../assets/SVG/trash.svg';
@@ -51,10 +52,10 @@ const Plan = ({ _id, title, description, date, participants, location }) => {
           css={mapCss}
         />
       </Styled.Location>
-      <Styled.PlanLink to={`/plan/${_id}`}>
+      <DefaultLink to={`/plan/${_id}`}>
         <Styled.Title>{title}</Styled.Title>
         <ArrowUpRightIcon />
-      </Styled.PlanLink>
+      </DefaultLink>
       <Styled.Description>{description}</Styled.Description>
       <Styled.Date>
         <CalendarIcon />

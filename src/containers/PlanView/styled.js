@@ -14,13 +14,12 @@ export const Panels = styled.article`
 `;
 
 export const Panel = styled.section`
-  flex: 1 1 auto;
+  flex: 1 1 40rem;
   padding: 2rem;
 `;
 
 export const LeftPanel = styled(Panel)`
   overflow-y: auto;
-  min-width: 50%;
 `;
 
 export const RightPanel = styled(Panel)`
@@ -38,12 +37,15 @@ export const Title = styled.h1`
 `;
 
 export const Description = styled.p`
+  width: 100%;
   font-size: 1.2rem;
+  color: var(--color-light-grey);
 `;
 
 export const Date = styled.p`
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   margin-bottom: 1rem;
+  color: var(--color-light-grey);
 `;
 
 export const Users = styled.section`

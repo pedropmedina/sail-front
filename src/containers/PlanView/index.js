@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import Avatar from 'react-user-avatar';
 
 import * as Styled from './styled';
-import { Wrapper } from '../../sharedStyles/wrappers'
+import { Wrapper } from '../../sharedStyles/wrappers';
 
 import MapPreview from '../../components/MapPreview';
 import Chat from '../../components/Chat';

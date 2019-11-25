@@ -80,11 +80,16 @@ export const Figure = styled.figure`
       width: 5rem !important;
       height: 5rem !important;
 
-      img, div {
+      > div {
         line-height: 4.5rem !important;
         width: 5rem !important;
         height: 5rem !important;
         border: 0.2rem solid #fff;
+
+        img {
+          width: 100% !important;
+          height: 100% !important;
+        }
       }
     }
   `}
@@ -94,11 +99,16 @@ export const Figure = styled.figure`
       width: 4rem !important;
       height: 4rem !important;
 
-      img {
-        border: 0.1rem solid red;
+      > div {
+        line-height: 3.5rem !important;
         width: 4rem !important;
         height: 4rem !important;
         border: 0.2rem solid #fff;
+
+        img {
+          width: 100% !important;
+          height: 100% !important;
+        }
       }
     }
   `}
@@ -289,6 +299,7 @@ export const AuthBtn = styled.button`
   color: var(--color-light-grey);
   cursor: pointer;
   transition: all 0.2s;
+  outline: unset;
 
   &:hover {
     background-color: var(--color-light-grey);

@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro';
-import { Link as L } from 'react-router-dom';
+import { DefaultLink } from '../../sharedStyles/links';
 
 export const Friend = styled.li`
   font-size: 1.6rem;
@@ -55,22 +55,12 @@ export const StatData = styled.p`
   color: var(--color-dark-grey);
 `;
 
-export const Link = styled(L)`
+export const Link = styled(DefaultLink)`
   :link,
   :visited,
   :active {
     flex-basis: 70%;
-    padding: 0.5rem 2rem;
-    text-decoration: none;
-    font-size: 1.2rem;
-    background-color: var(--color-medium-grey);
-    color: var(--color-almost-white);
-    text-align: center;
-    transition: all 0.2s;
-  }
-
-  :hover {
-    background-color: var(--color-dark-grey);
+    align-self: flex-end;
   }
 `;
 
