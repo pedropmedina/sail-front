@@ -1,5 +1,6 @@
 import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
+import { RoundButton } from '../../sharedStyles/buttons';
 
 export const Plan = styled.li`
   width: 50rem;
@@ -24,29 +25,102 @@ export const Plan = styled.li`
 export const PlanLink = styled(Link)`
   :link,
   :visited,
-  :active,
-  :hover {
-    text-decoration: none;
-    display: block;
-    color: inherit;
+  :active {
+    color: var(--color-medium-grey);
+    display: flex;
+    align-items: center;
   }
 
-  > * {
-    padding: 0.5rem;
+  :hover {
+    color: var(--color-dark-grey);
+
+    h3 {
+      color: inherit;
+    }
+  }
+
+  svg {
+    fill: currentColor;
+    width: 2rem;
+    height: 2rem;
   }
 `;
 
 export const Title = styled.h3`
-  font-size: 1.6rem;
+  font-size: 2rem;
   font-weight: normal;
   color: var(--color-medium-grey);
+  margin-right: 0.5rem;
 `;
 
 export const Description = styled.p`
-  font-size: 1.2rem;
+  font-size: 1.4rem;
+  color: var(--color-light-grey);
 `;
 
-export const Date = styled(Description)``;
+export const Date = styled(Description)`
+  display: flex;
+  align-items: center;
+
+  svg {
+    fill: currentColor;
+    height: 2rem;
+    width: 2rem;
+    margin-right: 0.5rem;
+  }
+`;
+
+export const Footer = styled.div`
+  display: flex;
+`;
+
+export const ActionButtons = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+`;
+
+export const ActionButton = styled(RoundButton)`
+  background-color: transparent;
+  color: var(--color-light-grey);
+  margin: 0.5rem;
+  box-shadow: unset;
+  height: 4rem;
+  width: 4rem;
+  transition: all 0.2s;
+  border: 0.1rem solid var(--color-light-grey);
+
+  :hover {
+    background-color: var(--color-light-grey);
+    color: var(--color-almost-white);
+  }
+
+  svg {
+    fill: currentColor;
+    width: 2rem;
+    height: 2rem;
+  }
+`;
+
+export const ActionButtonDelete = styled(ActionButton)`
+  color: var(--color-earth-red);
+  border: 0.1rem solid var(--color-earth-red);
+
+  :hover {
+    background-color: var(--color-earth-red);
+    color: var(--color-almost-white);
+  }
+`;
+
+export const ActionButtonEdit = styled(ActionButton)`
+  color: var(--color-medium-grey);
+  border: 0.1rem solid var(--color-medium-grey);
+
+  :hover {
+    background-color: var(--color-medium-grey);
+    color: var(--color-almost-white);
+  }
+`;
 
 export const Participants = styled.div`
   display: flex;

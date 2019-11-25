@@ -16,7 +16,7 @@ export const CREATE_DRAFT_PLAN = 'CREATE_DRAFT_PLAN';
 export const UPDATE_DRAFT_PLAN = 'UPDATE_DRAFT_PLAN';
 export const DELETE_DRAFT_PLAN = 'DELETE_DRAFT_PLAN';
 
-const DEFAULT_DRAFT_PLAN = {
+export const DEFAULT_DRAFT_PLAN = {
   title: '',
   description: '',
   location: '',

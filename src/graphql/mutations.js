@@ -90,6 +90,22 @@ export const CREATE_PLAN_MUTATION = gql`
   ${planFragments.default}
 `;
 
+export const UPDATE_PLAN_MUTATION = gql`
+  mutation UpdatePlan($input: UpdatePlanInput!) {
+    plan: updatePlan(input: $input) {
+      ...defaultPlanFields
+    }
+  }
+  ${planFragments.default}
+`;
+
+export const DELETE_PLAN_MUTATION = gql`
+  mutation DeletePlan($planId: ID!) {
+    plan: deletePlan(planId: $planId)
+  }
+`;
+
+// Like and and unlike pins
 export const LIKE_PIN = gql`
   mutation LikePin($pinId: ID!) {
     likePin(pinId: $pinId)

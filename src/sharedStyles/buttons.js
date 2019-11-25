@@ -35,6 +35,7 @@ export const RoundButton = styled.button`
   box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
   cursor: pointer;
   outline: unset;
+
   display: flex;
   align-items: center;
   justify-content: center;

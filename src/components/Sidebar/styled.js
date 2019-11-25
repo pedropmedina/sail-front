@@ -1,3 +1,4 @@
+import React from 'react';
 import styled, { css } from 'styled-components/macro';
 import { NavLink } from 'react-router-dom';
 
@@ -172,9 +173,13 @@ export const Item = styled.li`
   `}
 `;
 
-export const Link = styled(NavLink)`
+// Avoid customs props from being passed down to third party DOM element
+export const Link = styled((
+  { isDirtyReq, isDirtyMsg, children, ...rest } // eslint-disable-line
+) => <NavLink {...rest}>{children}</NavLink>)`
   &:link,
-  &:visited {
+  &:visited,
+  &:active {
     height: 5rem;
     width: 5rem;
     border-radius: 50%;
@@ -200,7 +205,8 @@ export const Link = styled(NavLink)`
 
   ${mediaQueries.tablet`
     &:link,
-    &:visited {
+    &:visited,
+    &:active {
       width: 4rem;
       height: 100%;
       border-radius: unset;

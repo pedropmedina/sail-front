@@ -40,14 +40,15 @@ const Plans = ({ history }) => {
               loading={loading && !data}
             />
           </Spinner>
-        ) : data.plans && data.plans.length === 0 ? (
+        ) : data && data.plans && data.plans.length === 0 ? (
           <NoContentFull>
             <FrownIcon />
             You have no plans, create one
           </NoContentFull>
         ) : (
           <Styled.PlansList>
-            {data.plans &&
+            {data &&
+              data.plans &&
               data.plans.map(plan => <Plan key={plan._id} {...plan} />)}
           </Styled.PlansList>
         )}
