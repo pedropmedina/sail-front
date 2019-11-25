@@ -7,7 +7,6 @@ import { useMutation } from '@apollo/react-hooks';
 import * as Styled from './styled';
 
 import { ReactComponent as CalendarIcon } from '../../assets/SVG/calendar.svg';
-import { ReactComponent as EditIcon } from '../../assets/SVG/edit-2.svg';
 import { ReactComponent as TrashIcon } from '../../assets/SVG/trash.svg';
 import { ReactComponent as ArrowUpRightIcon } from '../../assets/SVG/arrow-up-right.svg';
 
@@ -17,8 +16,6 @@ import { useReverseGeocode, useColors } from '../../hooks';
 
 import { DELETE_PLAN_MUTATION } from '../../graphql/mutations';
 import { GET_PLANS_QUERY } from '../../graphql/queries';
-
-import history from '../../history';
 
 const mapCss = `
   height: 25rem;
@@ -76,11 +73,6 @@ const Plan = ({ _id, title, description, date, participants, location }) => {
           ))}
         </Styled.Participants>
         <Styled.ActionButtons>
-          <Styled.ActionButtonEdit
-            onClick={() => history.push(`/edit-plan/${_id}`)}
-          >
-            <EditIcon />
-          </Styled.ActionButtonEdit>
           <Styled.ActionButtonDelete
             onClick={event => handleDeletePlan(event, _id)}
           >

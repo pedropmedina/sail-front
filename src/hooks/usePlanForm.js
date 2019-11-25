@@ -41,17 +41,14 @@ export const usePlanForm = () => {
   const { rows: descriptionRows, handleTextareaChange } = useTextarea();
 
   useEffect(() => {
-    if (draftPlan) {
+    if (!draftPlan) {
+      dispatch({ type: CREATE_DRAFT_PLAN });
+    } else {
       draftPlan.title && handleSetInput('title', draftPlan.title);
       draftPlan.description &&
         handleSetInput('description', draftPlan.description);
     }
-  }, [draftPlan]);
-
-  const initDraftPlan = plan => {
-    dispatch({ type: CREATE_DRAFT_PLAN });
-    dispatch({ type: UPDATE_DRAFT_PLAN, payload: plan });
-  };
+  }, []);
 
   const handleSelectGeocoding = async result => {
     const [longitude, latitude] = result.center;
@@ -168,7 +165,6 @@ export const usePlanForm = () => {
     handleCancelLocation,
     handleInvites,
     handleSelectDate,
-    handleSelectGeocoding,
-    initDraftPlan
+    handleSelectGeocoding
   };
 };

@@ -1,5 +1,5 @@
 /* eslint-disable no-console, react/prop-types */
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Marker } from 'react-map-gl';
 import { ClipLoader } from 'react-spinners';
 
@@ -25,8 +25,6 @@ import DatePicker from '../../components/DatePicker';
 import FriendsPicker from '../../components/FriendsPicker';
 import MapPreview from '../../components/MapPreview';
 
-import { DEFAULT_DRAFT_PLAN } from '../../reducer';
-
 const datePickerCss = `
   font-size: 1.6rem;
   background-color: var(--color-less-white);
@@ -37,11 +35,7 @@ const mapPreviewCss = `
   width: 100%;
 `;
 
-const PlanForm = ({
-  handleSave,
-  loading,
-  defaultDraftPlan = DEFAULT_DRAFT_PLAN
-}) => {
+const PlanForm = ({ handleSave, loading }) => {
   const { state } = useContext(Context);
   const { viewport, currentPin } = state;
   const {
@@ -55,13 +49,8 @@ const PlanForm = ({
     handleInvites,
     handleSelectDate,
     handleSelectGeocoding,
-    handleSubmit,
-    initDraftPlan
+    handleSubmit
   } = usePlanForm();
-
-  useEffect(() => {
-    initDraftPlan(defaultDraftPlan);
-  }, []);
 
   return (
     <Styled.PlanForm>

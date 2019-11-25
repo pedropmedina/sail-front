@@ -19,7 +19,6 @@ import App from './containers/App';
 import Auth from './containers/Auth';
 import Plans from './containers/Plans';
 import PlanCreate from './containers/PlanCreate';
-import PlanEdit from './containers/PlanEdit';
 import PlanView from './containers/PlanView';
 import Pins from './containers/Pins';
 import Chats from './containers/Chats';
@@ -32,7 +31,6 @@ const PRIVATE_ROUTES = [
   { path: '/map', component: App },
   { path: '/plans', component: Plans },
   { path: '/create-plan', component: PlanCreate },
-  { path: '/edit-plan/:planId', component: PlanEdit },
   { path: '/pins', component: Pins },
   { path: '/chats', component: Chats },
   { path: '/friends', component: Friends },
