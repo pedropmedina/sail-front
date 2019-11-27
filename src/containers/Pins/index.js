@@ -2,17 +2,17 @@
 import styled from 'styled-components/macro'; // eslint-disable-line
 import React, { useEffect, useState, useContext } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { ClipLoader } from 'react-spinners';
 
 import * as Styled from './styled';
 import { TopbarButton, RoundButton } from '../../sharedStyles/buttons';
-import { NoContent, Spinner } from '../../sharedStyles/placeholder';
+import { NoContent } from '../../sharedStyles/placeholder';
 import { Wrapper } from '../../sharedStyles/wrappers';
 
 import { ReactComponent as PlusIcon } from '../../assets/SVG/plus.svg';
 import { ReactComponent as HeartIcon } from '../../assets/SVG/heart.svg';
 
 import Topbar from '../../components/Topbar';
+import Loader from '../../components/Loader';
 
 import { ME_QUERY } from '../../graphql/queries';
 import { UNLIKE_PIN } from '../../graphql/mutations';
@@ -135,58 +135,48 @@ const Pins = ({ history }) => {
     history.push('/map');
   };
 
+  if (loading || loadingGeocode || !data)
+    return <Loader loading={loading || loadingGeocode} />;
+
   return (
     <Wrapper>
-      {loading || loadingGeocode ? (
-        <Spinner>
-          <ClipLoader
-            sizeUnit={'rem'}
-            size={4}
-            color={'#6C8C96'}
-            loading={true}
-          />
-        </Spinner>
-      ) : (
-        <>
-          <Topbar>
-            <TopbarButton onClick={() => handleCreate(state.viewport)}>
-              <PlusIcon className='icon icon-small' />
-            </TopbarButton>
-          </Topbar>
-          <Styled.Panels>
-            {/* Left Panel displaying pins authored by current user */}
-            <Styled.LeftPanel>
-              <Styled.PanelHeading>My Pins</Styled.PanelHeading>
-              {data.user.myPins.length === 0 ? (
-                <NoContent>No pins created</NoContent>
-              ) : (
-                <PinsList
-                  pins={data && data.user ? data.user.myPins : []}
-                  addresses={addresses}
-                  handleUnlikePin={handleUnlikePin}
-                  hanldeVisitLink={hanldeVisitLink}
-                  type='MINE'
-                />
-              )}
-            </Styled.LeftPanel>
-            {/* Right Panel displaying pins liked by current user */}
-            <Styled.RightPanel>
-              <Styled.PanelHeading>Liked Pins</Styled.PanelHeading>
-              {data.user.likedPins.length === 0 ? (
-                <NoContent>No pins liked</NoContent>
-              ) : (
-                <PinsList
-                  pins={data && data.user ? data.user.likedPins : []}
-                  addresses={addresses}
-                  handleUnlikePin={handleUnlikePin}
-                  hanldeVisitLink={hanldeVisitLink}
-                  type='LIKED'
-                />
-              )}
-            </Styled.RightPanel>
-          </Styled.Panels>
-        </>
-      )}
+      <Topbar>
+        <TopbarButton onClick={() => handleCreate(state.viewport)}>
+          <PlusIcon className='icon icon-small' />
+        </TopbarButton>
+      </Topbar>
+      <Styled.Panels>
+        {/* Left Panel displaying pins authored by current user */}
+        <Styled.LeftPanel>
+          <Styled.PanelHeading>My Pins</Styled.PanelHeading>
+          {data.user.myPins.length === 0 ? (
+            <NoContent>No pins created</NoContent>
+          ) : (
+            <PinsList
+              pins={data && data.user ? data.user.myPins : []}
+              addresses={addresses}
+              handleUnlikePin={handleUnlikePin}
+              hanldeVisitLink={hanldeVisitLink}
+              type='MINE'
+            />
+          )}
+        </Styled.LeftPanel>
+        {/* Right Panel displaying pins liked by current user */}
+        <Styled.RightPanel>
+          <Styled.PanelHeading>Liked Pins</Styled.PanelHeading>
+          {data.user.likedPins.length === 0 ? (
+            <NoContent>No pins liked</NoContent>
+          ) : (
+            <PinsList
+              pins={data && data.user ? data.user.likedPins : []}
+              addresses={addresses}
+              handleUnlikePin={handleUnlikePin}
+              hanldeVisitLink={hanldeVisitLink}
+              type='LIKED'
+            />
+          )}
+        </Styled.RightPanel>
+      </Styled.Panels>
     </Wrapper>
   );
 };

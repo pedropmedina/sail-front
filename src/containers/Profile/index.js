@@ -2,10 +2,9 @@
 import React from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import Avatar from 'react-user-avatar';
-import { ClipLoader } from 'react-spinners';
 
 import * as Styled from './styled';
-import { NoContent, Spinner } from '../../sharedStyles/placeholder';
+import { NoContent } from '../../sharedStyles/placeholder';
 import { Wrapper } from '../../sharedStyles/wrappers';
 
 import { ReactComponent as UserPlusIcon } from '../../assets/SVG/user-plus.svg';
@@ -13,26 +12,18 @@ import { ReactComponent as UserPlusIcon } from '../../assets/SVG/user-plus.svg';
 import Topbar from '../../components/Topbar';
 import Plan from '../../components/Plan';
 import Friend from '../../components/Friend';
+import Loader from '../../components/Loader';
 
-import { GET_PROFILE_QUERY, ME_QUERY } from '../../graphql/queries';
+import { GET_PROFILE_ME_QUERY } from '../../graphql/queries';
 import { CREATE_REQUEST_MUTATION } from '../../graphql/mutations';
 
 import { useColors } from '../../hooks';
 
 const Profile = props => {
-  const {
-    error: profileError,
-    loading: profileLoading,
-    data: { profile }
-  } = useQuery(GET_PROFILE_QUERY, {
-    variables: { username: props.match.params.username },
-    fetchPolicy: 'cache-and-network'
+  const { loading, data } = useQuery(GET_PROFILE_ME_QUERY, {
+    variables: { username: props.match.params.username }
   });
-  const {
-    error: meError,
-    loading: meLoading,
-    data: { user }
-  } = useQuery(ME_QUERY, { fetchPolicy: 'cache-and-network' });
+
   const [createRequest] = useMutation(CREATE_REQUEST_MUTATION, {
     ignoreResults: true
   });
@@ -70,110 +61,99 @@ const Profile = props => {
         )
       : true;
 
+  if (loading || !data) return <Loader loading={loading} />;
+
   return (
     <Wrapper>
-      {!profileError &&
-      !meError &&
-      (profileLoading || meLoading || (!profile && !user)) ? (
-        <Spinner>
-          <ClipLoader
-            sizeUnit={'rem'}
-            size={4}
-            color={'#6C8C96'}
-            loading={profileLoading || meLoading}
+      <Topbar>
+        {!showSendRequestBtn(data.profile, data.me) && (
+          <Styled.FriendRequestBtn
+            onClick={() => handleFriendRequest(data.profile.username, 'FRIEND')}
+          >
+            <UserPlusIcon className='icon icon-small' />
+            Send Friend Request
+          </Styled.FriendRequestBtn>
+        )}
+      </Topbar>
+      {/* Wraps profile details and content */}
+      <Styled.Profile>
+        {/* Profile details  */}
+        <Styled.ProfileDetails>
+          <Avatar
+            size='200'
+            name={data.profile.fullName}
+            src={data.profile.image}
+            className='UserAvatar--square'
+            colors={colors}
           />
-        </Spinner>
-      ) : (
-        <>
-          <Topbar>
-            {!showSendRequestBtn(profile, user) && (
-              <Styled.FriendRequestBtn
-                onClick={() => handleFriendRequest(profile.username, 'FRIEND')}
-              >
-                <UserPlusIcon className='icon icon-small' />
-                Send Friend Request
-              </Styled.FriendRequestBtn>
+          <Styled.Name>{showNameOrUsername(data.profile)}</Styled.Name>
+          <Styled.Stats>
+            <Styled.Stat>
+              <Styled.StatHeading>Plans</Styled.StatHeading>
+              <Styled.StatData>{data.profile.inPlans.length}</Styled.StatData>
+            </Styled.Stat>
+            <Styled.Stat>
+              <Styled.StatHeading>Friend</Styled.StatHeading>
+              <Styled.StatData>{data.profile.friends.length}</Styled.StatData>
+            </Styled.Stat>
+          </Styled.Stats>
+          <Styled.Email>{data.profile.email}</Styled.Email>
+          {data.profile.address.longitude && data.profile.address.latitude && (
+            <Styled.Location>
+              {data.profile.address.place}, {data.profile.address.region}
+            </Styled.Location>
+          )}
+          <Styled.About>
+            {data.profile.about ? data.profile.about : 'Add your about'}
+          </Styled.About>
+        </Styled.ProfileDetails>
+        {/* Content */}
+        <Styled.Content>
+          {/* Plans */}
+          <Styled.ContentPlans>
+            <Styled.ContentHeading>Plans</Styled.ContentHeading>
+            {data.profile.inPlans.length <= 0 ? (
+              <NoContent>
+                {`${showNameOrUsername(
+                  data.profile
+                )} is yet to be part of any plans.`}
+              </NoContent>
+            ) : data.profile.inPlans.filter(hidePlans(data.me)).length <= 0 ? (
+              <NoContent>
+                {`${showNameOrUsername(data.profile)}'s plans are private.`}
+              </NoContent>
+            ) : (
+              <Styled.List>
+                {data.profile.inPlans.filter(hidePlans(data.me)).map(plan => (
+                  <Plan key={plan._id} {...plan} me={data.me} />
+                ))}
+              </Styled.List>
             )}
-          </Topbar>
-          {/* Wraps profile details and content */}
-          <Styled.Profile>
-            {/* Profile details  */}
-            <Styled.ProfileDetails>
-              <Avatar
-                size='200'
-                name={profile.fullName}
-                src={profile.image}
-                className='UserAvatar--square'
-                colors={colors}
-              />
-              <Styled.Name>{showNameOrUsername(profile)}</Styled.Name>
-              <Styled.Stats>
-                <Styled.Stat>
-                  <Styled.StatHeading>Plans</Styled.StatHeading>
-                  <Styled.StatData>{profile.inPlans.length}</Styled.StatData>
-                </Styled.Stat>
-                <Styled.Stat>
-                  <Styled.StatHeading>Friend</Styled.StatHeading>
-                  <Styled.StatData>{profile.friends.length}</Styled.StatData>
-                </Styled.Stat>
-              </Styled.Stats>
-              <Styled.Email>{profile.email}</Styled.Email>
-              {profile.address.longitude && profile.address.latitude && (
-                <Styled.Location>
-                  {profile.address.place}, {profile.address.region}
-                </Styled.Location>
-              )}
-              <Styled.About>
-                {profile.about ? profile.about : 'Add your about'}
-              </Styled.About>
-            </Styled.ProfileDetails>
-            {/* Content */}
-            <Styled.Content>
-              {/* Plans */}
-              <Styled.ContentPlans>
-                <Styled.ContentHeading>Plans</Styled.ContentHeading>
-                {profile.inPlans.length <= 0 ? (
-                  <NoContent>
-                    {`${showNameOrUsername(
-                      profile
-                    )} is yet to be part of any plans.`}
-                  </NoContent>
-                ) : profile.inPlans.filter(hidePlans(user)).length <= 0 ? (
-                  <NoContent>
-                    {`${showNameOrUsername(profile)}'s plans are private.`}
-                  </NoContent>
-                ) : (
-                  <Styled.List>
-                    {profile.inPlans.filter(hidePlans(user)).map(plan => (
-                      <Plan key={plan._id} {...plan} />
-                    ))}
-                  </Styled.List>
-                )}
-              </Styled.ContentPlans>
-              {/* Friends */}
-              <Styled.ContentFriends>
-                <Styled.ContentHeading>Friends</Styled.ContentHeading>
-                {profile.friends.length > 0 ? (
-                  <Styled.List>
-                    {profile.friends.map((friend, i) => (
-                      <Friend
-                        key={`${friend.username}-${i}`}
-                        plansQty={friend.inPlans.length}
-                        friendsQty={friend.friends.length}
-                        {...friend}
-                      />
-                    ))}
-                  </Styled.List>
-                ) : (
-                  <NoContent>
-                    {`${showNameOrUsername(profile)} hasn't added any friends.`}
-                  </NoContent>
-                )}
-              </Styled.ContentFriends>
-            </Styled.Content>
-          </Styled.Profile>
-        </>
-      )}
+          </Styled.ContentPlans>
+          {/* Friends */}
+          <Styled.ContentFriends>
+            <Styled.ContentHeading>Friends</Styled.ContentHeading>
+            {data.profile.friends.length > 0 ? (
+              <Styled.List>
+                {data.profile.friends.map((friend, i) => (
+                  <Friend
+                    key={`${friend.username}-${i}`}
+                    plansQty={friend.inPlans.length}
+                    friendsQty={friend.friends.length}
+                    {...friend}
+                  />
+                ))}
+              </Styled.List>
+            ) : (
+              <NoContent>
+                {`${showNameOrUsername(
+                  data.profile
+                )} hasn't added any friends.`}
+              </NoContent>
+            )}
+          </Styled.ContentFriends>
+        </Styled.Content>
+      </Styled.Profile>
     </Wrapper>
   );
 };

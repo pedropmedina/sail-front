@@ -9,11 +9,13 @@ import * as Styled from './styled';
 import { NoContent } from '../../sharedStyles/placeholder';
 import { Wrapper } from '../../sharedStyles/wrappers';
 
+import Loader from '../../components/Loader';
+
 import { ReactComponent as FilterIcon } from '../../assets/SVG/filter.svg';
 import { ReactComponent as DownIcon } from '../../assets/SVG/chevron-down.svg';
 import { ReactComponent as XIcon } from '../../assets/SVG/x.svg';
 
-import { GET_REQUESTS_QUERY, ME_QUERY } from '../../graphql/queries';
+import { GET_REQUESTS_ME_QUERY } from '../../graphql/queries';
 import {
   UPDATE_REQUEST_MUTATION,
   DELETE_REQUEST_MUTATION
@@ -34,17 +36,12 @@ const Requests = () => {
   });
   const [searchText, setSearchText] = useState('');
 
-  const {
-    error: reqError,
-    loading: reqLoading,
-    data: reqData
-  } = useQuery(GET_REQUESTS_QUERY, { fetchPolicy: 'cache-and-network' });
-  const { error: meError, loading: meLoading, data: meData } = useQuery(
-    ME_QUERY
-  );
+  const { loading, data } = useQuery(GET_REQUESTS_ME_QUERY);
+
   const [updateRequest] = useMutation(UPDATE_REQUEST_MUTATION, {
     ignoreResults: true
   });
+
   const [deleteRequest] = useMutation(DELETE_REQUEST_MUTATION, {
     ignoreResults: true
   });
@@ -84,7 +81,7 @@ const Requests = () => {
 
   const filterReqs = (reqs, { reqType, status, searchText, relevance }) =>
     reqs
-      .filter(filterByNoPending(meData.user))
+      .filter(filterByNoPending(data.me))
       .filter(filterByType(reqType))
       .filter(filterByStatus(status))
       .filter(filterBySearch(searchText))
@@ -129,12 +126,10 @@ const Requests = () => {
     });
   };
 
-  if (((!meError || !reqError) && (meLoading || reqLoading)) || !reqData) {
-    return <div>Loading...</div>;
-  }
+  if (loading || !data) return <Loader loading={loading} />;
 
   const sentInviteReqs = filterReqs(
-    prepReqsByType(prepReqsBySent(reqData.requests, meData.user), 'INVITE'),
+    prepReqsByType(prepReqsBySent(data.requests, data.me), 'INVITE'),
     {
       ...filters,
       searchText
@@ -142,7 +137,7 @@ const Requests = () => {
   );
 
   const receivedInviteReqs = filterReqs(
-    prepReqsByType(prepReqsByReceived(reqData.requests, meData.user), 'INVITE'),
+    prepReqsByType(prepReqsByReceived(data.requests, data.me), 'INVITE'),
     {
       ...filters,
       searchText
@@ -150,7 +145,7 @@ const Requests = () => {
   );
 
   const sentFriendReqs = filterReqs(
-    prepReqsByType(prepReqsBySent(reqData.requests, meData.user), 'FRIEND'),
+    prepReqsByType(prepReqsBySent(data.requests, data.me), 'FRIEND'),
     {
       ...filters,
       searchText
@@ -158,12 +153,13 @@ const Requests = () => {
   );
 
   const receivedFriendReqs = filterReqs(
-    prepReqsByType(prepReqsByReceived(reqData.requests, meData.user), 'FRIEND'),
+    prepReqsByType(prepReqsByReceived(data.requests, data.me), 'FRIEND'),
     {
       ...filters,
       searchText
     }
   );
+
   return (
     <Wrapper>
       {/* filter bar */}
@@ -229,7 +225,7 @@ const Requests = () => {
                   <Request
                     key={request._id}
                     request={request}
-                    currentUser={meData.user}
+                    currentUser={data.me}
                     onUpdateRequest={handleUpdateRequest}
                     onDeleteRequest={handleDeleteRequest}
                   />
@@ -247,7 +243,7 @@ const Requests = () => {
                   <Request
                     key={request._id}
                     request={request}
-                    currentUser={meData.user}
+                    currentUser={data.me}
                     onUpdateRequest={handleUpdateRequest}
                     onDeleteRequest={handleDeleteRequest}
                   />
@@ -269,7 +265,7 @@ const Requests = () => {
                   <Request
                     key={request._id}
                     request={request}
-                    currentUser={meData.user}
+                    currentUser={data.me}
                     onUpdateRequest={handleUpdateRequest}
                     onDeleteRequest={handleDeleteRequest}
                   />
@@ -287,7 +283,7 @@ const Requests = () => {
                   <Request
                     key={request._id}
                     request={request}
-                    currentUser={meData.user}
+                    currentUser={data.me}
                     onUpdateRequest={handleUpdateRequest}
                     onDeleteRequest={handleDeleteRequest}
                   />

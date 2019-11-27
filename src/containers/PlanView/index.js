@@ -9,18 +9,18 @@ import { Wrapper } from '../../sharedStyles/wrappers';
 
 import MapPreview from '../../components/MapPreview';
 import Chat from '../../components/Chat';
+import Loader from '../../components/Loader';
 
 import { GET_PLAN_QUERY } from '../../graphql/queries';
 import { CREATE_MESSAGE_MUTATION } from '../../graphql/mutations';
 
 import { useLazyReverseGeocode, useColors } from '../../hooks';
-
 const mapCss = `
   height: 25rem;
 `;
 
 const PlanView = props => {
-  const { error, loading, data } = useQuery(GET_PLAN_QUERY, {
+  const { loading, data } = useQuery(GET_PLAN_QUERY, {
     variables: { planId: props.match.params.planId },
     fetchPolicy: 'cache-and-network'
   });
@@ -45,7 +45,7 @@ const PlanView = props => {
     await createMessage({ variables: { input: { conversation, content } } });
   };
 
-  if (!error && loading) return <div>Loading...</div>;
+  if (loading || !data) return <Loader loading={loading} />;
 
   return (
     <Wrapper>

@@ -31,10 +31,10 @@ const Map = ({
     <Styled.Map>
       <ReactMapGL
         {...viewport}
-        width="100%"
-        height="100vh"
+        width='100%'
+        height='100vh'
         mapboxApiAccessToken={process.env.MAPBOX_TOKEN}
-        mapStyle="mapbox://styles/mapbox/light-v9"
+        mapStyle='mapbox://styles/mapbox/light-v9'
         onViewportChange={onViewportChange}
       >
         {/* Map controls */}
@@ -47,26 +47,25 @@ const Map = ({
         </Styled.Controls>
 
         {/* Add markers for all existing pins */}
-        {pinsData &&
-          pinsData.pins.map(pin => {
-            const { _id, longitude, latitude } = pin;
-            return (
-              <Marker
-                key={_id}
-                longitude={longitude}
-                latitude={latitude}
-                offsetLeft={-24 / 2}
-                offsetTop={-24}
-              >
-                <PinIcon
-                  className="icon icon-small pin-icon"
-                  onClick={() => onClickMarker(pin)}
-                  onMouseEnter={() => onMouseEnterMarker(pin)}
-                  onMouseLeave={onMouseLeaveMarker}
-                />
-              </Marker>
-            );
-          })}
+        {pinsData.map(pin => {
+          const { _id, longitude, latitude } = pin;
+          return (
+            <Marker
+              key={_id}
+              longitude={longitude}
+              latitude={latitude}
+              offsetLeft={-24 / 2}
+              offsetTop={-24}
+            >
+              <PinIcon
+                className='icon icon-small pin-icon'
+                onClick={() => onClickMarker(pin)}
+                onMouseEnter={() => onMouseEnterMarker(pin)}
+                onMouseLeave={onMouseLeaveMarker}
+              />
+            </Marker>
+          );
+        })}
 
         {/* Show popup on hover over pin */}
         {popupPin && (
@@ -95,7 +94,7 @@ const Map = ({
             offsetLeft={-24 / 2}
             offsetTop={-24}
           >
-            <PinIcon className="icon icon-small draft-pin-icon-draggable" />
+            <PinIcon className='icon icon-small draft-pin-icon-draggable' />
           </Marker>
         )}
 
@@ -103,7 +102,7 @@ const Map = ({
         {showDraftPinPopup && (
           <>
             <Marker {...draftPinPopup} offsetLeft={-24 / 2} offsetTop={-24}>
-              <PinIcon className="icon icon-small draf-pin-icon" />
+              <PinIcon className='icon icon-small draf-pin-icon' />
             </Marker>
 
             <Styled.CustomPopup
@@ -111,15 +110,15 @@ const Map = ({
               latitude={draftPinPopup.latitude}
               offsetLeft={12}
               offsetTop={-12}
-              anchor="left"
+              anchor='left'
               closeButton={false}
             >
               <p>Create new pin</p>
               <button onClick={onClickDraftPinPopup}>
-                <PlusIcon className="icon icon-smallest" />
+                <PlusIcon className='icon icon-smallest' />
               </button>
               <button onClick={() => onClickDraftPinPopup('cancel')}>
-                <XIcon className="icon icon-smallest" />
+                <XIcon className='icon icon-smallest' />
               </button>
             </Styled.CustomPopup>
           </>

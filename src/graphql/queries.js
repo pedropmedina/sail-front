@@ -138,3 +138,75 @@ export const GET_CONVERSATION_QUERY = gql`
   }
   ${conversationFragments.default}
 `;
+
+// multiple queries
+export const GET_PLANS_ME_QUERY = gql`
+  query GetPlansMeQuery {
+    plans: getPlans {
+      ...defaultPlanFields
+    }
+    me {
+      ...defaultUserFields
+    }
+  }
+  ${planFragments.default}
+  ${userFragments.default}
+`;
+
+export const GET_CONVERSATIONS_ME_QUERY = gql`
+  query GetConversationsMeQuery {
+    chats: getConversations {
+      ...defaultConversationFields
+    }
+    me {
+      ...defaultUserFields
+    }
+  }
+  ${conversationFragments.default}
+  ${userFragments.default}
+`;
+
+export const GET_REQUESTS_ME_QUERY = gql`
+  query GetRequestsMeQuery {
+    requests: getRequests {
+      ... on FriendRequest {
+        ...defaultRequestFields
+      }
+      ... on InviteRequest {
+        ...inviteRequestFields
+      }
+    }
+    me {
+      ...defaultUserFields
+    }
+  }
+  ${requestFragments.default}
+  ${requestFragments.invite}
+  ${userFragments.default}
+`;
+
+export const GET_PINS_ME_QUERY = gql`
+  query GetPinsMeQuery {
+    pins: getPins {
+      ...defaultPinFields
+    }
+    me {
+      ...defaultUserFields
+    }
+  }
+  ${pinFragments.default}
+  ${userFragments.default}
+`;
+
+export const GET_PROFILE_ME_QUERY = gql`
+  query GetProfileMeQuery($userId: ID, $username: String) {
+    profile: getUser(userId: $userId, username: $username) {
+      ...profileFields
+    }
+    me {
+      ...defaultUserFields
+    }
+  }
+  ${userFragments.profile}
+  ${userFragments.default}
+`;

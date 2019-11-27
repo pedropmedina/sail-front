@@ -446,6 +446,9 @@ export const userFragments = {
         description
         date
         private
+        author {
+          username
+        }
         participants {
           firstName
           lastName

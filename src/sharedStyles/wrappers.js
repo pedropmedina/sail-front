@@ -15,4 +15,5 @@ export const Wrapper = styled.div`
   overflow-y: auto;
   position: relative;
   padding: 2rem 5rem;
+  position: relative;
 `;

@@ -118,7 +118,7 @@ const ChatCreate = ({
         ) : data ? (
           <Styled.FriendsList>
             {data.people
-              .filter(friend => friend.username !== me.user.username)
+              .filter(friend => friend.username !== me.username)
               .map((friend, i) => (
                 <Styled.FriendItem
                   key={`${friend.username}-${i}`}

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { formatDistanceToNow } from 'date-fns';
-import ClipLoader from 'react-spinners/ClipLoader';
 import Avatar from 'react-user-avatar';
 
 import { useColors } from '../../hooks';
@@ -18,11 +17,11 @@ import { ReactComponent as FrownIcon } from '../../assets/SVG/frown.svg';
 
 import ChatCreate from '../../components/ChatCreate';
 import Chat from '../../components/Chat';
+import Loader from '../../components/Loader';
 
 import {
-  GET_CONVERSATIONS_QUERY,
   GET_CONVERSATION_QUERY,
-  ME_QUERY
+  GET_CONVERSATIONS_ME_QUERY
 } from '../../graphql/queries';
 import {
   CREATE_MESSAGE_MUTATION,
@@ -32,16 +31,10 @@ import {
 const Chats = () => {
   const [searchText, setSearchText] = useState('');
   const [showChatCreate, setShowChatCreate] = useState(false);
-  const { error, loading, data } = useQuery(GET_CONVERSATIONS_QUERY, {
-    fetchPolicy: 'cache-and-network'
-  });
-  const { error: meError, loading: meLoading, data: meData } = useQuery(
-    ME_QUERY
+  const { loading, data } = useQuery(GET_CONVERSATIONS_ME_QUERY);
+  const [getChat, { loading: chatLoading, data: chatData }] = useLazyQuery(
+    GET_CONVERSATION_QUERY
   );
-  const [
-    getChat,
-    { error: chatError, loading: chatLoading, data: chatData }
-  ] = useLazyQuery(GET_CONVERSATION_QUERY);
   const [createMessage] = useMutation(CREATE_MESSAGE_MUTATION);
   const [updateConversationUnreadCount] = useMutation(
     UPDATE_CONVERSATION_UNREADCOUNT_MUTATION,
@@ -157,8 +150,7 @@ const Chats = () => {
       : participants;
   };
 
-  if ((!error || !meError) && (loading || meLoading))
-    return <div>Loading...</div>;
+  if (loading || !data) return <Loader loading={loading} />;
 
   return (
     <Wrapper>
@@ -183,7 +175,7 @@ const Chats = () => {
       </Styled.Topbar>
       <Styled.Panels>
         {/* List of current Chats */}
-        {data.chats.length === 0 ? (
+        {data.chats.length === 0 && !showChatCreate ? (
           <NoContentFull>
             <FrownIcon />
             You have no chats, create one
@@ -205,7 +197,7 @@ const Chats = () => {
                     <Styled.ChatPreview>
                       <Styled.ChatPreviewLeft>
                         <Styled.ChatParticipantsImgs>
-                          {prepareParticipantsData(chat, meData.user).map(
+                          {prepareParticipantsData(chat, data.me).map(
                             participant => {
                               const { username, image, fullName } = participant;
                               return (
@@ -230,7 +222,7 @@ const Chats = () => {
                           </Styled.ChatPlan>
                         )}
                         <Styled.ChatParticipantsNames>
-                          {prepareParticipantsData(chat, meData.user).map(
+                          {prepareParticipantsData(chat, data.me).map(
                             (participant, i, arr) => {
                               const { email, fullName } = participant;
                               return !(arr.length - 1 === i) ? (
@@ -271,14 +263,9 @@ const Chats = () => {
             </Styled.LeftPanel>
             {!showChatCreate ? (
               <Styled.RightPanel>
-                {(!chatError && chatLoading) || !chatData ? (
+                {chatLoading || !chatData ? (
                   <Styled.NoChatSelected>
-                    <ClipLoader
-                      sizeUnit={'rem'}
-                      size={3}
-                      color={'#6C8C96'}
-                      loading={chatLoading}
-                    />
+                    <Loader loading={chatLoading} />
                   </Styled.NoChatSelected>
                 ) : (
                   <Chat
@@ -296,7 +283,7 @@ const Chats = () => {
                     filterOutPlanChats(data.chats)
                   )}
                   onCreateMessage={handleNewMessage}
-                  me={meData}
+                  me={data.me}
                 />
               </Styled.RightPanel>
             )}

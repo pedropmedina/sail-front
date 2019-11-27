@@ -14,7 +14,7 @@ import Context from '../../context';
 import {
   GET_PINS_QUERY,
   GET_PIN_BY_COORDS,
-  ME_QUERY
+  GET_PINS_ME_QUERY
 } from '../../graphql/queries';
 import {
   COMMENT_CREATED_SUBSCRIPTION,
@@ -40,6 +40,7 @@ import Map from '../../components/Map';
 import PinQuery from '../../components/PinQuery';
 import PinMutation from '../../components/PinMutation';
 import GeocodingSearch from '../../components/GeocodingSearch';
+import Loader from '../../components/Loader';
 
 const App = props => {
   const client = useApolloClient();
@@ -53,10 +54,9 @@ const App = props => {
     viewport,
     draftPlan
   } = state;
-  const { error, loading, data: pinsData } = useQuery(GET_PINS_QUERY);
-  const { error: meError, loading: meLoading, data: meData } = useQuery(
-    ME_QUERY
-  );
+
+  const { loading, data } = useQuery(GET_PINS_ME_QUERY);
+
   const transitions = useTransition([draftPin || currentPin], null, {
     from: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
     enter: { opacity: 1, zIndex: 1, transform: 'translate3d(0%,0,0)' },
@@ -207,8 +207,7 @@ const App = props => {
       ? PinQuery
       : null;
 
-  if ((!error && loading) || (!meError && meLoading))
-    return <div>Loading...</div>;
+  if (loading || !data) return <Loader loading={loading} />;
 
   return (
     <Styled.App>
@@ -223,13 +222,13 @@ const App = props => {
       {Pin &&
         transitions.map(
           ({ item, key, props }) =>
-            item && <Pin key={key} style={props} me={meData.user} />
+            item && <Pin key={key} style={props} me={data.me} />
         )}
       {/* Map view  */}
       <Map
         viewport={viewport}
         draftPin={draftPin}
-        pinsData={pinsData}
+        pinsData={data.pins}
         onViewportChange={handleViewportChange}
         onDragEnd={handleDragEnd}
         onClickMarker={handleClickMarker}

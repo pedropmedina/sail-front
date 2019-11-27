@@ -22,7 +22,16 @@ const mapCss = `
   height: 25rem;
 `;
 
-const Plan = ({ _id, title, description, date, participants, location }) => {
+const Plan = ({
+  _id,
+  title,
+  description,
+  date,
+  participants,
+  location,
+  author,
+  me
+}) => {
   const { longitude: lon, latitude: lat } = location;
   const { name, longitude, latitude } = useReverseGeocode(lon, lat);
   const { colors } = useColors();
@@ -41,6 +50,8 @@ const Plan = ({ _id, title, description, date, participants, location }) => {
       }
     });
   };
+
+  const isAuthor = (username1, username2) => username1 === username2;
 
   return (
     <Styled.Plan>
@@ -74,11 +85,13 @@ const Plan = ({ _id, title, description, date, participants, location }) => {
           ))}
         </Styled.Participants>
         <Styled.ActionButtons>
-          <Styled.ActionButtonDelete
-            onClick={event => handleDeletePlan(event, _id)}
-          >
-            <TrashIcon />
-          </Styled.ActionButtonDelete>
+          {isAuthor(me.username, author.username) && (
+            <Styled.ActionButtonDelete
+              onClick={event => handleDeletePlan(event, _id)}
+            >
+              <TrashIcon />
+            </Styled.ActionButtonDelete>
+          )}
         </Styled.ActionButtons>
       </Styled.Footer>
     </Styled.Plan>

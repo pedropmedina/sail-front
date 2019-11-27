@@ -2,17 +2,16 @@
 import React, { useContext, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
-import { ClipLoader } from 'react-spinners';
 
 import * as Styled from './styled';
 import { Fields, Field, Form, Input, Textarea } from '../../sharedStyles/forms';
 import { SaveButton, CancelButton } from '../../sharedStyles/buttons';
 import { Wrapper } from '../../sharedStyles/wrappers';
-import { Spinner } from '../../sharedStyles/placeholder';
 
 import GeocodingSearch from '../../components/GeocodingSearch';
 import MapPreview from '../../components/MapPreview';
 import Upload from '../../components/Upload';
+import Loader from '../../components/Loader';
 
 import history from '../../history';
 import { deleteAccessToken } from '../../accessToken';
@@ -87,16 +86,7 @@ const renderFormButtons = ({ isLoadingUpdate, handleCancel }) => {
     <>
       <Field style={{ flex: '0 1 25%' }}>
         <SaveButton disabled={isLoadingUpdate}>
-          {isLoadingUpdate ? (
-            <ClipLoader
-              sizeUnit={'rem'}
-              size={3}
-              color={'#fff'}
-              loading={isLoadingUpdate}
-            />
-          ) : (
-            'Save'
-          )}
+          {isLoadingUpdate ? <Loader loading={isLoadingUpdate} /> : 'Save'}
         </SaveButton>
       </Field>
       <Field style={{ flex: '0 1 25%' }}>
@@ -331,14 +321,6 @@ const Settings = () => {
   const [editAddress, setEditAddress] = useState(false);
   const client = useApolloClient();
 
-  const spinnerCss = `
-  display: block;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-`;
-
   const handleClickGeocodingResult = result => {
     handleAddress(result);
     handleEditAddress(false);
@@ -404,81 +386,71 @@ const Settings = () => {
     history.push('/');
   };
 
+  if (loading) return <Loader loading={loading} />;
+
   return (
     <Wrapper>
-      {loading ? (
-        <Spinner>
-          <ClipLoader
-            sizeUnit={'rem'}
-            size={4}
-            color={'#6C8C96'}
-            loading={loading}
-            css={spinnerCss}
-          />
-        </Spinner>
-      ) : (
-        <Styled.InnerWrapper>
-          {/* Nav bar */}
-          <Styled.SettingsNav>
-            <Styled.Nav>
-              <Styled.NavList>
-                <Styled.NavItem>
-                  <Styled.NavLink
-                    exact
-                    to={`${url}`}
-                    activeClassName='activeLink'
-                  >
-                    User Details
-                  </Styled.NavLink>
-                </Styled.NavItem>
-                <Styled.NavItem>
-                  <Styled.NavLink
-                    to={`${url}/privacy`}
-                    activeClassName='activeLink'
-                  >
-                    Privacy
-                  </Styled.NavLink>
-                </Styled.NavItem>
-              </Styled.NavList>
-            </Styled.Nav>
-          </Styled.SettingsNav>
-          <Switch>
-            <Route exact path={`${path}`}>
-              <UserDetails
-                inputs={inputs}
-                handleChange={handleChange}
-                handleSubmit={handleSubmit}
-                handleCancel={handleCancel}
-                handleImageDelete={handleImageDelete}
-                handleAddress={handleAddress}
-                rows={rows}
-                file={file}
-                handleFileChange={handleFileChange}
-                handleFileDelete={handleFileDelete}
-                handleFileUpload={handleFileUpload}
-                handleDrag={handleDrag}
-                handleDragIn={handleDragIn}
-                handleDragOut={handleDragOut}
-                handleDrop={handleDrop}
-                dragging={dragging}
-                viewport={viewport}
-                isLoadingUpdate={loadingDetailsUpdate}
-                handleUpdateUser={handleUpdateUser}
-                handleClickGeocodingResult={handleClickGeocodingResult}
-                editAddress={editAddress}
-                onEditAddress={handleEditAddress}
-              />
-            </Route>
-            <Route path={`${path}/privacy`}>
-              <Privacy
-                {...privacyHook}
-                isLoadingUpdate={loadingPrivacyUpdate}
-                handleUpdatePrivacy={handleUpdatePrivacy}
-              />
-            </Route>
-          </Switch>
-        </Styled.InnerWrapper>
-      )}
+      <Styled.InnerWrapper>
+        {/* Nav bar */}
+        <Styled.SettingsNav>
+          <Styled.Nav>
+            <Styled.NavList>
+              <Styled.NavItem>
+                <Styled.NavLink
+                  exact
+                  to={`${url}`}
+                  activeClassName='activeLink'
+                >
+                  User Details
+                </Styled.NavLink>
+              </Styled.NavItem>
+              <Styled.NavItem>
+                <Styled.NavLink
+                  to={`${url}/privacy`}
+                  activeClassName='activeLink'
+                >
+                  Privacy
+                </Styled.NavLink>
+              </Styled.NavItem>
+            </Styled.NavList>
+          </Styled.Nav>
+        </Styled.SettingsNav>
+        <Switch>
+          <Route exact path={`${path}`}>
+            <UserDetails
+              inputs={inputs}
+              handleChange={handleChange}
+              handleSubmit={handleSubmit}
+              handleCancel={handleCancel}
+              handleImageDelete={handleImageDelete}
+              handleAddress={handleAddress}
+              rows={rows}
+              file={file}
+              handleFileChange={handleFileChange}
+              handleFileDelete={handleFileDelete}
+              handleFileUpload={handleFileUpload}
+              handleDrag={handleDrag}
+              handleDragIn={handleDragIn}
+              handleDragOut={handleDragOut}
+              handleDrop={handleDrop}
+              dragging={dragging}
+              viewport={viewport}
+              isLoadingUpdate={loadingDetailsUpdate}
+              handleUpdateUser={handleUpdateUser}
+              handleClickGeocodingResult={handleClickGeocodingResult}
+              editAddress={editAddress}
+              onEditAddress={handleEditAddress}
+            />
+          </Route>
+          <Route path={`${path}/privacy`}>
+            <Privacy
+              {...privacyHook}
+              isLoadingUpdate={loadingPrivacyUpdate}
+              handleUpdatePrivacy={handleUpdatePrivacy}
+            />
+          </Route>
+        </Switch>
+      </Styled.InnerWrapper>
     </Wrapper>
   );
 };
