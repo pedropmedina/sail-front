@@ -1,6 +1,5 @@
 /* eslint-disable no-console, react/prop-types */
 import React, { useContext } from 'react';
-import { Marker } from 'react-map-gl';
 import { ClipLoader } from 'react-spinners';
 
 import Context from '../../context';
@@ -8,7 +7,6 @@ import { usePlanForm } from '../../hooks';
 
 import * as Styled from './styled';
 import { SaveButton, CancelButton } from '../../sharedStyles/buttons';
-import { Popup } from '../../sharedStyles/popup';
 import {
   Fields,
   Field,
@@ -17,8 +15,6 @@ import {
   Textarea,
   Error
 } from '../../sharedStyles/forms';
-
-import { ReactComponent as PinIcon } from '../../assets/SVG/map-pin.svg';
 
 import GeocodingSearch from '../../components/GeocodingSearch';
 import DatePicker from '../../components/DatePicker';
@@ -89,24 +85,10 @@ const PlanForm = ({ handleSave, loading }) => {
                   {...viewport}
                   showEditButton={currentPin}
                   onEditMap={handleCancelLocation}
-                >
-                  <Marker
-                    longitude={currentPin.longitude}
-                    latitude={currentPin.latitude}
-                  >
-                    <PinIcon className='icon icon-small pin-icon' />
-                  </Marker>
-                  <Popup
-                    longitude={currentPin.longitude}
-                    latitude={currentPin.latitude}
-                    offsetLeft={24}
-                    offsetTop={12}
-                    anchor='left'
-                    closeButton={false}
-                  >
-                    <p style={{ width: '20rem' }}>{draftPlan.placeName}</p>
-                  </Popup>
-                </MapPreview>
+                  longitude={currentPin.longitude}
+                  latitude={currentPin.latitude}
+                  name={draftPlan.placeName}
+                />
               </Styled.MapPreviewWrapper>
             ) : (
               <GeocodingSearch

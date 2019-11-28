@@ -38,9 +38,7 @@ const Requests = () => {
 
   const { loading, data } = useQuery(GET_REQUESTS_ME_QUERY);
 
-  const [updateRequest] = useMutation(UPDATE_REQUEST_MUTATION, {
-    ignoreResults: true
-  });
+  const [updateRequest] = useMutation(UPDATE_REQUEST_MUTATION);
 
   const [deleteRequest] = useMutation(DELETE_REQUEST_MUTATION, {
     ignoreResults: true

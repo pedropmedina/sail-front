@@ -31,7 +31,10 @@ import {
 const Chats = () => {
   const [searchText, setSearchText] = useState('');
   const [showChatCreate, setShowChatCreate] = useState(false);
-  const { loading, data } = useQuery(GET_CONVERSATIONS_ME_QUERY);
+  const { loading, data } = useQuery(GET_CONVERSATIONS_ME_QUERY, {
+    fetchPolicy: 'cache-and-network'
+  });
+
   const [getChat, { loading: chatLoading, data: chatData }] = useLazyQuery(
     GET_CONVERSATION_QUERY
   );

@@ -1,6 +1,8 @@
 import styled from 'styled-components/macro';
 import { animated } from 'react-spring';
 
+import { mediaQueries } from './mediaQueries';
+
 export const PinWrapper = styled(animated.div)`
   position: absolute;
   top: 0;
@@ -16,4 +18,10 @@ export const Wrapper = styled.div`
   position: relative;
   padding: 2rem 5rem;
   position: relative;
+`;
+
+export const FormWrapper = styled(Wrapper)`
+  ${mediaQueries.tablet`
+    padding: 2rem 0;
+  `}
 `;

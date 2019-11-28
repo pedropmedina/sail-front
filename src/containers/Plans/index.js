@@ -17,7 +17,9 @@ import Topbar from '../../components/Topbar';
 import Loader from '../../components/Loader';
 
 const Plans = ({ history }) => {
-  const { loading, data } = useQuery(GET_PLANS_ME_QUERY);
+  const { loading, data } = useQuery(GET_PLANS_ME_QUERY, {
+    fetchPolicy: 'cache-and-network'
+  });
 
   const handleCreate = () => {
     history.push('/create-plan');

@@ -30,7 +30,7 @@ const MapPreview = ({
             right: '2rem',
             zIndex: 1
           }}
-          type="button"
+          type='button'
           onClick={onEditMap}
         >
           <EditIcon />
@@ -38,25 +38,25 @@ const MapPreview = ({
       )}
       <StaticMap
         mapboxApiAccessToken={process.env.MAPBOX_TOKEN}
-        mapStyle="mapbox://styles/mapbox/light-v9"
-        width="100%"
-        height="100%"
+        mapStyle='mapbox://styles/mapbox/light-v9'
+        width='100%'
+        height='100%'
         longitude={longitude}
         latitude={latitude}
         zoom={zoom}
       >
         <Marker longitude={longitude} latitude={latitude}>
-          <PinIcon className="icon icon-small pin-icon" />
+          <PinIcon className='icon icon-small pin-icon' />
         </Marker>
         <Popup
           longitude={longitude}
           latitude={latitude}
           offsetLeft={24}
           offsetTop={12}
-          anchor="left"
+          anchor='left'
           closeButton={false}
         >
-          <p style={{ width: '15rem' }}>{name}</p>
+          <p style={{ width: '20rem' }}>{name}</p>
         </Popup>
         {children}
       </StaticMap>

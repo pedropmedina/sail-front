@@ -3,6 +3,8 @@ import { Popup as P } from 'react-map-gl';
 
 export const Popup = styled(P)`
   z-index: 1;
+  width: 100%;
+  max-width: 15rem;
 
   .mapboxgl-popup-content {
     background-color: var(--color-medium-grey);

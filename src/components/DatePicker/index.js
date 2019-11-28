@@ -231,24 +231,27 @@ const DatePicker = ({ onSelectDate = () => {}, defaultDate = new Date() }) => {
             <Styled.DatePickerCalendar showCalendar={showCalendar}>
               {/* Header */}
               <Styled.CalendarHeader>
+                <Styled.CalendarArrows>
+                  <Styled.LeftArrow onClick={handlePrevMonth}>
+                    <LeftArrowIcon />
+                  </Styled.LeftArrow>
+                  <Styled.RightArrow onClick={handleNextMonth}>
+                    <RightArrowIcon />
+                  </Styled.RightArrow>
+                </Styled.CalendarArrows>
+
                 <Styled.CalendarHeading>
                   <Styled.TodayBtn onClick={handleBackToToday}>
                     Today
                   </Styled.TodayBtn>
                   <Styled.TimeBtn onClick={handleTimePicker}>
-                    Set Time <ClockIcon className='icon icon-smallest' />
+                    Set Time <ClockIcon />
                   </Styled.TimeBtn>
                   <Styled.HeadingDate>
                     <b>{format(date, 'MMMM')}</b>
                     {format(date, 'yyyy')}
                   </Styled.HeadingDate>
                 </Styled.CalendarHeading>
-                <Styled.LeftArrow onClick={handlePrevMonth}>
-                  <LeftArrowIcon />
-                </Styled.LeftArrow>
-                <Styled.RightArrow onClick={handleNextMonth}>
-                  <RightArrowIcon />
-                </Styled.RightArrow>
               </Styled.CalendarHeader>
               {/* Dates */}
               <Styled.CalendarDates>
@@ -282,9 +285,6 @@ const DatePicker = ({ onSelectDate = () => {}, defaultDate = new Date() }) => {
           {!!showTimePicker && (
             <Styled.DatePickerTime showTimePicker={showTimePicker}>
               <Styled.TimeHeader>
-                <Styled.TimeHeading>
-                  {format(selectedDate, 'h:mm a')}
-                </Styled.TimeHeading>
                 <Styled.PinMinutes>
                   {PIN_COLORS.map(({ time, color }) => (
                     <Styled.PinMinuteBtn
@@ -296,6 +296,9 @@ const DatePicker = ({ onSelectDate = () => {}, defaultDate = new Date() }) => {
                     </Styled.PinMinuteBtn>
                   ))}
                 </Styled.PinMinutes>
+                <Styled.TimeHeading>
+                  {format(selectedDate, 'h:mm a')}
+                </Styled.TimeHeading>
               </Styled.TimeHeader>
               <Styled.TimeHours>
                 <Styled.SectionHeading>Hours</Styled.SectionHeading>

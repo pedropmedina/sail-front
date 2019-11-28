@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components/macro';
 
 import { ReactComponent as Icon } from '../../assets/SVG/calendar.svg';
+import { mediaQueries } from '../../sharedStyles/mediaQueries';
 
 export const DatePickerWrapper = styled.div`
   width: 100%;
@@ -70,20 +71,15 @@ export const DatePickerCalendar = styled(Box)`
 
 export const CalendarHeader = styled.header`
   grid-row: 1 / 2;
-
-  display: grid;
-  grid-template-columns: min-content minmax(min-content, 1fr) min-content;
-  column-gap: 3rem;
 `;
 
 export const CalendarHeading = styled.h4`
-  grid-column: 2 / span 1;
   font-size: 2.4rem;
   font-weight: normal;
   padding: 1rem 0;
 
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap-reverse;
   align-items: center;
 `;
 
@@ -92,7 +88,7 @@ export const HeadingBtn = styled.span`
   border: none;
   background-color: transparent;
   color: var(--color-medium-grey);
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   padding: 1rem 2rem;
   cursor: pointer;
   outline: none;
@@ -102,6 +98,14 @@ export const HeadingBtn = styled.span`
   :hover {
     background-color: var(--color-lightest-grey);
   }
+
+  > * {
+    flex: 1;
+  }
+
+  ${mediaQueries.tablet`
+    font-size: 1.4rem;
+  `}
 `;
 
 export const TodayBtn = styled(HeadingBtn)`
@@ -119,31 +123,48 @@ export const TodayBtn = styled(HeadingBtn)`
 `;
 
 export const TimeBtn = styled(HeadingBtn)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   svg {
-    vertical-align: sub;
+    width: 2rem;
+    height: 2rem;
+    margin-left: 1rem;
+    fill: currentColor;
   }
 `;
 
 export const HeadingDate = styled.span`
-  flex-basis: 50%;
   color: var(--color-medium-grey);
-  text-align: right;
+  margin-left: auto;
 
   > b {
     font-weight: 700;
     margin-right: 1rem;
   }
+
+  ${mediaQueries.tablet`
+    font-size: 1.8rem;
+    margin-right: auto;
+  `}
+`;
+
+export const CalendarArrows = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 export const LeftArrow = styled.span`
-  grid-column: 1 / span 1;
-  grid-row: 1 / -1;
   border: none;
   background-color: inherit;
   color: var(--color-medium-grey);
   font-size: 2.4rem;
   cursor: pointer;
   outline: none;
+  margin-right: 2rem;
+  padding: 1rem;
+  border-radius: 50%;
 
   display: flex;
   align-items: center;
@@ -155,11 +176,13 @@ export const LeftArrow = styled.span`
 
   > svg {
     fill: currentColor;
+    width: 2rem;
+    height: 2rem;
   }
 `;
 
 export const RightArrow = styled(LeftArrow)`
-  grid-column: 3 / span 1;
+  margin-right: 0;
 `;
 
 export const CalendarDates = styled.section`
@@ -179,11 +202,15 @@ export const CalendarWeekdays = styled.section`
 export const CalendarWeekday = styled.span`
   color: var(--color-dark-grey);
   font-size: 1.6rem;
+
+  ${mediaQueries.tablet`
+    font-size: 1.4rem;
+  `}
 `;
 
 export const CalendarDays = styled.section`
   display: grid;
-  grid-template-rows: repeat(6, minmax(min-content, 8rem));
+  grid-template-rows: repeat(6, min-content);
   grid-template-columns: repeat(7, minmax(min-content, 1fr));
   border-left: 0.1rem solid var(--color-light-grey);
   border-top: 0.1rem solid var(--color-light-grey);
@@ -242,24 +269,19 @@ export const DatePickerTime = styled(Box)`
 export const TimeHeader = styled.header`
   grid-row: 1 / span 1;
 
-  display: grid;
-  grid-template-columns: 2rem 1fr max-content;
-  grid-template-rows: 1fr;
-  column-gap: 1rem;
+  display: flex;
+  flex-wrap: wrap-reverse;
+  align-items: center;
 `;
 
 export const TimeHeading = styled.h4`
-  grid-column: 3 / span 1;
-  line-height: 4rem;
   color: var(--color-dark-grey);
   font-size: 2.4rem;
   font-weight: 500;
+  margin-left: auto;
 `;
 
-export const PinMinutes = styled.span`
-  grid-column: 2 / span 1;
-  grid-row: 1 / span 1;
-`;
+export const PinMinutes = styled.span``;
 
 export const PinMinuteBtn = styled(TodayBtn)`
   ::after {

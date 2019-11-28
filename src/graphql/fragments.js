@@ -235,6 +235,7 @@ export const requestFragments = {
         _id
         title
         description
+        date
       }
       author {
         firstName

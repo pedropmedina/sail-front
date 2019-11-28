@@ -2,7 +2,9 @@ import styled from 'styled-components/macro';
 import { RoundButton } from '../../sharedStyles/buttons';
 
 export const Plan = styled.li`
-  width: 50rem;
+  width: 100%;
+  max-width: 50rem;
+  min-width: 35rem;
   padding: 1rem;
   margin: 1.5rem;
   box-shadow: 0 1rem 1.5rem 0.5rem rgba(0, 0, 0, 0.1);

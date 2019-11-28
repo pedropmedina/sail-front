@@ -3,7 +3,7 @@ import React from 'react';
 import { useMutation } from '@apollo/react-hooks';
 
 import * as Styled from './styled';
-import { Wrapper } from '../../sharedStyles/wrappers';
+import { FormWrapper as Wrapper } from '../../sharedStyles/wrappers';
 
 import PlanForm from '../../components/PlanForm';
 
